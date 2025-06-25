@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4과 단어 자가 테스트</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: #333;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+    .question {
+      margin: 10px auto;
+      padding: 15px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input {
+      width: 90%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007aff;
+      color: white;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: #0051c7;
+    }
+  </style>
+</head>
+<body>
+  <h1>4과 단어 자가 테스트</h1>
+  <div class="controls">
+    <label>문제 수: 
+      <select id="questionCount">
+        <option value="5">5문제</option>
+        <option value="10" selected>10문제</option>
+        <option value="20">20문제</option>
+      </select>
+    </label>
+    <button onclick="generateQuiz()">문제 생성</button>
+    <button onclick="checkAnswers()">정답 확인</button>
+  </div>
+  <div id="quiz"></div>
+  <div class="result" id="result"></div>
+
+  <script>
+    const wordList = [
+      ["closely", "밀접하게, 깊이"], ["connect", "연결하다"], ["identity", "정체성"],
+      ["personal", "개인의"], ["remind A of B", "A에게 B를 생각나게 하다."], ["tradition", "전통"],
+      ["bring together", "(사람들을)하나로 모으다"], ["value", "소중히 여기다, 가치"],
+      ["society", "사회"], ["example", "예시"], ["reflect", "반영하다"],
+      ["religion", "종교"], ["side dish", "반찬"], ["develop", "개발하다"],
+      ["ferment", "발효시키다, 발효되다"], ["store", "저장하다"], ["clay jar", "항아리"],
+      ["underground", "지하에, 땅속에"], ["steady", "꾸준한, 일정한"], ["temperature", "온도"],
+      ["slow down", "속도를 늦추다"], ["fermentation", "발효"], ["process", "과정"],
+      ["amount", "양"], ["a sense of community", "공동체 의식"], ["turkey", "칠면조"],
+      ["Thanksgiving", "추수감사절"], ["holiday", "휴일"], ["English", "영국의"],
+      ["settler", "정착민"], ["religious", "종교적인"], ["freedom", "자유"],
+      ["Native American", "북미 원주민"], ["harvest", "수확(하다)"],
+      ["survive", "살아남다, 견뎌내다"], ["common", "흔한, 공통적인"],
+      ["area", "지역"], ["gratitude", "감사, 고마움"], ["Tourist", "여행자"],
+      ["Tourist information office", "여행안내소"], ["wonder", "궁금하다"],
+      ["look for", "~를 찾다"], ["local", "지역의/ 현지의"], ["mark", "표시하다"],
+      ["try", "시도하다/ 먹어보다"], ["bill", "계산서"], ["it takes 시간", "(시간이) 걸리다"],
+      ["meal", "식사"], ["rich", "풍부한"], ["digest", "소화되다/ 소화시키다"],
+      ["recipe", "조리법"], ["Best-before date", "소비기한"], ["by", "~까지"],
+      ["last", "지속되다"], ["untill", "~까지"], ["take", "선택하다/(골라서)사다"]
+    ];
+
+    let currentQuiz = [];
+
+    function generateQuiz() {
+      const count = parseInt(document.getElementById('questionCount').value);
+      const shuffled = [...wordList].sort(() => Math.random() - 0.5);
+      currentQuiz = shuffled.slice(0, count).map(item => {
+        const isWordQuestion = Math.random() < 0.5;
+        return {
+          question: isWordQuestion ? item[0] : item[1],
+          answer: isWordQuestion ? item[1] : item[0],
+          type: isWordQuestion ? '뜻' : '단어'
+        };
+      });
+
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
+      currentQuiz.forEach((q, i) => {
+        quizDiv.innerHTML += `
+          <div class="question">
+            <div><strong>Q${i+1}. (${q.type})</strong> ${q.question}</div>
+            <input type="text" id="answer-${i}" />
+            <div id="emoji-${i}"></div>
+          </div>
+        `;
+      });
+      document.getElementById('result').innerText = '';
+    }
+
+    function checkAnswers() {
+      let correct = 0;
+      currentQuiz.forEach((q, i) => {
+        const input = document.getElementById(`answer-${i}`);
+        const emoji = document.getElementById(`emoji-${i}`);
+        const userAnswer = input.value.trim().toLowerCase();
+        const correctAnswer = q.answer.trim().toLowerCase();
+        if (userAnswer === correctAnswer) {
+          emoji.textContent = '✅ 정답';
+          correct++;
+        } else {
+          emoji.textContent = `❌ 오답 (정답: ${q.answer})`;
+        }
+      });
+      const result = document.getElementById('result');
+      result.innerText = `총 ${currentQuiz.length}문제 중 ${correct}개 정답!`;
+    }
+  </script>
+</body>
+</html>
