@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>찬양 일렉 릭 사전</title>
-<meta name="description" content="찬양팀 초보 일렉기타를 위한 느린 곡 릭 사전 — 시안 v0.1">
+<meta name="description" content="찬양팀 초보 일렉기타를 위한 느린 곡 릭 사전 48개 · 스케일 지도 · 톤 가이드 · 4주 로드맵">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -14,48 +14,55 @@
   --root:#d9480f; --root-ink:#ffffff;
   --chord:#0f766e; --chord-ink:#ffffff;
   --scale-ink:#1f1c17; --scale-bg:#ffffff;
-  --board:#efe5d3; --board-edge:#d9ccb3; --fret:#b9ab92; --string:#8b7f6d; --inlay:#d6c8ad;
+  --board:#efe5d3; --board-edge:#d9ccb3; --fret:#b9ab92; --string:#8b7f6d; --inlay:#d6c8ad; --shade:#fab00533;
   --tabline:#bdb6a8; --dur:#d9480f33; --dur-on:#d9480f;
   --chip:#efebe2; --chip-on:#1f1c17; --chip-on-ink:#ffffff;
   --lv1:#2f9e44; --lv2:#1971c2; --lv3:#ae3ec9;
-  --hl:#fab005;
+  --hl:#fab005; --tk:#d9480f14;
   --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#15130f; --surface:#1f1c17; --surface-2:#252119; --ink:#f1ece2; --muted:#a49d90; --line:#36312a;
-    --root:#ff7a45; --root-ink:#1a0f08;
-    --chord:#2dd4bf; --chord-ink:#06201d;
-    --scale-ink:#f1ece2; --scale-bg:#1f1c17;
-    --board:#2b251d; --board-edge:#3a3227; --fret:#6b5f4d; --string:#a69a86; --inlay:#4a4035;
+    --root:#ff7a45; --root-ink:#1a0f08; --chord:#2dd4bf; --chord-ink:#06201d; --scale-ink:#f1ece2; --scale-bg:#1f1c17;
+    --board:#2b251d; --board-edge:#3a3227; --fret:#6b5f4d; --string:#a69a86; --inlay:#4a4035; --shade:#ffd43b26;
     --tabline:#5a544a; --dur:#ff7a4533; --dur-on:#ff7a45;
     --chip:#2c2820; --chip-on:#f1ece2; --chip-on-ink:#15130f;
-    --lv1:#69db7c; --lv2:#74c0fc; --lv3:#e599f7;
-    --hl:#ffd43b;
+    --lv1:#69db7c; --lv2:#74c0fc; --lv3:#e599f7; --hl:#ffd43b; --tk:#ff7a451f;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
   }
 }
 :root[data-theme="dark"]{
   --bg:#15130f; --surface:#1f1c17; --surface-2:#252119; --ink:#f1ece2; --muted:#a49d90; --line:#36312a;
-  --root:#ff7a45; --root-ink:#1a0f08;
-  --chord:#2dd4bf; --chord-ink:#06201d;
-  --scale-ink:#f1ece2; --scale-bg:#1f1c17;
-  --board:#2b251d; --board-edge:#3a3227; --fret:#6b5f4d; --string:#a69a86; --inlay:#4a4035;
+  --root:#ff7a45; --root-ink:#1a0f08; --chord:#2dd4bf; --chord-ink:#06201d; --scale-ink:#f1ece2; --scale-bg:#1f1c17;
+  --board:#2b251d; --board-edge:#3a3227; --fret:#6b5f4d; --string:#a69a86; --inlay:#4a4035; --shade:#ffd43b26;
   --tabline:#5a544a; --dur:#ff7a4533; --dur-on:#ff7a45;
   --chip:#2c2820; --chip-on:#f1ece2; --chip-on-ink:#15130f;
-  --lv1:#69db7c; --lv2:#74c0fc; --lv3:#e599f7;
-  --hl:#ffd43b;
+  --lv1:#69db7c; --lv2:#74c0fc; --lv3:#e599f7; --hl:#ffd43b; --tk:#ff7a451f;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.65;font-size:15px}
 .wrap{max-width:920px;margin:0 auto;padding:28px 16px 80px}
+a{color:var(--root)}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.9em;background:var(--chip);padding:1px 5px;border-radius:5px}
 header.top h1{font-size:clamp(24px,5vw,34px);line-height:1.25;margin:0 0 6px;font-weight:800;letter-spacing:-.02em}
 header.top .sub{color:var(--muted);margin:0}
-.badge-draft{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--hl);color:#1f1c17;vertical-align:middle;margin-left:6px}
+.ver{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--muted);vertical-align:middle;margin-left:6px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:20px -16px 0;padding:0 16px;border-bottom:1px solid var(--line);scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;border:0;background:none;font:inherit;font-size:14.5px;font-weight:700;color:var(--muted);padding:10px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--root)}
+.tabpane{display:none}
+.tabpane.on{display:block}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-top:18px}
-.panel h2{font-size:16px;margin:0 0 10px}
+.panel h2{font-size:17px;margin:0 0 10px;letter-spacing:-.01em}
+.panel h3{font-size:15px;margin:18px 0 6px}
+.panel p{margin:6px 0}
+.panel ul,.panel ol{margin:6px 0;padding-left:20px}
+.panel li{margin:3px 0}
+.lead{font-size:15.5px;color:var(--muted);margin:16px 0 0}
 .legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13.5px;color:var(--muted)}
 .legend .dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font:700 11px "JetBrains Mono",ui-monospace,monospace;margin-right:6px;vertical-align:middle}
 .dot.root{background:var(--root);color:var(--root-ink)}
@@ -64,22 +71,25 @@ header.top .sub{color:var(--muted);margin:0}
 .legend b{color:var(--ink);font-weight:700}
 .howto{margin:12px 0 0;padding-left:18px;font-size:13.5px;color:var(--muted)}
 .howto li{margin:2px 0}
-.controls{padding:10px 0;margin-top:14px;border-bottom:1px solid var(--line)}
+details.guide summary{cursor:pointer;font-weight:700;font-size:15px}
+.controls{padding:10px 0;margin-top:10px;border-bottom:1px solid var(--line)}
 .crow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0}
 .crow .lab{font-size:12.5px;color:var(--muted);min-width:52px;font-weight:500}
 .chip{border:0;background:var(--chip);color:var(--ink);font:inherit;font-size:13px;padding:5px 11px;border-radius:999px;cursor:pointer;line-height:1.3}
 .chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);font-weight:700}
-.chip:focus-visible,.btn:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
+.chip:focus-visible,.btn:focus-visible,nav.tabs button:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
+.search{flex:1;min-width:160px;max-width:320px;font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .count{font-size:12.5px;color:var(--muted);margin-left:auto}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-top:18px;overflow:hidden}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-top:18px;overflow:hidden;scroll-margin-top:12px}
+.card:target{outline:3px solid var(--hl)}
 .card-head{padding:16px 16px 6px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline}
 .card-head .no{font:700 13px "JetBrains Mono",ui-monospace,monospace;color:var(--muted)}
 .card-head h3{margin:0;font-size:19px;letter-spacing:-.01em;line-height:1.35}
 .tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 10px}
 .tag{font-size:12px;padding:2px 9px;border-radius:999px;background:var(--chip);color:var(--ink);white-space:nowrap}
-.tag.lv1{background:color-mix(in srgb,var(--lv1) 18%,transparent);color:var(--ink);font-weight:700}
-.tag.lv2{background:color-mix(in srgb,var(--lv2) 18%,transparent);color:var(--ink);font-weight:700}
-.tag.lv3{background:color-mix(in srgb,var(--lv3) 18%,transparent);color:var(--ink);font-weight:700}
+.tag.lv1{background:color-mix(in srgb,var(--lv1) 18%,transparent);font-weight:700}
+.tag.lv2{background:color-mix(in srgb,var(--lv2) 18%,transparent);font-weight:700}
+.tag.lv3{background:color-mix(in srgb,var(--lv3) 18%,transparent);font-weight:700}
 .tag.fixed{background:var(--hl);color:#1f1c17;font-weight:700}
 .tag.key{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:700}
 .meta{padding:0 16px 8px;font-size:13.5px;color:var(--muted)}
@@ -91,10 +101,11 @@ header.top .sub{color:var(--muted);margin:0}
 .player{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface-2)}
 .btn{border:0;font:inherit;font-weight:700;font-size:14px;padding:8px 16px;border-radius:10px;background:var(--ink);color:var(--surface);cursor:pointer;min-width:84px}
 .btn.stop{background:var(--root);color:var(--root-ink)}
+.btn.ghost{background:var(--chip);color:var(--ink);min-width:0}
 .player label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .player input[type=range]{width:120px;accent-color:var(--root)}
 .player .bpm{font:700 13px "JetBrains Mono",ui-monospace,monospace;color:var(--ink);min-width:58px}
-.text{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.text{display:grid;grid-template-columns:1fr 1fr}
 .text section{padding:14px 16px;border-bottom:1px solid var(--line)}
 .text section:nth-child(odd){border-right:1px solid var(--line)}
 .text h4{margin:0 0 4px;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.02em}
@@ -103,17 +114,51 @@ header.top .sub{color:var(--muted);margin:0}
 .text li{margin:3px 0}
 .text section.full{grid-column:1 / -1;border-right:0}
 .text .why p{font-size:15px}
+.tk{background:var(--tk);border-radius:4px;padding:0 2px;font-weight:700}
+.compact .text{display:none}
 .empty{padding:40px 16px;text-align:center;color:var(--muted)}
-.note-fixed{font-size:13px;padding:8px 16px;background:color-mix(in srgb,var(--hl) 20%,transparent);color:var(--ink)}
+.note-fixed{font-size:13px;padding:8px 16px;background:color-mix(in srgb,var(--hl) 20%,transparent)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:700}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tablewrap table{min-width:560px}
+th:first-child,td:first-child{white-space:nowrap}
+.lick-link{border:0;background:var(--chip);color:var(--ink);font:700 12.5px "JetBrains Mono",ui-monospace,monospace;padding:2px 7px;border-radius:6px;cursor:pointer;margin:1px 2px 1px 0}
+.lick-link:hover{background:var(--hl);color:#1f1c17}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.box{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2)}
+.box h4{margin:0 0 6px;font-size:14.5px}
+.box p,.box li{font-size:14px}
+.calc{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.calc input{width:90px;font:700 16px "JetBrains Mono",ui-monospace,monospace;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px}
+.calc-out div{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.calc-out b{display:block;font:700 20px "JetBrains Mono",ui-monospace,monospace}
+.calc-out span{font-size:12.5px;color:var(--muted)}
+dl.gloss{margin:0}
+dl.gloss dt{font-weight:700;margin-top:12px}
+dl.gloss dd{margin:2px 0 0;color:var(--ink);font-size:14.5px}
+.week{border-left:4px solid var(--root);padding-left:12px;margin:16px 0}
+.week h3{margin:0 0 4px}
+.muted{color:var(--muted)}
 footer{margin-top:28px;font-size:12.5px;color:var(--muted)}
 @media (max-width:640px){
   .text{grid-template-columns:1fr}
   .text section:nth-child(odd){border-right:0}
   .player input[type=range]{width:100px}
+  .grid2{grid-template-columns:1fr}
+}
+@media print{
+  nav.tabs,.controls,.player,footer{display:none!important}
+  .tabpane{display:block!important}
+  .card{break-inside:avoid;box-shadow:none}
+  body{background:#fff}
 }
 /* svg */
 svg text{font-family:"JetBrains Mono",ui-monospace,monospace}
 .fb-board{fill:var(--board);stroke:var(--board-edge)}
+.fb-shade{fill:var(--shade)}
 .fb-fret{stroke:var(--fret);stroke-width:2}
 .fb-nut{stroke:var(--ink);stroke-width:5}
 .fb-string{stroke:var(--string)}
@@ -127,6 +172,7 @@ svg text{font-family:"JetBrains Mono",ui-monospace,monospace}
 .fb-note.chord text{fill:var(--chord-ink)}
 .fb-note.scale circle{fill:var(--scale-bg);stroke:var(--scale-ink)}
 .fb-note.scale text{fill:var(--scale-ink)}
+.fb-note.dim{opacity:.22}
 .fb-note text{font-size:11px;font-weight:700;text-anchor:middle;dominant-baseline:central}
 .fb-note text.small{font-size:9px}
 .fb-note.on circle{stroke:var(--hl);stroke-width:4}
@@ -155,207 +201,273 @@ svg text{font-family:"JetBrains Mono",ui-monospace,monospace}
 <body>
 <div class="wrap">
   <header class="top">
-    <h1>찬양 일렉 릭 사전 <span class="badge-draft">시안 v0.1</span></h1>
-    <p class="sub">찬양팀 초보 일렉기타를 위한 느린 곡 릭 모음 · 3단계 샘플 8개</p>
+    <h1>찬양 일렉 릭 사전 <span class="ver">v1.0</span></h1>
+    <p class="sub">찬양팀 초보 일렉기타를 위한 느린 곡 릭 48개와 실전 참고자료</p>
   </header>
 
-  <div class="panel">
-    <h2>카드 읽는 법</h2>
-    <div class="legend">
-      <span><span class="dot root">R</span><b>루트</b> 키의 으뜸음</span>
-      <span><span class="dot chord">3</span><b>3도·5도</b> 으뜸화음 구성음</span>
-      <span><span class="dot scale">6</span><b>그 밖의 스케일 음</b></span>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="licks" aria-selected="true">릭 사전</button>
+    <button role="tab" data-tab="scales" aria-selected="false">스케일 지도</button>
+    <button role="tab" data-tab="tech" aria-selected="false">찬양 기타 기법</button>
+    <button role="tab" data-tab="tone" aria-selected="false">톤 가이드</button>
+    <button role="tab" data-tab="road" aria-selected="false">4주 로드맵</button>
+    <button role="tab" data-tab="gloss" aria-selected="false">용어집</button>
+  </nav>
+
+  <!-- ================= 릭 사전 ================= -->
+  <section class="tabpane on" id="tab-licks" role="tabpanel">
+    <div class="panel">
+      <details class="guide">
+        <summary>카드 읽는 법 (처음이라면 펼쳐 보세요)</summary>
+        <div class="legend" style="margin-top:12px">
+          <span><span class="dot root">R</span><b>루트</b> 키의 으뜸음</span>
+          <span><span class="dot chord">3</span><b>3도·5도</b> 으뜸화음 구성음</span>
+          <span><span class="dot scale">6</span><b>그 밖의 스케일 음</b></span>
+        </div>
+        <ul class="howto">
+          <li>지판 그림과 TAB 모두 <b>위쪽 줄이 1번줄(가장 얇은 줄)</b>입니다.</li>
+          <li>TAB 숫자가 <b style="color:var(--chord)">청록색</b>이면 그 순간 울리는 코드의 구성음, <b style="color:var(--root)">주황색</b>이면 그 코드의 루트입니다.</li>
+          <li>TAB 아래 막대는 음의 길이입니다. <code>h</code> 해머온 · <code>p</code> 풀오프 · <code>/ \</code> 슬라이드 · <code>↑</code> 벤딩 · <code>~</code> 비브라토 · <code>&lt;</code> 볼륨 스웰</li>
+          <li>키를 바꾸면 그림·TAB·코드와 <span class="tk">강조된 설명 속 음·프렛·코드</span>가 함께 이동합니다. <span class="tag fixed">고정 키</span> 릭은 개방현을 써서 원래 키에서만 씁니다.</li>
+          <li>마이너 릭(Em, Bm)은 선택한 키의 <b>나란한조</b>로 이동합니다. 예: G 키 → Em, D 키 → Bm.</li>
+        </ul>
+      </details>
     </div>
-    <ul class="howto">
-      <li>지판 그림과 TAB 모두 <b>위쪽 줄이 1번줄(가장 얇은 줄)</b>입니다.</li>
-      <li>TAB 숫자가 <b style="color:var(--chord)">청록색</b>이면 그 순간 울리는 코드의 구성음, <b style="color:var(--root)">주황색</b>이면 그 코드의 루트입니다.</li>
-      <li>TAB 아래 막대는 음의 길이입니다. <code>h</code> 해머온 · <code>p</code> 풀오프 · <code>/ \</code> 슬라이드 · <code>↑</code> 벤딩 · <code>~</code> 비브라토</li>
-      <li>위 메뉴에서 키를 바꾸면 그림·TAB·코드가 함께 이동합니다. <span class="tag fixed">고정 키</span> 릭은 개방현을 써서 원래 키에서만 씁니다.</li>
-    </ul>
-  </div>
 
-  <div class="controls" id="controls">
-    <div class="crow"><span class="lab">키</span><span id="keyChips"></span></div>
-    <div class="crow"><span class="lab">표시</span><span id="labelChips"></span></div>
-    <div class="crow"><span class="lab">난이도</span><span id="levelChips"></span></div>
-    <div class="crow"><span class="lab">소재</span><span id="familyChips"></span></div>
-    <div class="crow"><span class="lab">자리</span><span id="slotChips"></span><span class="count" id="count"></span></div>
-    <div class="crow"><span class="lab">소리</span><span id="fxChips"></span></div>
-  </div>
+    <div class="controls" id="controls">
+      <div class="crow"><span class="lab">키</span><span id="keyChips"></span></div>
+      <div class="crow"><span class="lab">난이도</span><span id="levelChips"></span></div>
+      <div class="crow"><span class="lab">소재</span><span id="familyChips"></span></div>
+      <div class="crow"><span class="lab">자리</span><span id="slotChips"></span></div>
+      <div class="crow"><span class="lab">표시</span><span id="labelChips"></span><span id="viewChips"></span></div>
+      <div class="crow"><span class="lab">소리</span><span id="fxChips"></span></div>
+      <div class="crow"><span class="lab">검색</span><input class="search" id="q" type="search" placeholder="이름·기술 (예: 스웰, 벤딩)"><span class="count" id="count"></span></div>
+    </div>
 
-  <main id="list"></main>
+    <main id="list"></main>
+  </section>
+
+  <!-- ================= 스케일 지도 ================= -->
+  <section class="tabpane" id="tab-scales" role="tabpanel">
+    <p class="lead">릭은 결국 스케일 위의 '자주 쓰는 길'입니다. 키를 고르고, 스케일과 박스를 바꿔 가며 릭이 지판 어디에 사는지 확인하세요.</p>
+    <div class="panel">
+      <div class="crow"><span class="lab">키</span><span id="smKey"></span></div>
+      <div class="crow"><span class="lab">스케일</span><span id="smScale"></span></div>
+      <div class="crow"><span class="lab">자리</span><span id="smBox"></span></div>
+      <div class="scroll" id="smNeck" style="margin-top:10px"></div>
+      <p class="muted" id="smNote" style="font-size:13.5px"></p>
+    </div>
+    <div class="panel">
+      <h2>찬양에서 가장 많이 쓰는 3자리</h2>
+      <div class="grid2">
+        <div class="box"><h4>① 개방 포지션 (0~4프렛)</h4><p>G·D·A·E·C 키에서 개방현을 드론으로 섞을 수 있는 자리. 울림이 크고 쉬워 Lv1 인트로에 최고입니다. → <button class="lick-link" data-id="L02">L02</button><button class="lick-link" data-id="L14">L14</button><button class="lick-link" data-id="L16">L16</button></p></div>
+        <div class="box"><h4>② 중간 포지션 (키 루트가 2번줄에 있는 자리)</h4><p>G 키라면 7~10프렛. 보컬 음역과 비슷해 오블리가토·필인의 '본진'입니다. 이 사전 릭의 절반 이상이 여기 있습니다. → <button class="lick-link" data-id="L04">L04</button><button class="lick-link" data-id="L19">L19</button><button class="lick-link" data-id="L21">L21</button></p></div>
+        <div class="box"><h4>③ 하이 포지션 (12프렛 부근)</h4><p>개방 포지션을 한 옥타브 올린 자리. 코러스처럼 소리가 꽉 찬 순간에 기타가 들리게 해 줍니다. → <button class="lick-link" data-id="L35">L35</button><button class="lick-link" data-id="L40">L40</button><button class="lick-link" data-id="L43">L43</button></p></div>
+        <div class="box"><h4>박스 하나만 먼저</h4><p>펜타토닉 박스 5개를 한 번에 외우려 하지 마세요. ②번 자리의 박스 하나로 4주를 버티고, 거기서 L01~L38의 대부분을 연주할 수 있습니다.</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>세 스케일, 언제 무엇을</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>스케일</th><th>음 (G 키 기준)</th><th>느낌</th><th>쓰는 곳</th></tr></thead>
+        <tbody>
+          <tr><td><b>메이저 펜타토닉</b></td><td>G A B D E (1 2 3 5 6)</td><td>밝고 열린, 부딪힘 없음</td><td>거의 모든 장조 찬양의 기본. 틀릴 음이 없어 초보 1순위</td></tr>
+          <tr><td><b>메이저 스케일</b></td><td>+ C, F# (4, 7)</td><td>긴장과 해결</td><td>sus4 해결(L20), 이끔음 해결(L42), 3도 화음(L41)</td></tr>
+          <tr><td><b>마이너 펜타토닉</b></td><td>E G A B D (Em 기준)</td><td>간절함, 깊이</td><td>단조 곡, 장조 곡의 vi 코드(Em·Bm) 구간</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted" style="font-size:13.5px">G 메이저 펜타와 E 마이너 펜타는 <b>같은 다섯 음</b>입니다. 지판 모양이 같고, 어느 음을 '집'으로 느끼느냐만 다릅니다.</p>
+    </div>
+  </section>
+
+  <!-- ================= 찬양 기타 기법 ================= -->
+  <section class="tabpane" id="tab-tech" role="tabpanel">
+    <p class="lead">릭을 '어디에 넣을지'가 '무엇을 칠지'보다 중요합니다. 찬양팀 일렉기타의 원칙과 핵심 기법을 정리했습니다.</p>
+    <div class="panel">
+      <h2>1. 안 치는 용기: 일렉기타의 자리</h2>
+      <p>찬양팀에서 일렉기타는 주인공이 아니라 <b>회중의 노래를 돕는 색깔</b>입니다. 소리가 많을수록 좋은 게 아니라, 비어 있는 곳을 찾아 채우는 것이 실력입니다.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>악기</th><th>주로 차지하는 공간</th><th>일렉기타가 피할 것</th></tr></thead>
+        <tbody>
+          <tr><td>베이스</td><td>저음 (6·5번줄 영역)</td><td>저음 줄 드론을 크게, 톤의 저음 과다</td></tr>
+          <tr><td>어쿠스틱 기타</td><td>리듬, 중음 코드 스트로크</td><td>같은 코드를 같은 자리에서 스트로크</td></tr>
+          <tr><td>키보드·패드</td><td>중음역 전체, 긴 화음</td><td>중음역에서 큰 코드를 길게</td></tr>
+          <tr><td>보컬</td><td>멜로디, 가사 전달</td><td>노래하는 동안 멜로디성 필인</td></tr>
+        </tbody>
+      </table></div>
+      <p><b>그래서 일렉기타는:</b> ① 보컬이 쉬는 틈(<button class="lick-link" data-id="L27">L27</button>), ② 높은 음역(<button class="lick-link" data-id="L35">L35</button>), ③ 한두 음의 롱노트·스웰(<button class="lick-link" data-id="L04">L04</button><button class="lick-link" data-id="L05">L05</button>), ④ 리듬 패턴(<button class="lick-link" data-id="L31">L31</button>)으로 들어갑니다.</p>
+    </div>
+    <div class="panel">
+      <h2>2. 곡의 구성별 역할 지도</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>구간</th><th>에너지</th><th>일렉기타 역할</th><th>추천 릭</th></tr></thead>
+        <tbody>
+          <tr><td><b>인트로</b></td><td>중</td><td>곡의 테마를 소개하는 멜로디·아르페지오, 또는 패드</td><td><button class="lick-link" data-id="L01">L01</button><button class="lick-link" data-id="L16">L16</button><button class="lick-link" data-id="L21">L21</button><button class="lick-link" data-id="L31">L31</button></td></tr>
+          <tr><td><b>벌스</b></td><td>낮음</td><td>거의 치지 않거나 스웰, 보컬 틈에 짧은 응답</td><td><button class="lick-link" data-id="L05">L05</button><button class="lick-link" data-id="L11">L11</button><button class="lick-link" data-id="L19">L19</button><button class="lick-link" data-id="L27">L27</button></td></tr>
+          <tr><td><b>프리코러스</b></td><td>상승</td><td>8분 펄스, 상행 라인으로 긴장 쌓기</td><td><button class="lick-link" data-id="L08">L08</button><button class="lick-link" data-id="L12">L12</button><button class="lick-link" data-id="L20">L20</button><button class="lick-link" data-id="L23">L23</button><button class="lick-link" data-id="L30">L30</button></td></tr>
+          <tr><td><b>코러스</b></td><td>최고</td><td>높은 음역 롱노트·옥타브, 끝 마디 필인</td><td><button class="lick-link" data-id="L07">L07</button><button class="lick-link" data-id="L35">L35</button><button class="lick-link" data-id="L40">L40</button><button class="lick-link" data-id="L48">L48</button></td></tr>
+          <tr><td><b>브릿지</b></td><td>변화</td><td>처음엔 비우고, 반복될수록 쌓기(스웰 → 펄스 → 리드)</td><td><button class="lick-link" data-id="L05">L05</button><button class="lick-link" data-id="L12">L12</button><button class="lick-link" data-id="L47">L47</button></td></tr>
+          <tr><td><b>엔딩</b></td><td>하강</td><td>해결감 있는 마침, 긴 슬라이드·스웰</td><td><button class="lick-link" data-id="L09">L09</button><button class="lick-link" data-id="L34">L34</button><button class="lick-link" data-id="L39">L39</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <h2>3. 핵심 기법 7가지</h2>
+      <div class="grid2">
+        <div class="box"><h4>볼륨 스웰</h4><ol><li>볼륨 0에서 피킹</li><li>1~2박에 걸쳐 볼륨 올리기</li><li>다음 음 직전에 다시 0</li></ol><p>새끼손가락을 볼륨 노브에 걸거나 볼륨/익스프레션 페달 사용. 딜레이·리버브가 함께 있어야 음 사이가 이어집니다.</p></div>
+        <div class="box"><h4>코드톤 타겟</h4><p>코드가 바뀌는 첫 박에 그 코드의 <b>3도 또는 루트</b>가 오게 하면 무엇을 쳐도 안정적으로 들립니다. 릭 카드 TAB의 청록·주황 숫자가 바로 그 음입니다.</p></div>
+        <div class="box"><h4>공통음</h4><p>코드가 바뀌어도 그대로 어울리는 음. G·C·Em의 공통음은 G. 한 음을 오래 버티면 초보도 프로처럼 들립니다(<button class="lick-link" data-id="L05">L05</button><button class="lick-link" data-id="L17">L17</button>).</p></div>
+        <div class="box"><h4>드론·페달 톤</h4><p>개방현을 계속 울리며 다른 줄로 멜로디. 적은 음으로 큰 공간. 키가 맞아야 쓸 수 있습니다(<button class="lick-link" data-id="L02">L02</button><button class="lick-link" data-id="L25">L25</button>).</p></div>
+        <div class="box"><h4>옥타브</h4><p>4·2번줄(3프렛 차) 또는 5·3번줄, 6·4번줄(2프렛 차). 가운데 줄은 검지로 뮤트. 볼륨을 키우지 않아도 멜로디가 선명합니다.</p></div>
+        <div class="box"><h4>비브라토</h4><p>느린 곡의 생명. 손가락이 아니라 손목을 돌려서, 1박에 2번 정도 느리고 일정하게. 빠르고 좁은 비브라토는 블루스·록 느낌이 납니다.</p></div>
+        <div class="box"><h4>벤딩 음정</h4><p>목표음을 먼저 그 프렛에서 쳐서 듣고, 벤딩으로 같은 음을 만듭니다. 찬양에서는 음정이 모자란 벤딩이 가장 귀에 거슬립니다.</p></div>
+        <div class="box"><h4>다이내믹</h4><p>같은 릭도 벌스에선 70%, 코러스에선 100%. 볼륨 노브를 7에 두고 시작하면 위로 올릴 여유가 생깁니다.</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>4. 새 곡에 적용하는 5단계</h2>
+      <ol>
+        <li><b>키와 코드 차트 확인</b>: 위 메뉴의 키 칩을 그 곡 키로 바꿉니다. 단조 곡이면 나란한조 장조 키(예: Em 곡 → G)를 선택하세요.</li>
+        <li><b>구간마다 역할 정하기</b>: 위 '역할 지도' 표에서 인트로·벌스·코러스의 에너지를 먼저 정합니다.</li>
+        <li><b>자리 필터로 후보 2개</b>: 릭 사전에서 '자리' 필터를 누르고, 곡의 코드 진행과 비슷한 릭을 고릅니다.</li>
+        <li><b>코드에 맞추기</b>: 릭의 코드 진행이 곡과 다르면 TAB의 청록·주황 원리대로 끝음만 그 곡의 코드톤으로 바꿉니다.</li>
+        <li><b>리허설에서 덜어내기</b>: 밴드와 맞춰 보고 겹치면 음을 빼거나 옥타브를 올립니다. 처음 계획의 절반만 남기는 것이 보통입니다.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= 톤 가이드 ================= -->
+  <section class="tabpane" id="tab-tone" role="tabpanel">
+    <p class="lead">Sonicake Matribox 기준 톤 레시피입니다. 모델(초기형 · II · II Pro)에 따라 메뉴 이름과 블록 수가 다르므로, 여기서는 <b>모든 모델에 공통인 블록 순서와 시작값</b>으로 정리했습니다. 숫자는 출발점일 뿐, 예배당과 PA에서 귀로 최종 조정하세요.</p>
+    <div class="panel">
+      <h2>기본 신호 순서</h2>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:2">기타 → 튜너 → <b>컴프</b> → <b>드라이브</b>(선택) → <b>앰프</b> → <b>캐비닛/IR</b> → <b>EQ</b> → 모듈레이션(선택) → <b>딜레이</b> → <b>리버브</b> → 볼륨 → 출력</p>
+      <ul>
+        <li><b>딜레이는 리버브 앞</b>: 반복음에도 잔향이 붙어 자연스럽습니다.</li>
+        <li><b>볼륨 스웰</b>: 익스프레션 페달이 있는 모델이면 볼륨에 할당하고 딜레이 <i>앞</i>에 두세요. 볼륨을 내려도 딜레이·리버브 꼬리가 남아야 스웰이 이어집니다. 페달이 없으면 기타 볼륨 노브로 같은 효과를 냅니다.</li>
+        <li><b>EQ 로우컷 80~120Hz</b>: 베이스와 킥 드럼 영역을 비워 주면 밴드 전체가 맑아집니다.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>딜레이 타임 계산기</h2>
+      <p class="muted" style="font-size:13.5px">곡의 BPM을 넣으면 딜레이 타임(ms)을 계산합니다. 탭 템포가 있으면 탭으로, 없으면 이 값을 직접 입력하세요.</p>
+      <div class="calc"><label for="bpmIn"><b>BPM</b></label><input id="bpmIn" type="number" min="30" max="200" value="72" inputmode="numeric"></div>
+      <div class="calc-out" id="calcOut"></div>
+    </div>
+    <div class="panel">
+      <h2>프리셋 레시피 4종 (시작값)</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>블록</th><th>① 클린 벌스</th><th>② 앰비언트 패드</th><th>③ 리드 필인</th><th>④ 점8분 리프</th></tr></thead>
+        <tbody>
+          <tr><td><b>컴프</b></td><td>약하게(서스테인 낮게)</td><td>중간</td><td>약하게</td><td>중간</td></tr>
+          <tr><td><b>드라이브</b></td><td>끔</td><td>끔</td><td>오버드라이브 계열, 게인 낮게, 레벨 약간 올림</td><td>끔 또는 아주 약하게</td></tr>
+          <tr><td><b>앰프</b></td><td colspan="4">클린 계열 앰프 모델, 게인은 '찌그러지기 직전'까지. 4개 프리셋 모두 같은 앰프를 쓰면 전환이 자연스럽습니다.</td></tr>
+          <tr><td><b>딜레이</b></td><td>4분음표, 믹스 15~20%, 반복 2~3회</td><td>점8분, 믹스 30~40%, 반복 많게(피드백 40~50%)</td><td>점8분 또는 4분음표, 믹스 20~25%</td><td><b>점8분 정확히</b>, 믹스 35~45%, 반복 2~3회</td></tr>
+          <tr><td><b>리버브</b></td><td>홀/플레이트, 디케이 2~3초, 믹스 20%</td><td>홀(또는 쉬머가 있으면 쉬머), 디케이 5초 이상, 믹스 40% 이상, 프리딜레이 약간</td><td>플레이트, 디케이 2초, 믹스 15~20%</td><td>홀, 디케이 2~3초, 믹스 20%</td></tr>
+          <tr><td><b>볼륨</b></td><td>기준</td><td>기준보다 약간 낮게</td><td>기준보다 약간 높게</td><td>기준</td></tr>
+          <tr><td><b>어울리는 릭</b></td><td><button class="lick-link" data-id="L04">L04</button><button class="lick-link" data-id="L19">L19</button><button class="lick-link" data-id="L27">L27</button></td><td><button class="lick-link" data-id="L05">L05</button><button class="lick-link" data-id="L11">L11</button><button class="lick-link" data-id="L37">L37</button></td><td><button class="lick-link" data-id="L35">L35</button><button class="lick-link" data-id="L40">L40</button><button class="lick-link" data-id="L43">L43</button></td><td><button class="lick-link" data-id="L12">L12</button><button class="lick-link" data-id="L24">L24</button><button class="lick-link" data-id="L31">L31</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <h2>예배 전 점검 체크리스트</h2>
+      <ul>
+        <li>튜닝: 매 곡 사이에 튜너로 확인(뮤트 상태로).</li>
+        <li>프리셋 볼륨 맞추기: 4개 프리셋을 번갈아 쳐서 음량이 튀는 것이 없는지.</li>
+        <li>딜레이 타임: 오늘 곡들의 BPM으로 다시 계산하거나 탭 템포 확인.</li>
+        <li>음향팀과 소통: 기타 볼륨은 엔지니어와 함께 정하고, 공연 중 크게 바꾸지 않기.</li>
+        <li>여분의 줄·배터리·케이블, 그리고 Matribox 전원 어댑터.</li>
+      </ul>
+      <p class="muted" style="font-size:13px">참고: 블록 이름(예: 홀, 플레이트, 쉬머)과 지원 기능(익스프레션 페달, 탭 템포, 블록 수)은 사용하시는 Matribox 모델의 설명서로 확인하세요. 이 가이드는 특정 모델의 메뉴를 그대로 옮긴 것이 아닙니다.</p>
+    </div>
+  </section>
+
+  <!-- ================= 로드맵 ================= -->
+  <section class="tabpane" id="tab-road" role="tabpanel">
+    <p class="lead">매일 20분, 4주. 릭을 '외우는' 것이 아니라 '곡에 넣는' 데까지 가는 계획입니다.</p>
+    <div class="panel">
+      <h2>매일 20분 루틴</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>시간</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>3분</td><td>비브라토·스웰 워밍업: 2번줄 한 음으로 4박 비브라토, 볼륨 스웰 4번</td></tr>
+          <tr><td>10분</td><td>이번 주 릭 2~3개: 재생 버튼으로 듣기 → 템포 -20으로 연습 → 기준 템포</td></tr>
+          <tr><td>5분</td><td>키 바꿔 보기: 같은 릭을 다른 키 한 개로(키 칩 사용)</td></tr>
+          <tr><td>2분</td><td>적용: 이번 주 예배 곡 하나에 어느 자리에 넣을지 정하기</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <div class="week"><h3>1주차 · 한 음의 힘</h3><p>목표: 코드톤과 롱노트, 스웰에 익숙해지기. 왼손은 거의 움직이지 않습니다.</p>
+        <p><button class="lick-link" data-id="L04">L04</button><button class="lick-link" data-id="L05">L05</button><button class="lick-link" data-id="L06">L06</button><button class="lick-link" data-id="L07">L07</button><button class="lick-link" data-id="L03">L03</button><button class="lick-link" data-id="L09">L09</button></p>
+        <p class="muted">체크: 코드가 바뀌는 첫 박에 정확히 들어가는가? 스웰에서 피킹 소리가 들리지 않는가?</p></div>
+      <div class="week"><h3>2주차 · 개방현과 옥타브</h3><p>목표: 적은 음으로 큰 공간. 실제 곡의 인트로 하나를 이번 주에 바꿔 보세요.</p>
+        <p><button class="lick-link" data-id="L01">L01</button><button class="lick-link" data-id="L08">L08</button><button class="lick-link" data-id="L02">L02</button><button class="lick-link" data-id="L14">L14</button><button class="lick-link" data-id="L15">L15</button><button class="lick-link" data-id="L16">L16</button><button class="lick-link" data-id="L17">L17</button><button class="lick-link" data-id="L11">L11</button></p>
+        <p class="muted">체크: 옥타브에서 가운데 줄이 울리지 않는가? 드론 줄이 막히지 않는가?</p></div>
+      <div class="week"><h3>3주차 · 펜타토닉 한 박스로 말하기</h3><p>목표: 해머온·풀오프로 짧은 필인. 보컬 틈에 들어가는 감각.</p>
+        <p><button class="lick-link" data-id="L19">L19</button><button class="lick-link" data-id="L22">L22</button><button class="lick-link" data-id="L23">L23</button><button class="lick-link" data-id="L26">L26</button><button class="lick-link" data-id="L27">L27</button><button class="lick-link" data-id="L33">L33</button><button class="lick-link" data-id="L12">L12</button></p>
+        <p class="muted">체크: 필인이 보컬과 겹치지 않는가? 착지 음이 박에 맞는가?</p></div>
+      <div class="week"><h3>4주차 · 코드를 따라가는 라인</h3><p>목표: 아르페지오·긴장과 해결·딜레이 리프. 이번 주 예배에서 한 곡 전체를 계획대로 연주.</p>
+        <p><button class="lick-link" data-id="L20">L20</button><button class="lick-link" data-id="L21">L21</button><button class="lick-link" data-id="L24">L24</button><button class="lick-link" data-id="L30">L30</button><button class="lick-link" data-id="L31">L31</button><button class="lick-link" data-id="L34">L34</button></p>
+        <p class="muted">체크: 점8분 딜레이 타임을 곡 템포에 맞췄는가? 해결음이 코드 체인지와 동시인가?</p></div>
+      <div class="week"><h3>그다음 · Lv3로</h3><p>4주를 마치면 Lv2의 나머지와 Lv3(더블스톱·벤딩·런)로 넘어갑니다. Lv3 릭마다 '쉽게' 변형이 있으니 거기서 시작하세요.</p>
+        <p><button class="lick-link" data-id="L39">L39</button><button class="lick-link" data-id="L40">L40</button><button class="lick-link" data-id="L41">L41</button><button class="lick-link" data-id="L47">L47</button></p></div>
+    </div>
+  </section>
+
+  <!-- ================= 용어집 ================= -->
+  <section class="tabpane" id="tab-gloss" role="tabpanel">
+    <div class="panel">
+      <dl class="gloss">
+        <dt>오블리가토 (오블리)</dt><dd>보컬 뒤에서 흐르는 보조 멜로디. 노래를 방해하지 않고 받쳐 주는 것이 원칙입니다.</dd>
+        <dt>필인</dt><dd>프레이즈와 프레이즈 사이 빈 박을 채우는 짧은 연주.</dd>
+        <dt>턴어라운드</dt><dd>구절 끝에서 다음 구절(보통 I 코드)로 돌아가게 이끄는 부분.</dd>
+        <dt>도수 (R, 2, 3, 5, 6 …)</dt><dd>키의 으뜸음(R)으로부터 몇 번째 음인지. 도수로 외우면 어느 키에서나 같은 원리로 쓸 수 있습니다.</dd>
+        <dt>코드톤 / 코드 구성음</dt><dd>지금 울리는 코드를 이루는 음(예: G 코드 = G, B, D). 첫 박에 두면 가장 안정적입니다.</dd>
+        <dt>공통음</dt><dd>두 코드에 모두 들어 있는 음. 코드가 바뀌어도 그대로 버틸 수 있습니다.</dd>
+        <dt>드론</dt><dd>계속 울리는 고정음. 주로 개방현을 씁니다.</dd>
+        <dt>페달 톤</dt><dd>멜로디 사이사이 반복해서 돌아오는 고정음.</dd>
+        <dt>볼륨 스웰</dt><dd>볼륨을 0에서 천천히 올려 피킹 소리를 없애고 현악기처럼 만드는 기법.</dd>
+        <dt>더블스톱</dt><dd>두 음을 동시에 치는 것. 3도·6도 간격이 가장 많이 쓰입니다.</dd>
+        <dt>트라이어드</dt><dd>세 음짜리 기본 화음. 높은 3줄에서 작은 코드로 자주 씁니다.</dd>
+        <dt>아르페지오</dt><dd>코드 음을 하나씩 펼쳐서 연주하는 것.</dd>
+        <dt>해머온 (h) / 풀오프 (p)</dt><dd>피킹 없이 손가락을 내려찍어(h) 또는 튕겨 떼어(p) 다음 음을 내는 기법.</dd>
+        <dt>슬라이드 (/ \) / 슬라이드 인</dt><dd>누른 채 미끄러져 음을 바꾸는 기법. 슬라이드 인은 목표 음보다 아래에서 출발해 미끄러져 들어가는 것.</dd>
+        <dt>벤딩 (↑ full / ½)</dt><dd>줄을 밀어 음을 올리는 기법. full = 온음(2프렛), ½ = 반음(1프렛).</dd>
+        <dt>비브라토 (~)</dt><dd>음을 미세하게 흔들어 살아 있게 하는 기법.</dd>
+        <dt>레가토</dt><dd>음과 음 사이를 끊지 않고 이어 연주하는 것.</dd>
+        <dt>포지션 / 박스</dt><dd>손이 머무는 지판 위 자리. 펜타토닉은 5개의 박스로 지판 전체를 덮습니다.</dd>
+        <dt>나란한조</dt><dd>같은 음을 쓰는 장조와 단조의 짝. G장조 ↔ E단조, D장조 ↔ B단조.</dd>
+        <dt>점8분 딜레이</dt><dd>딜레이 타임을 점8분음표 길이(45000 ÷ BPM ms)로 맞추는 것. 4분음표로 치면 사이사이가 채워져 16분 리프처럼 들립니다.</dd>
+        <dt>디케이 / 믹스 / 피드백 / 프리딜레이</dt><dd>디케이: 잔향 길이. 믹스: 원음 대비 효과음 비율. 피드백: 딜레이 반복 횟수. 프리딜레이: 원음과 리버브 시작 사이 간격.</dd>
+        <dt>하이브리드 피킹</dt><dd>피크와 남은 손가락(중지·약지)을 함께 써서 떨어진 줄을 동시에 튕기는 주법.</dd>
+        <dt>뮤트</dt><dd>울리면 안 되는 줄을 손가락이나 손바닥으로 살짝 막는 것.</dd>
+      </dl>
+    </div>
+  </section>
 
   <footer>
-    <p>모든 릭은 특정 곡을 옮긴 것이 아니라 찬양 연주에서 널리 쓰이는 관용구를 바탕으로 새로 구성했습니다. 재생음은 음정·리듬 확인용 합성음이며 실제 기타 톤과는 다릅니다.</p>
+    <p>모든 릭은 특정 곡을 옮긴 것이 아니라 찬양 연주에서 널리 쓰이는 관용구를 바탕으로 새로 구성했습니다. 재생음은 음정·리듬 확인용 합성음이며 실제 기타 톤과는 다릅니다. 데이터 검증: <code>node tools/validate.mjs</code></p>
   </footer>
 </div>
 
-<script id="lick-data" type="application/json">
-{
-  "families": {
-    "A": {"name": "메이저 펜타토닉", "scale": [0,2,4,7,9]},
-    "B": {"name": "메이저 스케일", "scale": [0,2,4,5,7,9,11]},
-    "C": {"name": "코드톤·더블스톱", "scale": [0,2,4,5,7,9,11]},
-    "D": {"name": "마이너 펜타토닉", "scale": [0,3,5,7,10]}
-  },
-  "slots": ["인트로","벌스 오블리가토","프리코러스","코러스 필인","턴어라운드","엔딩"],
-  "keys": ["G","A","C","D","E"],
-  "licks": [
-    {
-      "id": "L01", "name": "옥타브 3-2-1 착지", "level": 1, "family": "A",
-      "slots": ["인트로","엔딩"], "techs": ["옥타브","뮤트"],
-      "meter": "4/4", "bpm": 64, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"G"},{"t":4,"n":"D"},{"t":8,"n":"G"}],
-      "notes": [
-        {"t":0,"d":4,"s":4,"f":9},{"t":0,"d":4,"s":2,"f":12},
-        {"t":4,"d":4,"s":4,"f":7},{"t":4,"d":4,"s":2,"f":10},
-        {"t":8,"d":8,"s":4,"f":5,"vib":true},{"t":8,"d":8,"s":2,"f":8,"vib":true}
-      ],
-      "why": "3도(B) → 2도(A) → 1도(G)로 내려오는, '집으로 돌아오는' 선율입니다. 두 번째 음 A는 D 코드의 5도라 코드와도 맞습니다. 같은 음을 옥타브로 겹치면 볼륨을 키우지 않아도 멜로디가 또렷해서 보컬·키보드와 덜 부딪힙니다.",
-      "how": ["검지로 4번줄, 약지(또는 새끼)로 2번줄을 짚습니다.", "검지 끝을 3번줄에 살짝 닿게 해 소리를 죽입니다. 4~2번줄을 한 번에 긁어도 가운데 줄은 소리가 나지 않아야 정답입니다.", "자리를 옮길 때 손가락을 떼지 말고 줄 위에서 미끄러지듯 이동하세요."],
-      "mistakes": ["3번줄이 같이 울린다 → 검지를 조금 더 눕혀 3번줄에 닿게", "이동할 때 소리가 뚝 끊긴다 → 다음 자리를 눈으로 먼저 보고 이동"],
-      "vars": ["리듬: 첫 옥타브를 반 박 늦게 시작해 당김음 느낌으로", "음역: 같은 선율을 6번+4번줄 옥타브로(4번줄이 6번줄보다 2프렛 위) 한 옥타브 낮게", "끝음: 마지막을 G 대신 E(6도)로 끝내면 Em로 넘어가는 여운"]
-    },
-    {
-      "id": "L02", "name": "개방 E 드론 하강", "level": 1, "family": "A",
-      "slots": ["인트로","벌스 오블리가토"], "techs": ["드론","개방현"],
-      "meter": "4/4", "bpm": 66, "homeKey": "E", "movable": false,
-      "fixedReason": "1번줄 개방 E를 드론(계속 울리는 음)으로 쓰기 때문에 E 키에서만 그대로 쓸 수 있습니다.",
-      "chords": [{"t":0,"n":"E"},{"t":8,"n":"A"},{"t":12,"n":"E"}],
-      "notes": [
-        {"t":0,"d":4,"s":2,"f":12},{"t":0,"d":4,"s":1,"f":0},
-        {"t":4,"d":4,"s":2,"f":9},{"t":4,"d":4,"s":1,"f":0},
-        {"t":8,"d":4,"s":2,"f":7},{"t":8,"d":4,"s":1,"f":0},
-        {"t":12,"d":4,"s":2,"f":5,"vib":true},{"t":12,"d":4,"s":1,"f":0}
-      ],
-      "why": "1번줄 개방 E가 계속 울리는 동안 2번줄 멜로디가 5도(B) → 3도(G#) → 2도(F#) → 1도(E)로 내려옵니다. 개방현이 함께 울려서 적은 음으로도 공간이 꽉 찹니다. 마지막 E-E 동음(유니즌)은 찬양 인트로에서 자주 쓰는 '종소리' 같은 울림입니다.",
-      "how": ["2번줄만 한 손가락(약지 추천)으로 짚고, 1·2번줄을 함께 피킹합니다.", "짚는 손가락을 세워서 1번줄에 닿지 않게 하세요. 드론이 끊기면 이 릭의 맛이 사라집니다.", "딜레이를 켜고 연주하면 효과가 가장 큽니다."],
-      "mistakes": ["손가락 배가 1번줄을 막는다 → 손가락 끝으로 세워 짚기", "2번줄 이동 중 '찍' 소리 → 이동 순간 힘을 살짝 빼기"],
-      "vars": ["리듬: 각 음을 8분음표로 두 번씩(2번줄-1번줄 번갈아) 튕기는 패턴", "드론 바꾸기: 2번줄 개방 B를 드론으로 두고 3번줄 9 → 6 → 4프렛(E-C#-B)으로 멜로디", "끝음: 마지막을 2번줄 4프렛 D#으로 끝내면 다음 코드 B로 넘어가는 긴장"]
-    },
-    {
-      "id": "L03", "name": "5-6-1 슬라이드 착지", "level": 1, "family": "A",
-      "slots": ["턴어라운드","코러스 필인"], "techs": ["슬라이드","비브라토"],
-      "meter": "4/4", "bpm": 68, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"D"},{"t":4,"n":"G"}],
-      "notes": [
-        {"t":0,"d":2,"s":2,"f":3},
-        {"t":2,"d":2,"s":2,"f":5},
-        {"t":4,"d":12,"s":2,"f":8,"tech":"sl","vib":true}
-      ],
-      "why": "D 코드 위에서 5도(D)·6도(E)로 기대감을 만들고, 코드가 G로 바뀌는 순간 루트로 미끄러져 도착합니다. 도착 시점이 코드 체인지와 정확히 맞기 때문에 단순해도 '준비된 연주'로 들립니다.",
-      "how": ["2번줄 하나만 씁니다. 3프렛은 검지, 5프렛은 약지.", "약지를 누른 채 8프렛까지 미끄러뜨리고, 도착 후 손목을 흔들어 비브라토.", "슬라이드할 때는 다시 피킹하지 않습니다."],
-      "mistakes": ["슬라이드 중 힘이 빠져 소리가 죽는다 → 누르는 힘을 끝까지 유지", "8프렛을 지나친다 → 도착 프렛을 눈으로 먼저 확인"],
-      "vars": ["리듬: 슬라이드를 반 박 일찍 시작해 코드 체인지 순간 이미 도착해 있기", "음역: 같은 선율을 1번줄 10 → 12 → 15프렛으로 한 옥타브 위", "끝음: 도착 후 한 박 뒤 1번줄 7프렛 B(3도)로 한 음 더 올리기"]
-    },
-    {
-      "id": "L04", "name": "6/8 풀오프 하강 오블리", "level": 2, "family": "A",
-      "slots": ["벌스 오블리가토"], "techs": ["풀오프","해머온","6/8"],
-      "meter": "6/8", "bpm": 52, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"G"},{"t":6,"n":"Em"}],
-      "notes": [
-        {"t":0,"d":2,"s":1,"f":7},
-        {"t":2,"d":1,"s":2,"f":10},
-        {"t":3,"d":1,"s":2,"f":8,"tech":"p"},
-        {"t":4,"d":2,"s":3,"f":9},
-        {"t":6,"d":1,"s":3,"f":7},
-        {"t":7,"d":5,"s":3,"f":9,"tech":"h","vib":true}
-      ],
-      "why": "G 위에서 3도(B) → 2도(A) → 1도(G)로 내려온 뒤, Em의 루트(E)에 안착합니다. E는 G의 6도이면서 Em의 루트라 두 코드를 자연스럽게 이어 줍니다. 6/8 특유의 흔들리는 박에 맞춰 '긴-짧-짧' 리듬을 씁니다.",
-      "how": ["검지를 7프렛에 두는 7포지션에서 손을 움직이지 않고 연주합니다.", "2번줄 10 → 8은 풀오프: 약지를 줄에서 아래로 살짝 튕기듯 떼어 8프렛 음을 울립니다.", "3번줄 7 → 9는 해머온: 약지로 망치처럼 내려찍습니다."],
-      "mistakes": ["풀오프 때 1번줄을 건드린다 → 튕기는 방향을 바닥 쪽으로 짧게", "6/8을 4/4처럼 센다 → '하나-둘-셋, 넷-다섯-여섯' 크게 두 박으로 느끼기"],
-      "vars": ["리듬: 1마디는 쉬고 2마디부터 시작(공간 남기기)", "끝음: E 대신 D(5도)에서 멈추면 G 코드가 계속될 때 잘 어울림", "꾸밈: 첫 B를 1번줄 5 → 7프렛 슬라이드로 들어가기"]
-    },
-    {
-      "id": "L05", "name": "sus4 → 3도 해결 라인", "level": 2, "family": "B",
-      "slots": ["프리코러스"], "techs": ["해머온","풀오프","긴장·해결"],
-      "meter": "4/4", "bpm": 66, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"Gsus4"},{"t":8,"n":"G"}],
-      "notes": [
-        {"t":0,"d":1,"s":2,"f":8},
-        {"t":1,"d":1,"s":2,"f":10,"tech":"h"},
-        {"t":2,"d":2,"s":1,"f":10},
-        {"t":4,"d":4,"s":1,"f":8},
-        {"t":8,"d":8,"s":1,"f":7,"tech":"p","vib":true}
-      ],
-      "why": "Gsus4의 4도(C)를 길게 끌어 긴장을 만든 뒤, 코드가 G로 풀리는 순간 3도(B)로 반음 내려옵니다. 이 'C → B' 반음 해결이 핵심입니다. 메이저 스케일의 4도를 쓰기 때문에 펜타토닉만으로는 나오지 않는 소리입니다.",
-      "how": ["검지를 7프렛에 두는 7포지션. 2번줄 8은 중지, 10은 새끼(또는 약지).", "1번줄 10은 약지, 8은 중지, 7은 검지.", "C(8프렛)를 누르는 동안 검지를 7프렛에 미리 대 두면 풀오프가 쉬워집니다."],
-      "mistakes": ["코드가 G로 바뀐 뒤에도 C를 끈다 → 해결은 코드 체인지와 동시에", "풀오프 대신 다시 피킹한다 → 해결음이 튀어서 '풀리는' 느낌이 약해짐"],
-      "vars": ["리듬: C를 한 마디 내내 끌고, 해결은 다음 마디 첫 박에 정확히", "음역: 같은 C → B를 3번줄 5 → 4프렛에서 낮게", "응용: Dsus4 → D에서는 G → F#(2번줄 8 → 7프렛)으로 같은 원리"]
-    },
-    {
-      "id": "L06", "name": "트라이어드 아르페지오 I–IV", "level": 2, "family": "C",
-      "slots": ["인트로","벌스 오블리가토"], "techs": ["아르페지오","공통음"],
-      "meter": "4/4", "bpm": 70, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"G"},{"t":8,"n":"C"}],
-      "notes": [
-        {"t":0,"d":1,"s":3,"f":7},{"t":1,"d":1,"s":2,"f":8},{"t":2,"d":1,"s":1,"f":7},{"t":3,"d":1,"s":2,"f":8},
-        {"t":4,"d":1,"s":3,"f":7},{"t":5,"d":1,"s":2,"f":8},{"t":6,"d":2,"s":1,"f":7},
-        {"t":8,"d":1,"s":3,"f":9},{"t":9,"d":1,"s":2,"f":8},{"t":10,"d":1,"s":1,"f":8},{"t":11,"d":1,"s":2,"f":8},
-        {"t":12,"d":1,"s":3,"f":9},{"t":13,"d":1,"s":2,"f":8},{"t":14,"d":2,"s":1,"f":8}
-      ],
-      "why": "G 화음(D-G-B)에서 C 화음(E-G-C)으로 갈 때, 가운데 G는 그대로 두고 위아래 음만 한 칸씩 움직입니다(공통음 + 순차 진행). 코드 구성음만 치므로 틀릴 일이 거의 없고, 딜레이를 걸면 반짝이는 인트로가 됩니다.",
-      "how": ["G: 검지로 3~1번줄 7프렛을 눕혀 짚고, 중지로 2번줄 8프렛.", "C: 검지를 8프렛으로 옮겨 2·1번줄을 눕혀 짚고, 중지로 3번줄 9프렛.", "앞 음을 떼지 말고 겹쳐 울리게 두세요. 아르페지오는 '코드를 펼쳐 놓은 것'입니다."],
-      "mistakes": ["음을 하나씩 떼서 끊어 친다 → 손 모양을 고정하고 울림을 겹치기", "피킹이 세서 딜레이가 지저분해진다 → 평소의 70% 세기로"],
-      "vars": ["리듬: 6/8로 바꿔 '아래-가운데-위-가운데-위-가운데'", "음역: 12프렛 부근에서 G = 3·2·1번줄 12·12·10, C = 12·13·12", "확장: Em는 3번줄만 9프렛으로(9·8·7), 같은 손 모양으로 G-Em-C 순환"]
-    },
-    {
-      "id": "L07", "name": "6도 더블스톱 IV–V–I", "level": 3, "family": "C",
-      "slots": ["턴어라운드","엔딩"], "techs": ["더블스톱","6도","줄 뮤트"],
-      "meter": "4/4", "bpm": 64, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"C"},{"t":4,"n":"D"},{"t":8,"n":"G"}],
-      "notes": [
-        {"t":0,"d":2,"s":3,"f":12},{"t":0,"d":2,"s":1,"f":12},
-        {"t":2,"d":2,"s":3,"f":9},{"t":2,"d":2,"s":1,"f":8},
-        {"t":4,"d":3,"s":3,"f":11},{"t":4,"d":3,"s":1,"f":10},
-        {"t":7,"d":1,"s":3,"f":9},{"t":7,"d":1,"s":1,"f":8},
-        {"t":8,"d":8,"s":3,"f":7,"vib":true},{"t":8,"d":8,"s":1,"f":7,"vib":true}
-      ],
-      "why": "3번줄과 1번줄로 6도 화음을 만들어 C → D → G를 따라갑니다. 윗음은 E-C-D-C-B, 아랫음은 G-E-F#-E-D로 움직이며 매 순간 코드 구성음을 짚고, 마지막에 G의 5도·3도로 착지합니다. 두 음만으로 코드 진행 전체가 들립니다.",
-      "how": ["피크로 3번줄, 중지로 1번줄을 동시에 튕기는 하이브리드 피킹이 가장 깔끔합니다.", "피크만 쓴다면 3번줄을 짚은 손가락 배로 2번줄을 덮어 뮤트하세요.", "모든 쌍을 같은 두 손가락(3번줄 약지, 1번줄 중지)으로 모양만 바꿔 이동합니다. 같은 프렛 쌍(12·12, 7·7)은 약지를 조금 눕혀 맞춥니다."],
-      "mistakes": ["2번줄이 같이 울린다 → 뮤트 확인 후 천천히", "쌍 사이 이동에서 소리가 끊긴다 → 각 쌍을 사진 찍듯 '정지 연습' 먼저"],
-      "vars": ["쉽게: 각 쌍을 아랫음 → 윗음으로 나눠 치면 Lv2 난이도", "음역: 4번줄+2번줄도 같은 원리의 6도(같은 프렛 = 장6도)", "끝음: 마지막을 12·12(G·E)로 바꾸면 G6 느낌의 열린 엔딩"]
-    },
-    {
-      "id": "L08", "name": "2→3 벤딩 + 펜타 하강", "level": 3, "family": "A",
-      "slots": ["코러스 필인"], "techs": ["벤딩","비브라토"],
-      "meter": "4/4", "bpm": 66, "homeKey": "G", "movable": true,
-      "chords": [{"t":0,"n":"D"},{"t":8,"n":"G"}],
-      "notes": [
-        {"t":0,"d":2,"s":3,"f":14,"tech":"b","bend":2},
-        {"t":2,"d":1,"s":2,"f":12},
-        {"t":3,"d":1,"s":2,"f":15},
-        {"t":4,"d":1,"s":1,"f":12},
-        {"t":5,"d":1,"s":2,"f":15},
-        {"t":6,"d":2,"s":2,"f":12},
-        {"t":8,"d":8,"s":3,"f":12,"vib":true}
-      ],
-      "why": "D 코드 위에서 A를 B로 온음 밀어 올리는 컨트리·워십식 벤딩으로 시작합니다. 벤딩 도착음 B는 다음 코드 G의 3도라 해결을 미리 예고하고, 이어서 G 메이저 펜타 12포지션을 따라 내려와 G 루트에 착지합니다.",
-      "how": ["3번줄 14프렛을 약지로 짚고, 중지·검지를 같은 줄 뒤에 붙여 세 손가락으로 밀어 올립니다.", "먼저 3번줄 16프렛(B) 소리를 듣고, 벤딩으로 같은 음이 나오는지 비교하며 연습하세요.", "하강 부분은 12프렛 검지, 15프렛 새끼(또는 약지)."],
-      "mistakes": ["벤딩이 반음만 올라가 음이 낮게 들린다 → 16프렛 음과 비교", "벤딩을 내릴 때 옆 줄이 울린다 → 오른손 손바닥으로 낮은 줄 뮤트"],
-      "vars": ["쉽게: 벤딩 대신 3번줄 14 → 16 슬라이드로 바꾸면 Lv2", "표현: 벤딩을 미리 걸어 둔 채 피킹하고 천천히 내리기(프리벤드·릴리즈)", "끝음: 마지막을 G 대신 2번줄 12프렛 B(3도)로 길게 비브라토"]
-    }
-  ]
-}
-</script>
-
+<script src="licks.js"></script>
 <script>
 (function(){
 "use strict";
-const DATA = JSON.parse(document.getElementById('lick-data').textContent);
+const DATA = window.LICK_DATA;
 const NOTE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 const PC = {C:0,D:2,E:4,F:5,G:7,A:9,B:11};
 const OPEN = {1:64,2:59,3:55,4:50,5:45,6:40};
 const STRNAME = {1:'e',2:'B',3:'G',4:'D',5:'A',6:'E'};
 const DEG = ['R','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'];
+const LVNAME = {1:'Lv1 공간 만들기',2:'Lv2 멜로디 채우기',3:'Lv3 필인 완성'};
 
-const state = { key:null, label:'deg', level:'all', family:'all', slot:'all', fx:true };
+const state = { key:null, label:'deg', view:'full', level:'all', family:'all', slot:'all', fx:true, q:'' };
 
 function pcOf(name){ const m=/^([A-G])([#b]?)/.exec(name); let p=PC[m[1]]; if(m[2]==='#')p++; if(m[2]==='b')p--; return (p+12)%12; }
-function trChord(name, d){
-  if(!d) return name;
-  return name.replace(/([A-G])([#b]?)/g,(all)=>NOTE[(pcOf(all)+d+12)%12]);
-}
+const isMinor = k => /m$/.test(k);
+function trChord(name, d){ return d ? name.replace(/[A-G][#b]?/g, x=>NOTE[(pcOf(x)+d)%12]) : name; }
 function chordPcs(name){
   const [main,bass] = name.split('/');
   const r = pcOf(main); const q = main.replace(/^[A-G][#b]?/,'');
@@ -371,40 +483,63 @@ function chordPcs(name){
   return {root:r,set};
 }
 function chordAt(chords,t){ let c=chords[0]; for(const x of chords){ if(x.t<=t) c=x; } return c; }
+function prevSameString(notes, n){ let p=null; for(const m of notes){ if(m.s===n.s && m.t<n.t && (!p||m.t>p.t)) p=m; } return p; }
 
+/* ---- 이조 ---- */
+function pickShift(notes, d){
+  const fr = notes.map(n=>n.f);
+  const slideFrets = notes.filter(n=>n.tech==='sl'||n.tech==='si').map(n=>n.f);
+  notes.forEach(n=>{ if(n.tech==='sl'){ const p=prevSameString(notes,n); if(p) slideFrets.push(p.f); } });
+  const mn=Math.min(...fr), mx=Math.max(...fr);
+  const ok = s => mn+s>=0 && mx+s<=20 && slideFrets.every(f=>f+s>=1);
+  const opts = [d, d-12].filter(ok);
+  opts.sort((a,b)=>((mn+a>=1?0:1)-(mn+b>=1?0:1)) || Math.abs(a)-Math.abs(b));
+  return opts.length ? opts[0] : null;
+}
 function transpose(lick, key){
-  const base = {key:lick.homeKey, shift:0, d:0, moved:false};
-  if(!key || key===lick.homeKey || !lick.movable) return base;
-  const d = (pcOf(key)-pcOf(lick.homeKey)+12)%12;
-  const fr = lick.notes.map(n=>n.f);
-  const opts = [d, d-12].filter(s=>Math.min(...fr)+s>=1 && Math.max(...fr)+s<=20);
-  if(!opts.length) return base;
-  opts.sort((a,b)=>Math.abs(a)-Math.abs(b));
-  return {key, shift:opts[0], d, moved:true};
+  const root = pcOf(lick.homeKey), minor = isMinor(lick.homeKey);
+  const base = {key:lick.homeKey, shift:0, d:0, moved:false, rootPc:root, minor};
+  if(!key || !lick.movable) return base;
+  const ref = minor ? (root+3)%12 : root;
+  const d = (pcOf(key)-ref+12)%12;
+  if(d===0) return base;
+  const s = pickShift(lick.notes, d);
+  if(s===null) return Object.assign(base,{failed:true});
+  const nr = (root+d)%12;
+  return {key: NOTE[nr]+(minor?'m':''), shift:s, d, moved:true, rootPc:nr, minor};
 }
 function build(lick){
   const tr = transpose(lick, state.key);
-  const keyPc = pcOf(tr.key);
   const notes = lick.notes.map(n=>{
     const f = n.f + tr.shift; const midi = OPEN[n.s]+f;
-    return Object.assign({}, n, {f, midi, pc:midi%12, deg:DEG[(midi-keyPc+120)%12], name:NOTE[midi%12]});
+    return Object.assign({}, n, {f, midi, pc:midi%12, deg:DEG[(midi-tr.rootPc+120)%12], name:NOTE[midi%12]});
   });
   const chords = lick.chords.map(c=>({t:c.t, n:trChord(c.n, tr.d)}));
-  // events = groups of simultaneous notes
   const times = [...new Set(notes.map(n=>n.t))].sort((a,b)=>a-b);
   const events = times.map((t,i)=>({t, idx:i, notes:notes.filter(n=>n.t===t)}));
   notes.forEach(n=>{ n.ev = times.indexOf(n.t); });
   const barLen = lick.meter==='6/8'?6:8;
   const end = Math.max(...notes.map(n=>n.t+n.d));
   const total = Math.ceil(end/barLen)*barLen;
-  return {lick, tr, keyPc, notes, chords, events, barLen, total};
+  const fine = notes.some(n=>n.t%1||n.d%1);
+  return {lick, tr, notes, chords, events, barLen, total, fine};
 }
 function role(deg){ return deg==='R'?'root':(deg==='3'||deg==='5'||deg==='♭3')?'chord':'scale'; }
-function prevSameString(notes, n){
-  let p=null; for(const m of notes){ if(m.s===n.s && m.t<n.t && (!p||m.t>p.t)) p=m; } return p;
+
+/* ---- 설명 문장 토큰 ---- */
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function fmt(str, B){
+  const {d, shift} = B.tr;
+  return esc(str).replace(/\{([nfc]):([^}]+)\}/g,(all,k,v)=>{
+    let out;
+    if(k==='n') out = NOTE[(pcOf(v)+d)%12];
+    else if(k==='c') out = trChord(v,d);
+    else { let f=+v+shift; if(f<0) f+=12; if(f>22) f-=12; out = f===0?'0(개방현)':String(f); }
+    return B.tr.moved ? `<span class="tk">${out}</span>` : out;
+  });
 }
 
-/* ---------- fretboard ---------- */
+/* ---------- 지판 ---------- */
 let svgUid=0;
 function fretboardSVG(B){
   const uid = 'a'+(svgUid++);
@@ -415,18 +550,45 @@ function fretboardSVG(B){
   const first = hasOpen?1:Math.max(1,minF-1);
   const last = Math.max(first+4, maxF+1);
   const cells = last-first+1;
-  const fw=44, gap=20, padL=hasOpen?40:22, top=16, padR=10;
+  const fw=44, gap=20, padL=hasOpen?40:22, top=30, padR=10;
   const W = padL+cells*fw+padR, H = top+5*gap+30;
   const sy = s=>top+(s-1)*gap;
   const cx = f=> f===0 ? padL-19 : padL+(f-first+0.5)*fw;
   let o = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="지판 다이어그램">`;
   o += `<defs><marker id="${uid}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fb-arrow"/></marker></defs>`;
+  o += boardSVG(first,last,padL,top,fw,gap,H,!hasOpen);
+  B.notes.forEach(n=>{
+    const y=sy(n.s);
+    if(n.tech==='si'){ const x=cx(n.f); o+=`<path class="fb-conn" d="M${x-34},${y+7} L${x-13},${y+7}" marker-end="url(#${uid})"/>`; return; }
+    if(!n.tech || n.tech==='b' || n.tech==='sw') return;
+    const p = prevSameString(B.notes,n); if(!p) return;
+    const x1=cx(p.f), x2=cx(n.f);
+    if(n.tech==='sl'){
+      const dir = x2>x1?1:-1;
+      o+=`<path class="fb-conn" d="M${x1+dir*12},${y+7} L${x2-dir*13},${y+7}" marker-end="url(#${uid})"/>`;
+    } else {
+      const mx=(x1+x2)/2;
+      o+=`<path class="fb-conn" d="M${x1},${y-11} Q${mx},${y-24} ${x2},${y-11}"/><text class="fb-conn-lab" x="${mx}" y="${y-17}">${n.tech}</text>`;
+    }
+  });
+  const pos = new Map();
+  B.notes.forEach(n=>{ const k=n.s+'-'+n.f; if(!pos.has(k)) pos.set(k,{n,evs:[]}); const e=pos.get(k).evs; if(!e.includes(n.ev)) e.push(n.ev); });
+  for(const {n,evs} of pos.values()){
+    const x=cx(n.f), y=sy(n.s);
+    const lab = state.label==='deg'?n.deg: state.label==='note'?n.name: (evs.length>3?evs.slice(0,2).map(e=>e+1).join('·')+'…':evs.map(e=>e+1).join('·'));
+    o+=`<g class="fb-note ${role(n.deg)}" data-evs="${evs.join(' ')}"><circle cx="${x}" cy="${y}" r="10.5"/><text class="${lab.length>2?'small':''}" x="${x}" y="${y+0.5}">${lab}</text></g>`;
+    const bn = B.notes.find(m=>m.s===n.s&&m.f===n.f&&m.tech==='b');
+    if(bn) o+=`<path class="fb-conn" d="M${x+13},${y-2} Q${x+20},${y-8} ${x+20},${y-20}" marker-end="url(#${uid})"/><text class="fb-conn-lab" x="${x+21}" y="${y-24}">${bn.bend===1?'½':'full'}</text>`;
+  }
+  return o+'</svg>';
+}
+function boardSVG(first,last,padL,top,fw,gap,H,names){
+  const cells=last-first+1; let o='';
   o += `<rect class="fb-board" x="${padL}" y="${top-6}" width="${cells*fw}" height="${5*gap+12}" rx="3"/>`;
-  // inlays
   for(let f=first;f<=last;f++){
     const x=padL+(f-first+0.5)*fw;
     if([3,5,7,9,15,17,19,21].includes(f)) o+=`<circle class="fb-inlay" cx="${x}" cy="${top+2.5*gap}" r="5"/>`;
-    if(f===12||f===24){ o+=`<circle class="fb-inlay" cx="${x}" cy="${top+1.5*gap}" r="5"/><circle class="fb-inlay" cx="${x}" cy="${top+3.5*gap}" r="5"/>`; }
+    if(f===12){ o+=`<circle class="fb-inlay" cx="${x}" cy="${top+1.5*gap}" r="5"/><circle class="fb-inlay" cx="${x}" cy="${top+3.5*gap}" r="5"/>`; }
     o+=`<text class="fb-num" x="${x}" y="${H-6}">${f}</text>`;
   }
   for(let k=0;k<=cells;k++){
@@ -434,101 +596,61 @@ function fretboardSVG(B){
     o += (k===0 && first===1) ? `<line class="fb-nut" x1="${x}" y1="${top-6}" x2="${x}" y2="${top+5*gap+6}"/>` : `<line class="fb-fret" x1="${x}" y1="${top-6}" x2="${x}" y2="${top+5*gap+6}"/>`;
   }
   for(let s=1;s<=6;s++){
-    o+=`<line class="fb-string" x1="${padL}" y1="${sy(s)}" x2="${padL+cells*fw}" y2="${sy(s)}" stroke-width="${0.8+s*0.28}"/>`;
-    if(!hasOpen) o+=`<text class="fb-sname" x="${padL-11}" y="${sy(s)+4}">${STRNAME[s]}</text>`;
+    const y=top+(s-1)*gap;
+    o+=`<line class="fb-string" x1="${padL}" y1="${y}" x2="${padL+cells*fw}" y2="${y}" stroke-width="${0.8+s*0.28}"/>`;
+    if(names) o+=`<text class="fb-sname" x="${padL-11}" y="${y+4}">${STRNAME[s]}</text>`;
   }
-  // connectors
-  B.notes.forEach(n=>{
-    if(!n.tech || n.tech==='b') return;
-    const p = prevSameString(B.notes,n); if(!p) return;
-    const x1=cx(p.f), x2=cx(n.f), y=sy(n.s);
-    if(n.tech==='sl'){
-      const dir = x2>x1?1:-1;
-      o+=`<path class="fb-conn" d="M${x1+dir*12},${y+7} L${x2-dir*13},${y+7}" marker-end="url(#${uid})"/>`;
-    } else {
-      const mx=(x1+x2)/2, h=13;
-      o+=`<path class="fb-conn" d="M${x1},${y-11} Q${mx},${y-11-h} ${x2},${y-11}"/>`;
-      o+=`<text class="fb-conn-lab" x="${mx}" y="${y-17}">${n.tech}</text>`;
-    }
-  });
-  // notes (aggregate by position)
-  const pos = new Map();
-  B.notes.forEach(n=>{ const k=n.s+'-'+n.f; if(!pos.has(k)) pos.set(k,{n,evs:[]}); pos.get(k).evs.push(n.ev); });
-  for(const {n,evs} of pos.values()){
-    const x=cx(n.f), y=sy(n.s);
-    let lab = state.label==='deg'?n.deg: state.label==='note'?n.name: evs.map(e=>e+1).join('·');
-    const small = lab.length>2;
-    o+=`<g class="fb-note ${role(n.deg)}" data-evs="${evs.join(' ')}"><circle cx="${x}" cy="${y}" r="10.5"/><text class="${small?'small':''}" x="${x}" y="${y+0.5}">${lab}</text></g>`;
-    if(B.notes.some(m=>m.s===n.s&&m.f===n.f&&m.tech==='b')){
-      const m=B.notes.find(m=>m.s===n.s&&m.f===n.f&&m.tech==='b');
-      o+=`<path class="fb-conn" d="M${x+13},${y-2} Q${x+20},${y-8} ${x+20},${y-20}" marker-end="url(#${uid})"/><text class="fb-conn-lab" x="${x+21}" y="${y-24}">${m.bend===1?'½':'full'}</text>`;
-    }
-  }
-  o+='</svg>';
   return o;
 }
 
 /* ---------- TAB ---------- */
 function tabSVG(B){
-  const colW=30, padL=26, padR=14, chordY=16, countY=36, tabTop=54, g=15;
+  const colW=B.fine?44:30, padL=26, padR=14, chordY=16, countY=34, tabTop=62, g=15;
   const W = padL+B.total*colW+padR, sy=s=>tabTop+(s-1)*g, durY=sy(6)+20, H=durY+14;
-  const X = t=>padL+t*colW+colW/2;
+  const X = t=>padL+t*colW+colW/2*(B.fine?0.5:1);
   let o=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="TAB 악보">`;
-  // chords
   B.chords.forEach(c=>{ o+=`<text class="tab-chord" x="${padL+c.t*colW+4}" y="${chordY}">${c.n}</text>`; });
-  // counts
   const lab = B.lick.meter==='6/8'?['1','2','3','4','5','6']:['1','&','2','&','3','&','4','&'];
   for(let t=0;t<B.total;t++){
     const i=t%B.barLen; const strong = B.lick.meter==='6/8'?(i===0||i===3):(i%2===0);
-    o+=`<text class="tab-count ${strong?'strong':''}" x="${X(t)}" y="${countY}">${lab[i]}</text>`;
+    o+=`<text class="tab-count ${strong?'strong':''}" x="${padL+t*colW+(B.fine?colW/4:colW/2)}" y="${countY}">${lab[i]}</text>`;
   }
   for(let s=1;s<=6;s++){
     o+=`<line class="tab-line" x1="${padL}" y1="${sy(s)}" x2="${padL+B.total*colW}" y2="${sy(s)}"/>`;
     o+=`<text class="tab-sname" x="${padL-12}" y="${sy(s)}">${STRNAME[s]}</text>`;
   }
-  for(let t=0;t<=B.total;t+=B.barLen){
-    const x=padL+t*colW;
-    o+=`<line class="tab-bar" x1="${x}" y1="${sy(1)}" x2="${x}" y2="${sy(6)}"/>`;
-  }
+  for(let t=0;t<=B.total;t+=B.barLen){ const x=padL+t*colW; o+=`<line class="tab-bar" x1="${x}" y1="${sy(1)}" x2="${x}" y2="${sy(6)}"/>`; }
   const xe=padL+B.total*colW;
   o+=`<line class="tab-bar" x1="${xe-4}" y1="${sy(1)}" x2="${xe-4}" y2="${sy(6)}"/><line class="tab-bar" style="stroke-width:3.5" x1="${xe}" y1="${sy(1)}" x2="${xe}" y2="${sy(6)}"/>`;
-  // technique marks
   B.notes.forEach(n=>{
-    if(!n.tech||n.tech==='b') return;
+    if(!['h','p','sl'].includes(n.tech)) return;
     const p=prevSameString(B.notes,n); if(!p) return;
     const x1=X(p.t), x2=X(n.t), y=sy(n.s);
-    if(n.tech==='sl'){
-      const up=n.f>p.f;
-      o+=`<line class="tab-slide" x1="${x1+10}" y1="${up?y+5:y-5}" x2="${x2-10}" y2="${up?y-5:y+5}"/>`;
-    } else {
-      const mx=(x1+x2)/2;
-      o+=`<path class="tab-arc" d="M${x1+3},${y-9} Q${mx},${y-19} ${x2-3},${y-9}"/><text class="tab-tech" x="${mx}" y="${y-16}">${n.tech}</text>`;
-    }
+    if(n.tech==='sl'){ const up=n.f>p.f; o+=`<line class="tab-slide" x1="${x1+10}" y1="${up?y+5:y-5}" x2="${x2-10}" y2="${up?y-5:y+5}"/>`; }
+    else { const mx=(x1+x2)/2; o+=`<path class="tab-arc" d="M${x1+3},${y-9} Q${mx},${y-19} ${x2-3},${y-9}"/><text class="tab-tech" x="${mx}" y="${y-16}">${n.tech}</text>`; }
   });
-  // events
   B.events.forEach(ev=>{
     o+=`<g class="ev" data-ev="${ev.idx}">`;
     const d=Math.max(...ev.notes.map(n=>n.d));
-    o+=`<rect class="tab-dur" x="${padL+ev.t*colW+3}" y="${durY}" width="${d*colW-6}" height="7" rx="3.5"/>`;
+    o+=`<rect class="tab-dur" x="${padL+ev.t*colW+3}" y="${durY}" width="${Math.max(6,d*colW-6)}" height="7" rx="3.5"/>`;
+    let swDone=false;
     ev.notes.forEach(n=>{
       const x=X(n.t), y=sy(n.s), txt=String(n.f), w=txt.length*8+6;
       const c=chordPcs(chordAt(B.chords,n.t).n);
       const cls = n.pc===c.root?'rt':(c.set.has(n.pc)?'ct':'');
       o+=`<rect class="tab-bg" x="${x-w/2}" y="${y-8}" width="${w}" height="16" rx="3"/>`;
       o+=`<text class="tab-num ${cls}" x="${x}" y="${y+0.5}">${txt}</text>`;
-      if(n.tech==='b'){
-        const top=sy(1)-9;
-        o+=`<path class="tab-arc" d="M${x+7},${y-6} Q${x+15},${y-6} ${x+15},${top+3}"/><text class="tab-tech" x="${x+15}" y="${top}">↑${n.bend===1?'½':'full'}</text>`;
-      }
+      if(n.tech==='b'){ const top=sy(1)-9; o+=`<path class="tab-arc" d="M${x+7},${y-6} Q${x+15},${y-6} ${x+15},${top+3}"/><text class="tab-tech" x="${x+15}" y="${top}">↑${n.bend===1?'½':'full'}</text>`; }
+      if(n.tech==='si') o+=`<line class="tab-slide" x1="${x-17}" y1="${y+5}" x2="${x-9}" y2="${y-4}"/>`;
+      if(n.tech==='sw' && !swDone){ swDone=true; const yy=sy(1)-13; o+=`<path class="tab-arc" d="M${x+8},${yy-4} L${x-8},${yy} L${x+8},${yy+4}"/>`; }
       if(n.vib) o+=`<text class="tab-tech" x="${x+(txt.length>1?17:13)}" y="${y+4}" style="font-size:13px">~</text>`;
     });
     o+='</g>';
   });
-  o+='</svg>';
-  return o;
+  return o+'</svg>';
 }
 
-/* ---------- audio ---------- */
+/* ---------- 오디오 ---------- */
 const A = {ctx:null, timers:[], nodes:[], playing:null};
 function audio(){
   if(A.ctx) return A.ctx;
@@ -549,25 +671,29 @@ function audio(){
 const hz = m=>440*Math.pow(2,(m-69)/12);
 function voice(ctx, start, end, f0, f1, glide, opt){
   const out = ctx.createGain(); out.connect(A.dry); out.connect(A.send);
-  A.send.gain.value = state.fx?1:0;
   const filt = ctx.createBiquadFilter(); filt.type='lowpass'; filt.Q.value=0.8;
-  filt.frequency.setValueAtTime(3200,start); filt.frequency.exponentialRampToValueAtTime(1100,start+0.6);
   const g = ctx.createGain(); g.connect(out); filt.connect(g);
   const peak = opt.soft?0.16:0.26;
-  g.gain.setValueAtTime(0.0001,start); g.gain.exponentialRampToValueAtTime(peak,start+0.008);
-  g.gain.exponentialRampToValueAtTime(peak*0.45,start+0.5);
-  g.gain.setValueAtTime(peak*0.45,Math.max(start+0.5,end-0.08));
-  g.gain.exponentialRampToValueAtTime(0.0001,end+0.12);
-  const oscs=[['sawtooth',0,0.5],['triangle',5,1]].map(([type,det,lv])=>{
+  if(opt.swell){
+    const rise = Math.min(1.2, (end-start)*0.6);
+    filt.frequency.setValueAtTime(1800,start);
+    g.gain.setValueAtTime(0.0001,start); g.gain.linearRampToValueAtTime(peak*0.8,start+rise);
+    g.gain.setValueAtTime(peak*0.8,Math.max(start+rise,end-0.15)); g.gain.linearRampToValueAtTime(0.0001,end+0.1);
+  } else {
+    filt.frequency.setValueAtTime(3200,start); filt.frequency.exponentialRampToValueAtTime(1100,start+0.6);
+    g.gain.setValueAtTime(0.0001,start); g.gain.exponentialRampToValueAtTime(peak,start+0.008);
+    g.gain.exponentialRampToValueAtTime(peak*0.45,start+0.5);
+    g.gain.setValueAtTime(peak*0.45,Math.max(start+0.5,end-0.08));
+    g.gain.exponentialRampToValueAtTime(0.0001,end+0.12);
+  }
+  [['sawtooth',0,0.5],['triangle',5,1]].forEach(([type,det,lv])=>{
     const o=ctx.createOscillator(); o.type=type; o.detune.value=det;
     const og=ctx.createGain(); og.gain.value=lv; o.connect(og); og.connect(filt);
     o.frequency.setValueAtTime(f0,start);
-    if(f1!==f0) o.frequency.exponentialRampToValueAtTime(f1,start+glide.at+glide.len);
-    if(glide.at>0 && f1!==f0) o.frequency.setValueAtTime(f0,start+glide.at);
+    if(f1!==f0){ if(glide.at>0) o.frequency.setValueAtTime(f0,start+glide.at); o.frequency.exponentialRampToValueAtTime(f1,start+glide.at+glide.len); }
     if(opt.vib){ const l=ctx.createOscillator(); l.frequency.value=5.2; const lg=ctx.createGain(); lg.gain.setValueAtTime(0,start); lg.gain.linearRampToValueAtTime(f1*0.006,Math.min(end,start+0.45)); l.connect(lg); lg.connect(o.frequency); l.start(start); l.stop(end+0.2); A.nodes.push(l); }
-    o.start(start); o.stop(end+0.2); A.nodes.push(o); return o;
+    o.start(start); o.stop(end+0.2); A.nodes.push(o);
   });
-  return oscs;
 }
 function click(ctx,t,strong){
   const o=ctx.createOscillator(), g=ctx.createGain(); o.frequency.value=strong?1500:1000; o.connect(g); g.connect(A.master);
@@ -577,110 +703,194 @@ function click(ctx,t,strong){
 function stopAll(){
   A.timers.forEach(clearTimeout); A.timers=[];
   A.nodes.forEach(n=>{ try{n.stop();}catch(e){} }); A.nodes=[];
-  document.querySelectorAll('.on').forEach(e=>e.classList.remove('on'));
-  if(A.playing){ const b=A.playing.querySelector('.btn'); if(b){ b.textContent='▶ 재생'; b.classList.remove('stop'); } }
+  document.querySelectorAll('.on').forEach(e=>{ if(!e.classList.contains('tabpane')) e.classList.remove('on'); });
+  if(A.playing){ const b=A.playing.querySelector('.play'); if(b){ b.textContent='▶ 재생'; b.classList.remove('stop'); } }
   A.playing=null;
 }
 function play(card, B, bpm){
   stopAll();
   const ctx=audio(); if(ctx.state==='suspended') ctx.resume();
+  A.send.gain.value = state.fx?1:0;
   const eighth = B.lick.meter==='6/8'?60/bpm/3:60/bpm/2;
-  A.delay.delayTime.value = Math.min(1.9, 0.75*2*eighth*(B.lick.meter==='6/8'?1:1));
+  A.delay.delayTime.value = Math.min(1.9, 1.5*eighth);
   const t0 = ctx.currentTime+0.12;
-  const countN = B.barLen; // one bar count-in in eighths
   const step = B.lick.meter==='6/8'?1:2;
-  for(let i=0;i<countN;i+=step) click(ctx,t0+i*eighth, i===0);
-  const s0 = t0+countN*eighth;
+  for(let i=0;i<B.barLen;i+=step) click(ctx,t0+i*eighth, i===0);
+  const s0 = t0+B.barLen*eighth;
   B.notes.forEach(n=>{
     const st=s0+n.t*eighth;
     const nxt=B.notes.filter(m=>m.s===n.s&&m.t>n.t).sort((a,b)=>a.t-b.t)[0];
     let en=st+n.d*eighth; if(nxt) en=Math.min(en,s0+nxt.t*eighth);
     let f0=hz(n.midi), f1=f0, glide={at:0,len:0.001}, soft=false;
     if(n.tech==='sl'){ const p=prevSameString(B.notes,n); if(p){ f0=hz(p.midi); glide={at:0,len:Math.min(0.14,(en-st)/2)}; soft=true; } }
+    if(n.tech==='si'){ f0=hz(n.midi-2); glide={at:0,len:Math.min(0.09,(en-st)/2)}; }
     if(n.tech==='h'||n.tech==='p') soft=true;
     if(n.tech==='b'){ f1=hz(n.midi+(n.bend||2)); glide={at:0.07,len:Math.min(0.22,(en-st)/2)}; }
-    voice(ctx,st,en,f0,f1,glide,{soft,vib:!!n.vib});
+    voice(ctx,st,en,f0,f1,glide,{soft,vib:!!n.vib,swell:n.tech==='sw'});
   });
   const endT = s0+B.total*eighth;
   B.events.forEach(ev=>{
     const on=(s0+ev.t*eighth-ctx.currentTime)*1000;
     const d=Math.max(...ev.notes.map(n=>n.d));
-    A.timers.push(setTimeout(()=>{
-      card.querySelectorAll(`.ev[data-ev="${ev.idx}"]`).forEach(e=>e.classList.add('on'));
-      card.querySelectorAll('.fb-note').forEach(e=>{ if(e.dataset.evs.split(' ').includes(String(ev.idx))) e.classList.add('on'); });
-    },on));
-    A.timers.push(setTimeout(()=>{
-      card.querySelectorAll(`.ev[data-ev="${ev.idx}"]`).forEach(e=>e.classList.remove('on'));
-      card.querySelectorAll('.fb-note').forEach(e=>{ if(e.dataset.evs.split(' ').includes(String(ev.idx))) e.classList.remove('on'); });
-    },on+d*eighth*1000-30));
+    const sel = c => { card.querySelectorAll(`.ev[data-ev="${ev.idx}"]`).forEach(e=>e.classList[c]('on')); card.querySelectorAll('.fb-note').forEach(e=>{ if(e.dataset.evs.split(' ').includes(String(ev.idx))) e.classList[c]('on'); }); };
+    A.timers.push(setTimeout(()=>sel('add'),on));
+    A.timers.push(setTimeout(()=>sel('remove'),on+d*eighth*1000-30));
   });
   A.timers.push(setTimeout(()=>stopAll(),(endT-ctx.currentTime)*1000+400));
   A.playing=card;
-  const b=card.querySelector('.btn'); b.textContent='■ 정지'; b.classList.add('stop');
+  const b=card.querySelector('.play'); b.textContent='■ 정지'; b.classList.add('stop');
 }
 
-/* ---------- UI ---------- */
-function chips(el, items, key){
-  el.innerHTML = items.map(([v,l])=>`<button class="chip" data-v="${v}" aria-pressed="${String(state[key])===String(v)}">${l}</button>`).join(' ');
+/* ---------- 릭 목록 UI ---------- */
+function chips(el, items, key, after){
+  el.innerHTML = items.map(([v,l])=>`<button class="chip" data-v="${v}" aria-pressed="${String(state[key]??'home')===String(v)}">${l}</button>`).join(' ');
   el.onclick = e=>{ const b=e.target.closest('.chip'); if(!b) return;
     let v=b.dataset.v; if(key==='key') v = v==='home'?null:v; if(key==='fx') v = v==='true';
-    state[key]=v; stopAll(); renderControls(); renderList(); };
+    state[key]=v; stopAll(); renderControls(); (after||renderList)(); };
 }
 function renderControls(){
   chips(document.getElementById('keyChips'), [['home','원래 키'],...DATA.keys.map(k=>[k,k])], 'key');
-  document.querySelectorAll('#keyChips .chip').forEach(b=>b.setAttribute('aria-pressed', String((state.key??'home')===b.dataset.v)));
-  chips(document.getElementById('labelChips'), [['deg','도수'],['note','음이름'],['order','순서']], 'label');
   chips(document.getElementById('levelChips'), [['all','전체'],['1','Lv1 공간 만들기'],['2','Lv2 멜로디 채우기'],['3','Lv3 필인 완성']], 'level');
   chips(document.getElementById('familyChips'), [['all','전체'],...Object.entries(DATA.families).map(([k,v])=>[k,v.name])], 'family');
   chips(document.getElementById('slotChips'), [['all','전체'],...DATA.slots.map(s=>[s,s])], 'slot');
-  chips(document.getElementById('fxChips'), [['true','딜레이+리버브 켜기'],['false','드라이']], 'fx');
+  chips(document.getElementById('labelChips'), [['deg','도수'],['note','음이름'],['order','순서']], 'label');
+  chips(document.getElementById('viewChips'), [['full','자세히'],['compact','간단히']], 'view');
+  chips(document.getElementById('fxChips'), [['true','딜레이+리버브'],['false','드라이']], 'fx');
 }
-const LVNAME={1:'Lv1 공간 만들기',2:'Lv2 멜로디 채우기',3:'Lv3 필인 완성'};
-function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function matches(l){
+  if(state.level!=='all' && String(l.level)!==state.level) return false;
+  if(state.family!=='all' && l.family!==state.family) return false;
+  if(state.slot!=='all' && !l.slots.includes(state.slot)) return false;
+  if(state.q){ const q=state.q.toLowerCase(); const hay=(l.id+' '+l.name+' '+l.techs.join(' ')+' '+l.slots.join(' ')).toLowerCase(); if(!hay.includes(q)) return false; }
+  return true;
+}
+function cardHTML(l){
+  const B=build(l);
+  let keyTag;
+  if(!l.movable) keyTag=`<span class="tag fixed">고정 키 · ${l.homeKey}</span>`;
+  else if(B.tr.minor){ const rel=NOTE[(B.tr.rootPc+3)%12]; keyTag=`<span class="tag key">${B.tr.key} (${rel} 키의 vi)</span>`; }
+  else keyTag=`<span class="tag key">${B.tr.key} 키${B.tr.moved?'':' (원래 키)'}</span>`;
+  let note='';
+  if(!l.movable && state.key) note=`<div class="note-fixed">${esc(l.fixedReason)} 그래서 ${state.key} 키를 선택해도 ${l.homeKey} 키로 표시합니다.</div>`;
+  else if(B.tr.failed) note=`<div class="note-fixed">이 릭은 ${state.key} 키로 옮기면 지판 범위를 벗어나 원래 키로 표시합니다.</div>`;
+  else if(B.tr.moved && B.notes.some(n=>n.f===0)) note=`<div class="note-fixed">이 키에서는 일부 음이 개방현(0프렛)이 됩니다. 손 모양이 원래와 조금 다르니 그림을 확인하세요.</div>`;
+  const prog = B.chords.map(c=>c.n).join(' → ');
+  const meterNote = l.meter==='6/8'?' (점4분음표 기준)':'';
+  return `<article class="card" id="lick-${l.id}" data-id="${l.id}">
+    <div class="card-head"><span class="no">${l.id}</span><h3>${esc(l.name)}</h3></div>
+    <div class="tags"><span class="tag lv${l.level}">${LVNAME[l.level]}</span><span class="tag">${DATA.families[l.family].name}</span>${l.slots.map(s=>`<span class="tag">${s}</span>`).join('')}${keyTag}</div>
+    <div class="meta"><b>코드</b> ${prog} · <b>박자</b> ${l.meter} · <b>기준 템포</b> ${l.bpm} BPM${meterNote} · <b>기술</b> ${l.techs.join(', ')}</div>
+    ${note}
+    <div class="viz">
+      <div class="cap">지판 (위 = 1번줄)</div>
+      <div class="scroll">${fretboardSVG(B)}</div>
+      <div class="cap">TAB · 박 · 음 길이</div>
+      <div class="scroll">${tabSVG(B)}</div>
+    </div>
+    <div class="player">
+      <button class="btn play" type="button">▶ 재생</button>
+      <label>템포 <input type="range" min="40" max="96" value="${l.bpm}"><span class="bpm">${l.bpm} BPM</span></label>
+      <span style="font-size:12.5px;color:var(--muted)">1마디 카운트 후 시작</span>
+    </div>
+    <div class="text">
+      <section class="why full"><h4>왜 어울리나</h4><p>${fmt(l.why,B)}</p></section>
+      <section><h4>이렇게 연주</h4><ul>${l.how.map(x=>`<li>${fmt(x,B)}</li>`).join('')}</ul></section>
+      <section><h4>자주 하는 실수</h4><ul>${l.mistakes.map(x=>`<li>${fmt(x,B)}</li>`).join('')}</ul></section>
+      <section class="full"><h4>변형 아이디어</h4><ul>${l.vars.map(x=>`<li>${fmt(x,B)}</li>`).join('')}</ul></section>
+    </div>
+  </article>`;
+}
 function renderList(){
   const list=document.getElementById('list');
-  const ls = DATA.licks.filter(l=>(state.level==='all'||String(l.level)===state.level)&&(state.family==='all'||l.family===state.family)&&(state.slot==='all'||l.slots.includes(state.slot)));
+  list.classList.toggle('compact', state.view==='compact');
+  const ls = DATA.licks.filter(matches);
   document.getElementById('count').textContent = `${ls.length}개 / 전체 ${DATA.licks.length}개`;
   if(!ls.length){ list.innerHTML='<div class="empty">조건에 맞는 릭이 없습니다.</div>'; return; }
-  list.innerHTML = ls.map(l=>{
-    const B=build(l);
-    const keyTag = l.movable ? `<span class="tag key">${B.tr.key} 키${B.tr.moved?'':' (원래 키)'}</span>` : `<span class="tag fixed">고정 키 · ${l.homeKey}</span>`;
-    const fixedNote = (!l.movable && state.key && state.key!==l.homeKey) ? `<div class="note-fixed">이 릭은 ${esc(l.fixedReason)} 그래서 ${state.key} 키를 선택해도 ${l.homeKey} 키로 표시합니다.</div>` : '';
-    const movedNote = B.tr.moved ? `<div class="note-fixed">그림·TAB·코드는 ${B.tr.key} 키로 이동했습니다. 아래 설명의 음 이름과 프렛 번호는 원래 키(${l.homeKey}) 기준입니다.</div>` : '';
-    const prog = B.chords.map(c=>c.n).join(' → ');
-    return `<article class="card" data-id="${l.id}">
-      <div class="card-head"><span class="no">${l.id}</span><h3>${esc(l.name)}</h3></div>
-      <div class="tags"><span class="tag lv${l.level}">${LVNAME[l.level]}</span><span class="tag">${DATA.families[l.family].name}</span>${l.slots.map(s=>`<span class="tag">${s}</span>`).join('')}${keyTag}</div>
-      <div class="meta"><b>코드</b> ${prog} · <b>박자</b> ${l.meter} · <b>기준 템포</b> ${l.bpm} BPM${l.meter==='6/8'?' (점4분음표 기준)':''} · <b>기술</b> ${l.techs.join(', ')}</div>
-      ${fixedNote}${movedNote}
-      <div class="viz">
-        <div class="cap">지판 (위 = 1번줄)</div>
-        <div class="scroll">${fretboardSVG(B)}</div>
-        <div class="cap">TAB · 박 · 음 길이</div>
-        <div class="scroll">${tabSVG(B)}</div>
-      </div>
-      <div class="player">
-        <button class="btn" type="button">▶ 재생</button>
-        <label>템포 <input type="range" min="40" max="96" value="${l.bpm}"><span class="bpm">${l.bpm} BPM</span></label>
-        <span style="font-size:12.5px;color:var(--muted)">1마디 카운트 후 시작</span>
-      </div>
-      <div class="text">
-        <section class="why full"><h4>왜 어울리나</h4><p>${esc(l.why)}</p></section>
-        <section><h4>이렇게 연주</h4><ul>${l.how.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
-        <section><h4>자주 하는 실수</h4><ul>${l.mistakes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
-        <section class="full"><h4>변형 아이디어</h4><ul>${l.vars.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
-      </div>
-    </article>`;
-  }).join('');
+  list.innerHTML = ls.map(cardHTML).join('');
   list.querySelectorAll('.card').forEach(card=>{
     const l=DATA.licks.find(x=>x.id===card.dataset.id);
     const range=card.querySelector('input[type=range]'), out=card.querySelector('.bpm');
     range.oninput=()=>{ out.textContent=range.value+' BPM'; };
-    card.querySelector('.btn').onclick=()=>{ if(A.playing===card){ stopAll(); return; } play(card, build(l), +range.value); };
+    card.querySelector('.play').onclick=()=>{ if(A.playing===card){ stopAll(); return; } play(card, build(l), +range.value); };
   });
 }
-renderControls(); renderList();
-window.__LICKS__ = {DATA, build, transpose, chordPcs};
+document.getElementById('q').addEventListener('input', e=>{ state.q=e.target.value.trim(); renderList(); });
+
+/* ---------- 탭 ---------- */
+function showTab(name){
+  stopAll();
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.tab===name)));
+  document.querySelectorAll('.tabpane').forEach(p=>p.classList.toggle('on', p.id==='tab-'+name));
+}
+document.getElementById('tabs').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; showTab(b.dataset.tab); history.replaceState(null,'','#'+b.dataset.tab); };
+document.addEventListener('click', e=>{
+  const b=e.target.closest('.lick-link'); if(!b) return;
+  const id=b.dataset.id;
+  state.level='all'; state.family='all'; state.slot='all'; state.q=''; document.getElementById('q').value='';
+  renderControls(); renderList(); showTab('licks');
+  const el=document.getElementById('lick-'+id);
+  if(el){ history.replaceState(null,'','#lick-'+id); el.scrollIntoView({behavior:'smooth',block:'start'}); el.style.outline='3px solid var(--hl)'; setTimeout(()=>{el.style.outline='';},1800); }
+});
+
+/* ---------- 스케일 지도 ---------- */
+const SM = { key:'G', scale:'mpent', box:'all' };
+const SCALES = {
+  mpent:{name:'메이저 펜타토닉', iv:[0,2,4,7,9]},
+  major:{name:'메이저 스케일', iv:[0,2,4,5,7,9,11]},
+  npent:{name:'마이너 펜타토닉 (나란한조)', iv:[0,3,5,7,10], minor:true},
+  triad:{name:'으뜸화음 (1·3·5)', iv:[0,4,7]}
+};
+function renderScaleMap(){
+  const mk=(el,items,key)=>{ el.innerHTML=items.map(([v,l])=>`<button class="chip" data-v="${v}" aria-pressed="${SM[key]===v}">${l}</button>`).join(' '); el.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; SM[key]=b.dataset.v; renderScaleMap(); }; };
+  mk(document.getElementById('smKey'), DATA.keys.map(k=>[k,k]), 'key');
+  mk(document.getElementById('smScale'), Object.entries(SCALES).map(([k,v])=>[k,v.name]), 'scale');
+  mk(document.getElementById('smBox'), [['all','지판 전체'],['1','박스 1'],['2','박스 2'],['3','박스 3'],['4','박스 4'],['5','박스 5']], 'box');
+  const sc = SCALES[SM.scale];
+  const keyPc = pcOf(SM.key);
+  const rootPc = sc.minor ? (keyPc+9)%12 : keyPc;
+  const set = new Set(sc.iv.map(i=>(rootPc+i)%12));
+  // 박스 범위: 나란한조 단조 루트의 6번줄 위치 기준
+  const m = ((keyPc+9)%12 - 4 + 12)%12;
+  const ranges = [[m,m+3],[m+2,m+5],[m+4,m+8],[m+7,m+10],[m+9,m+12]];
+  let win=null;
+  if(SM.box!=='all'){ let [a,b]=ranges[+SM.box-1]; if(a>12){a-=12;b-=12;} win=[a,b]; }
+  const first=1,last=15, fw=44, gap=20, padL=40, top=16, padR=10, H=top+5*gap+30, W=padL+(last-first+1)*fw+padR;
+  let o=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="스케일 지도">`;
+  o+=boardSVG(first,last,padL,top,fw,gap,H,false);
+  if(win){ const x1 = win[0]===0?padL-30:padL+(Math.max(win[0],1)-first)*fw; const x2=padL+(Math.min(win[1],last)-first+1)*fw; o+=`<rect class="fb-shade" x="${x1}" y="${top-10}" width="${x2-x1}" height="${5*gap+20}" rx="6"/>`; }
+  for(let s=1;s<=6;s++){
+    for(let f=0;f<=last;f++){
+      const midi=OPEN[s]+f; if(!set.has(midi%12)) continue;
+      const deg=DEG[(midi-rootPc+120)%12];
+      const x= f===0?padL-19:padL+(f-first+0.5)*fw, y=top+(s-1)*gap;
+      const dim = win && (f<win[0]||f>win[1]);
+      const lab = state.label==='note'?NOTE[midi%12]:deg;
+      o+=`<g class="fb-note ${role(deg)}${dim?' dim':''}"><circle cx="${x}" cy="${y}" r="10.5"/><text class="${lab.length>2?'small':''}" x="${x}" y="${y+0.5}">${lab}</text></g>`;
+    }
+  }
+  o+='</svg>';
+  document.getElementById('smNeck').innerHTML=o;
+  const rel = NOTE[(keyPc+9)%12]+'m';
+  document.getElementById('smNote').innerHTML = sc.minor
+    ? `${SM.key} 키의 나란한조 <b>${rel}</b> 마이너 펜타토닉입니다. 도수는 ${rel}의 루트 기준입니다. 음은 ${SM.key} 메이저 펜타와 같고 '집'만 다릅니다.`
+    : `${SM.key} 키 ${sc.name}. 도수는 ${SM.key} 기준입니다. 박스를 고르면 그 자리만 밝게 표시됩니다(박스 번호는 ${rel} 마이너 펜타 관례를 따릅니다).`;
+}
+
+/* ---------- 딜레이 계산기 ---------- */
+function calc(){
+  const bpm = Math.max(30,Math.min(200,+document.getElementById('bpmIn').value||72));
+  const q=60000/bpm;
+  const rows=[['점8분음표',q*0.75,'워십 리프의 기본(L31)'],['4분음표',q,'클린 벌스, 리드'],['8분음표',q/2,'짧은 슬랩백 느낌'],['셋잇단 4분',q*2/3,'6/8 곡에 자연스러움']];
+  document.getElementById('calcOut').innerHTML = rows.map(([n,v,d])=>`<div><span>${n}</span><b>${Math.round(v)} ms</b><span>${d}</span></div>`).join('');
+}
+document.getElementById('bpmIn').addEventListener('input', calc);
+
+/* ---------- 시작 ---------- */
+renderControls(); renderList(); renderScaleMap(); calc();
+const h=location.hash.slice(1);
+if(h.startsWith('lick-')){ const el=document.getElementById(h); if(el) setTimeout(()=>el.scrollIntoView({block:'start'}),50); }
+else if(['scales','tech','tone','road','gloss'].includes(h)) showTab(h);
+window.__LICKS__ = {DATA, build, transpose, chordPcs, fmt};
 })();
 </script>
 </body>
