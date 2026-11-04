@@ -1,0 +1,14 @@
+{
+  "name": "seoul-end",
+  "private": true,
+  "version": "0.1.0",
+  "description": "서울 끝 — 1차 테스트 빌드",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0"
+  }
+}
