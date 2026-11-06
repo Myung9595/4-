@@ -1,0 +1,675 @@
+{
+ "items": {
+  "kimbap": {
+   "name": "삼각김밥",
+   "file": "items/kimbap.png",
+   "sheet": "sheet_01",
+   "cell": 1
+  },
+  "cupRamen": {
+   "name": "컵라면",
+   "file": "items/cupRamen.png",
+   "sheet": "sheet_01",
+   "cell": 2
+  },
+  "ramen": {
+   "name": "봉지라면",
+   "file": "items/ramen.png",
+   "sheet": "sheet_01",
+   "cell": 3
+  },
+  "tuna": {
+   "name": "참치캔",
+   "file": "items/tuna.png",
+   "sheet": "sheet_01",
+   "cell": 4
+  },
+  "spam": {
+   "name": "햄 통조림",
+   "file": "items/spam.png",
+   "sheet": "sheet_01",
+   "cell": 5
+  },
+  "hetbahn": {
+   "name": "즉석밥",
+   "file": "items/hetbahn.png",
+   "sheet": "sheet_01",
+   "cell": 6
+  },
+  "chocopie": {
+   "name": "초코파이 두 개",
+   "file": "items/chocopie.png",
+   "sheet": "sheet_01",
+   "cell": 7
+  },
+  "geonppang": {
+   "name": "건빵",
+   "file": "items/geonppang.png",
+   "sheet": "sheet_01",
+   "cell": 8
+  },
+  "water500": {
+   "name": "생수 500ml",
+   "file": "items/water500.png",
+   "sheet": "sheet_01",
+   "cell": 9
+  },
+  "water2l": {
+   "name": "생수 2L",
+   "file": "items/water2l.png",
+   "sheet": "sheet_02",
+   "cell": 1
+  },
+  "tapWater": {
+   "name": "받아 둔 수돗물",
+   "file": "items/tapWater.png",
+   "sheet": "sheet_02",
+   "cell": 2
+  },
+  "cleanWater": {
+   "name": "깨끗한 물",
+   "file": "items/cleanWater.png",
+   "sheet": "sheet_02",
+   "cell": 3
+  },
+  "kimchi": {
+   "name": "김치 (반찬통)",
+   "file": "items/kimchi.png",
+   "sheet": "sheet_02",
+   "cell": 4
+  },
+  "rice": {
+   "name": "쌀 1kg",
+   "file": "items/rice.png",
+   "sheet": "sheet_02",
+   "cell": 5
+  },
+  "burner": {
+   "name": "휴대용 버너",
+   "file": "items/burner.png",
+   "sheet": "sheet_02",
+   "cell": 6
+  },
+  "butane": {
+   "name": "부탄가스",
+   "file": "items/butane.png",
+   "sheet": "sheet_02",
+   "cell": 7
+  },
+  "pot": {
+   "name": "냄비",
+   "file": "items/pot.png",
+   "sheet": "sheet_02",
+   "cell": 8
+  },
+  "boiledRamen": {
+   "name": "끓인 라면",
+   "file": "items/boiledRamen.png",
+   "sheet": "sheet_02",
+   "cell": 9
+  },
+  "raincoat": {
+   "name": "일회용 우비",
+   "file": "items/raincoat.png",
+   "sheet": "sheet_03",
+   "cell": 1
+  },
+  "mask": {
+   "name": "KF94 마스크",
+   "file": "items/mask.png",
+   "sheet": "sheet_03",
+   "cell": 2
+  },
+  "rubberGloves": {
+   "name": "고무장갑",
+   "file": "items/rubberGloves.png",
+   "sheet": "sheet_03",
+   "cell": 3
+  },
+  "boots": {
+   "name": "장화",
+   "file": "items/boots.png",
+   "sheet": "sheet_03",
+   "cell": 4
+  },
+  "dosimeter": {
+   "name": "방사선 측정기",
+   "file": "items/dosimeter.png",
+   "sheet": "sheet_03",
+   "cell": 5
+  },
+  "trashBag": {
+   "name": "종량제 봉투",
+   "file": "items/trashBag.png",
+   "sheet": "sheet_03",
+   "cell": 6
+  },
+  "ductTape": {
+   "name": "청테이프",
+   "file": "items/ductTape.png",
+   "sheet": "sheet_03",
+   "cell": 7
+  },
+  "iodine": {
+   "name": "요오드화칼륨 정",
+   "file": "items/iodine.png",
+   "sheet": "sheet_03",
+   "cell": 8
+  },
+  "hazmat": {
+   "name": "간이 방호복",
+   "file": "items/hazmat.png",
+   "sheet": "sheet_03",
+   "cell": 9
+  },
+  "flashlight": {
+   "name": "손전등",
+   "file": "items/flashlight.png",
+   "sheet": "sheet_04",
+   "cell": 1
+  },
+  "battery": {
+   "name": "건전지 AA",
+   "file": "items/battery.png",
+   "sheet": "sheet_04",
+   "cell": 2
+  },
+  "powerbank": {
+   "name": "보조배터리",
+   "file": "items/powerbank.png",
+   "sheet": "sheet_04",
+   "cell": 3
+  },
+  "lighter": {
+   "name": "라이터",
+   "file": "items/lighter.png",
+   "sheet": "sheet_04",
+   "cell": 4
+  },
+  "candle": {
+   "name": "양초",
+   "file": "items/candle.png",
+   "sheet": "sheet_04",
+   "cell": 5
+  },
+  "cutter": {
+   "name": "커터칼",
+   "file": "items/cutter.png",
+   "sheet": "sheet_04",
+   "cell": 6
+  },
+  "crowbar": {
+   "name": "빠루 (쇠지렛대)",
+   "file": "items/crowbar.png",
+   "sheet": "sheet_04",
+   "cell": 7
+  },
+  "rope": {
+   "name": "노끈",
+   "file": "items/rope.png",
+   "sheet": "sheet_04",
+   "cell": 8
+  },
+  "radio": {
+   "name": "휴대용 라디오",
+   "file": "items/radio.png",
+   "sheet": "sheet_04",
+   "cell": 9
+  },
+  "cloth": {
+   "name": "천 조각",
+   "file": "items/cloth.png",
+   "sheet": "sheet_05",
+   "cell": 1
+  },
+  "charcoal": {
+   "name": "숯",
+   "file": "items/charcoal.png",
+   "sheet": "sheet_05",
+   "cell": 2
+  },
+  "sand": {
+   "name": "모래",
+   "file": "items/sand.png",
+   "sheet": "sheet_05",
+   "cell": 3
+  },
+  "emptyBottle": {
+   "name": "빈 페트병",
+   "file": "items/emptyBottle.png",
+   "sheet": "sheet_05",
+   "cell": 4
+  },
+  "emptyCan": {
+   "name": "빈 캔",
+   "file": "items/emptyCan.png",
+   "sheet": "sheet_05",
+   "cell": 5
+  },
+  "cardboard": {
+   "name": "택배 상자",
+   "file": "items/cardboard.png",
+   "sheet": "sheet_05",
+   "cell": 6
+  },
+  "bubbleWrap": {
+   "name": "뽁뽁이 (에어캡)",
+   "file": "items/bubbleWrap.png",
+   "sheet": "sheet_05",
+   "cell": 7
+  },
+  "aluminumMat": {
+   "name": "은박 돗자리",
+   "file": "items/aluminumMat.png",
+   "sheet": "sheet_05",
+   "cell": 8
+  },
+  "flyer": {
+   "name": "배달 전단지",
+   "file": "items/flyer.png",
+   "sheet": "sheet_05",
+   "cell": 9
+  },
+  "padding": {
+   "name": "롱패딩",
+   "file": "items/padding.png",
+   "sheet": "sheet_06",
+   "cell": 1
+  },
+  "blanket": {
+   "name": "담요",
+   "file": "items/blanket.png",
+   "sheet": "sheet_06",
+   "cell": 2
+  },
+  "handwarmer": {
+   "name": "핫팩",
+   "file": "items/handwarmer.png",
+   "sheet": "sheet_06",
+   "cell": 3
+  },
+  "workGloves": {
+   "name": "목장갑",
+   "file": "items/workGloves.png",
+   "sheet": "sheet_06",
+   "cell": 4
+  },
+  "photo": {
+   "name": "형제 사진",
+   "file": "items/photo.png",
+   "sheet": "sheet_06",
+   "cell": 5
+  },
+  "earphones": {
+   "name": "도준의 이어폰",
+   "file": "items/earphones.png",
+   "sheet": "sheet_06",
+   "cell": 6
+  },
+  "letter": {
+   "name": "훈련소 편지",
+   "file": "items/letter.png",
+   "sheet": "sheet_06",
+   "cell": 7
+  },
+  "storeKey": {
+   "name": "가게 열쇠",
+   "file": "items/storeKey.png",
+   "sheet": "sheet_06",
+   "cell": 8
+  },
+  "grandmaPhoto": {
+   "name": "일곱 살 동생 사진",
+   "file": "items/grandmaPhoto.png",
+   "sheet": "sheet_06",
+   "cell": 9
+  },
+  "phone": {
+   "name": "휴대폰",
+   "file": "items/phone.png",
+   "sheet": "sheet_07",
+   "cell": 1
+  },
+  "guardLog": {
+   "name": "경비 근무일지",
+   "file": "items/guardLog.png",
+   "sheet": "sheet_07",
+   "cell": 2
+  },
+  "drawing": {
+   "name": "하윤의 그림",
+   "file": "items/drawing.png",
+   "sheet": "sheet_07",
+   "cell": 3
+  },
+  "fridgeNote": {
+   "name": "도준의 쪽지",
+   "file": "items/fridgeNote.png",
+   "sheet": "sheet_07",
+   "cell": 4
+  },
+  "medPouch": {
+   "name": "할머니의 약봉지",
+   "file": "items/medPouch.png",
+   "sheet": "sheet_07",
+   "cell": 5
+  },
+  "baton": {
+   "name": "경비원의 삼단봉",
+   "file": "items/baton.png",
+   "sheet": "sheet_07",
+   "cell": 6
+  },
+  "fireExt": {
+   "name": "소화기",
+   "file": "items/fireExt.png",
+   "sheet": "sheet_07",
+   "cell": 7
+  },
+  "tapedPipe": {
+   "name": "테이프 감은 쇠파이프",
+   "file": "items/tapedPipe.png",
+   "sheet": "sheet_07",
+   "cell": 8
+  },
+  "medkit": {
+   "name": "상비약 키트",
+   "file": "items/medkit.png",
+   "sheet": "sheet_07",
+   "cell": 9
+  },
+  "budae": {
+   "name": "부대찌개",
+   "file": "items/budae.png",
+   "sheet": "sheet_08",
+   "cell": 1
+  },
+  "kimchiRice": {
+   "name": "김치볶음밥",
+   "file": "items/kimchiRice.png",
+   "sheet": "sheet_08",
+   "cell": 2
+  },
+  "jumeokbap": {
+   "name": "참치마요 주먹밥",
+   "file": "items/jumeokbap.png",
+   "sheet": "sheet_08",
+   "cell": 3
+  },
+  "hotCoffee": {
+   "name": "따뜻한 믹스커피",
+   "file": "items/hotCoffee.png",
+   "sheet": "sheet_08",
+   "cell": 4
+  },
+  "cookedRice": {
+   "name": "냄비밥",
+   "file": "items/cookedRice.png",
+   "sheet": "sheet_08",
+   "cell": 5
+  },
+  "gim": {
+   "name": "조미김",
+   "file": "items/gim.png",
+   "sheet": "sheet_08",
+   "cell": 6
+  },
+  "egg": {
+   "name": "달걀",
+   "file": "items/egg.png",
+   "sheet": "sheet_08",
+   "cell": 7
+  },
+  "peach": {
+   "name": "황도 통조림",
+   "file": "items/peach.png",
+   "sheet": "sheet_08",
+   "cell": 8
+  },
+  "mixCoffee": {
+   "name": "믹스커피",
+   "file": "items/mixCoffee.png",
+   "sheet": "sheet_08",
+   "cell": 9
+  },
+  "painkiller": {
+   "name": "진통제",
+   "file": "items/painkiller.png",
+   "sheet": "sheet_09",
+   "cell": 1
+  },
+  "bandage": {
+   "name": "붕대",
+   "file": "items/bandage.png",
+   "sheet": "sheet_09",
+   "cell": 2
+  },
+  "bandaid": {
+   "name": "일회용 밴드",
+   "file": "items/bandaid.png",
+   "sheet": "sheet_09",
+   "cell": 3
+  },
+  "ointment": {
+   "name": "상처 연고",
+   "file": "items/ointment.png",
+   "sheet": "sheet_09",
+   "cell": 4
+  },
+  "coldMed": {
+   "name": "감기약",
+   "file": "items/coldMed.png",
+   "sheet": "sheet_09",
+   "cell": 5
+  },
+  "pad": {
+   "name": "생리대",
+   "file": "items/pad.png",
+   "sheet": "sheet_09",
+   "cell": 6
+  },
+  "alcohol": {
+   "name": "소독용 에탄올",
+   "file": "items/alcohol.png",
+   "sheet": "sheet_09",
+   "cell": 7
+  },
+  "pas": {
+   "name": "파스",
+   "file": "items/pas.png",
+   "sheet": "sheet_09",
+   "cell": 8
+  },
+  "thermometer": {
+   "name": "체온계",
+   "file": "items/thermometer.png",
+   "sheet": "sheet_09",
+   "cell": 9
+  },
+  "headlamp": {
+   "name": "헤드랜턴",
+   "file": "items/headlamp.png",
+   "sheet": "sheet_10",
+   "cell": 1
+  },
+  "matches": {
+   "name": "성냥",
+   "file": "items/matches.png",
+   "sheet": "sheet_10",
+   "cell": 2
+  },
+  "multitool": {
+   "name": "멀티툴",
+   "file": "items/multitool.png",
+   "sheet": "sheet_10",
+   "cell": 3
+  },
+  "hammer": {
+   "name": "망치",
+   "file": "items/hammer.png",
+   "sheet": "sheet_10",
+   "cell": 4
+  },
+  "screwdriver": {
+   "name": "드라이버",
+   "file": "items/screwdriver.png",
+   "sheet": "sheet_10",
+   "cell": 5
+  },
+  "pliers": {
+   "name": "펜치",
+   "file": "items/pliers.png",
+   "sheet": "sheet_10",
+   "cell": 6
+  },
+  "hanger": {
+   "name": "철사 옷걸이",
+   "file": "items/hanger.png",
+   "sheet": "sheet_10",
+   "cell": 7
+  },
+  "walkie": {
+   "name": "무전기",
+   "file": "items/walkie.png",
+   "sheet": "sheet_10",
+   "cell": 8
+  },
+  "alarmClock": {
+   "name": "탁상 알람시계",
+   "file": "items/alarmClock.png",
+   "sheet": "sheet_10",
+   "cell": 9
+  },
+  "tinfoil": {
+   "name": "쿠킹호일",
+   "file": "items/tinfoil.png",
+   "sheet": "sheet_11",
+   "cell": 1
+  },
+  "pipe": {
+   "name": "쇠파이프",
+   "file": "items/pipe.png",
+   "sheet": "sheet_11",
+   "cell": 2
+  },
+  "wood": {
+   "name": "각목",
+   "file": "items/wood.png",
+   "sheet": "sheet_11",
+   "cell": 3
+  },
+  "nails": {
+   "name": "못",
+   "file": "items/nails.png",
+   "sheet": "sheet_11",
+   "cell": 4
+  },
+  "wire": {
+   "name": "전선",
+   "file": "items/wire.png",
+   "sheet": "sheet_11",
+   "cell": 5
+  },
+  "rubberBand": {
+   "name": "고무줄",
+   "file": "items/rubberBand.png",
+   "sheet": "sheet_11",
+   "cell": 6
+  },
+  "bat": {
+   "name": "알루미늄 야구방망이",
+   "file": "items/bat.png",
+   "sheet": "sheet_11",
+   "cell": 7
+  },
+  "golfClub": {
+   "name": "골프채",
+   "file": "items/golfClub.png",
+   "sheet": "sheet_11",
+   "cell": 8
+  },
+  "hatchet": {
+   "name": "캠핑 손도끼",
+   "file": "items/hatchet.png",
+   "sheet": "sheet_11",
+   "cell": 9
+  },
+  "hikingPack": {
+   "name": "등산 배낭",
+   "file": "items/hikingPack.png",
+   "sheet": "sheet_12",
+   "cell": 1
+  },
+  "suitcase": {
+   "name": "바퀴 캐리어",
+   "file": "items/suitcase.png",
+   "sheet": "sheet_12",
+   "cell": 2
+  },
+  "cart": {
+   "name": "쇼핑카트",
+   "file": "items/cart.png",
+   "sheet": "sheet_12",
+   "cell": 3
+  },
+  "cigarettes": {
+   "name": "담배 한 보루",
+   "file": "items/cigarettes.png",
+   "sheet": "sheet_12",
+   "cell": 4
+  },
+  "cash": {
+   "name": "현금",
+   "file": "items/cash.png",
+   "sheet": "sheet_12",
+   "cell": 5
+  },
+  "goldRing": {
+   "name": "돌반지",
+   "file": "items/goldRing.png",
+   "sheet": "sheet_12",
+   "cell": 6
+  },
+  "diesel": {
+   "name": "경유 20L 말통",
+   "file": "items/diesel.png",
+   "sheet": "sheet_12",
+   "cell": 7
+  },
+  "winchHandle": {
+   "name": "윈치 핸들",
+   "file": "items/winchHandle.png",
+   "sheet": "sheet_12",
+   "cell": 8
+  },
+  "pass": {
+   "name": "검문소 통행증",
+   "file": "items/pass.png",
+   "sheet": "sheet_12",
+   "cell": 9
+  }
+ },
+ "news": {
+  "news_01_studio": {
+   "file": "news/news_01_studio.png",
+   "size": [
+    344,
+    192
+   ]
+  },
+  "news_02_breaking": {
+   "file": "news/news_02_breaking.png",
+   "size": [
+    344,
+    192
+   ]
+  },
+  "news_03_map": {
+   "file": "news/news_03_map.png",
+   "size": [
+    344,
+    192
+   ]
+  }
+ }
+}
