@@ -1,10 +1,11 @@
 // 게임 루프: 씬 관리, 이동·충돌, 상호작용, 렌더링·조명
-import { TILE, Input, Sfx, clamp, lerp, wait } from './engine.js';
+import { TILE, Input, Sfx, Voice, clamp, lerp, wait } from './engine.js';
+import { loadAssets } from './assets.js';
 import { MAPS, renderMap, solidAt } from './world.js';
 import { UI } from './ui.js';
 import { state, passTime, addStat, has, removeItem, hasSave } from './state.js';
 import { ITEMS } from './items.js';
-import { SCENES, startNewGame, continueGame, dieScript } from './story.js';
+import { SCENES, startNewGame, continueGame, dieScript, letterScript } from './story.js';
 
 const PLAYER_R = 9;
 
@@ -15,6 +16,9 @@ class Game {
     this.lc = document.createElement('canvas');
     this.lctx = this.lc.getContext('2d');
     this.sfx = new Sfx();
+    this.voice = new Voice(this.sfx);
+    this.adapt = 1;
+    try { window.speechSynthesis && window.speechSynthesis.getVoices(); } catch (e) { /* noop */ }
     this.input = new Input();
     this.ui = new UI(this);
     this.player = { x: 0, y: 0, dir: Math.PI / 2, moving: false, stepT: 0, walkT: 0, visible: true };
@@ -42,11 +46,13 @@ class Game {
   // ───────── 화면 크기 ─────────
   resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.dpr = dpr;
     const w = window.innerWidth, h = window.innerHeight;
     this.cv.width = Math.round(w * dpr);
     this.cv.height = Math.round(h * dpr);
-    this.lc.width = this.cv.width;
-    this.lc.height = this.cv.height;
+    // 조명은 절반 해상도로 그리고 늘려서 그린다: 가장자리가 자연스럽게 번지고 빠르다
+    this.lc.width = Math.max(1, Math.round(this.cv.width / 2));
+    this.lc.height = Math.max(1, Math.round(this.cv.height / 2));
     const zoom = clamp(Math.min(w, h) / (10.5 * TILE), 1, 2.4);
     this.ws = zoom * dpr; // 캔버스 픽셀 / 월드 픽셀
   }
@@ -156,12 +162,13 @@ class Game {
       const def = SCENES[id];
       const scene = {
         id, def, map: MAPS[def.map || id], power: false, ambient: 0.9, tint: def.tint || [6, 8, 12],
-        labels: [], entities: [], triggers: [], lights: [],
+        labels: [], entities: [], triggers: [], lights: [], particles: [],
       };
       def.setup(scene, this);
       scene.mapCanvas = renderMap(scene);
       this.scene = scene;
       state.scene = id;
+      this.adapt = scene.ambient > 0.8 ? 0.25 : 1;
       const p = this.player;
       p.x = (spawn.tx ?? 1) * TILE + TILE / 2;
       p.y = (spawn.ty ?? 1) * TILE + TILE / 2;
@@ -210,12 +217,13 @@ class Game {
       if (state.charges[id] <= 0) { delete state.charges[id]; removeItem(id); }
     } else removeItem(id);
     this.sfx.pickup();
+    if (it.special === 'letter') { this.ui.closeModal(); this.run(letterScript); this.ui.updateHUD(); return; }
     toast(it.useText || `${it.name}을(를) 썼다.`);
     this.ui.updateHUD();
   }
 
   toggleLight() {
-    if (this.lightMode) { this.lightMode = null; this.sfx.ui(); this.ui.updateHUD(); return; }
+    if (this.lightMode) { this.lightMode = null; this.adapt = Math.min(this.adapt, 0.3); this.sfx.ui(); this.ui.updateHUD(); return; }
     if (has('flashlight')) {
       if (state.flashPower <= 0 && has('battery')) { removeItem('battery'); state.flashPower = 100; this.ui.toast('건전지를 갈아 끼웠다.'); }
       if (state.flashPower > 0) { this.lightMode = 'flash'; this.sfx.ui(); this.ui.updateHUD(); return; }
@@ -378,6 +386,29 @@ class Game {
       }
     }
 
+    // 암순응: 어둠에 들어가면 몇 초에 걸쳐 눈이 익는다
+    this.adapt = Math.min(1, this.adapt + dt / 7);
+
+    // 입자
+    for (const q of s.particles) {
+      q.x += q.vx * dt; q.y += q.vy * dt; q.life -= dt;
+      if (q.type === 'shard') { q.vx *= 0.93; q.vy *= 0.93; }
+      if (q.type === 'bird') { q.vx *= 1.01; q.vy *= 1.01; q.flap = (q.flap || 0) + dt * 18; }
+    }
+    s.particles = s.particles.filter((q) => q.life > 0);
+
+    // 머리 위 말풍선: 가까이 지나가면 혼잣말을 한다
+    if (free) {
+      for (const e of s.entities) {
+        if (!e.barks || e.visible === false || e.barkUntil > this.now || (e.barkReady || 0) > this.now) continue;
+        if (Math.hypot(e.x - p.x, e.y - p.y) < 96) {
+          e.barkText = e.barks[(e.barkN = ((e.barkN ?? -1) + 1)) % e.barks.length];
+          e.barkUntil = this.now + 3.8;
+          e.barkReady = this.now + 22;
+        }
+      }
+    }
+
     if (s.def.update) s.def.update(this, dt, free);
 
     // 쓰러짐
@@ -431,6 +462,8 @@ class Game {
       ctx.strokeRect(n.tx * TILE + 1, n.ty * TILE + 1, n.tw * TILE - 2, n.th * TILE - 2);
     }
 
+    if (s.def.drawUnder) s.def.drawUnder(ctx, this);
+
     // 사람들 (y 정렬)
     const people = s.entities.filter((e) => e.kind === 'npc' && e.visible !== false);
     const list = [...people.map((e) => ({ e, y: e.y })), { e: null, y: this.player.y }].sort((a, b) => a.y - b.y);
@@ -438,12 +471,15 @@ class Game {
       if (it.e) this.drawPerson(ctx, it.e, false);
       else if (this.player.visible) this.drawPerson(ctx, this.player, true);
     }
+    this.drawParticles(ctx, false);
     if (s.def.drawOver) s.def.drawOver(ctx, this);
 
     this.renderLighting(cx, cy);
 
-    // 퀘스트 표시는 조명 위에 그려서 어둠 속에서도 보이게
+    // 조명 위에 그리는 것: 유리 반짝임, 퀘스트 표시, 말풍선
     ctx.setTransform(ws, 0, 0, ws, -cx * ws, -cy * ws);
+    this.drawParticles(ctx, true);
+    if (s.def.drawTop) s.def.drawTop(ctx, this);
     for (const e of people) {
       if (e.mark && e.mark()) {
         const y = e.y - 26 + Math.sin(this.now * 3) * 2;
@@ -452,7 +488,52 @@ class Game {
         ctx.moveTo(e.x, y - 5); ctx.lineTo(e.x + 4, y); ctx.lineTo(e.x, y + 5); ctx.lineTo(e.x - 4, y);
         ctx.fill();
       }
+      if (e.barkUntil > this.now && e.barkText && !this.ui.dialogOpen) this.drawBubble(ctx, e.x, e.y - 22, e.barkText, Math.min(1, (e.barkUntil - this.now) * 2));
     }
+  }
+
+  drawParticles(ctx, top) {
+    for (const q of this.scene.particles) {
+      const a = Math.min(1, q.life / (q.fade || 0.6));
+      if (q.type === 'bird' && !top) {
+        const w = Math.sin(q.flap || 0) * 3;
+        ctx.strokeStyle = `rgba(30,30,34,${a})`;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(q.x - 5, q.y - w); ctx.lineTo(q.x, q.y); ctx.lineTo(q.x + 5, q.y - w); ctx.stroke();
+      } else if (q.type === 'shard') {
+        ctx.fillStyle = top ? `rgba(220,240,255,${a * 0.55})` : `rgba(150,180,200,${a})`;
+        ctx.fillRect(q.x, q.y, q.size, q.size);
+      } else if (q.type === 'dust' && !top) {
+        ctx.fillStyle = `rgba(190,185,170,${a * 0.5})`;
+        ctx.fillRect(q.x, q.y, q.size, q.size);
+      }
+    }
+  }
+
+  drawBubble(ctx, x, y, text, alpha) {
+    const fs = 12.5 / (this.ws / this.dpr); // 화면에서 12.5px 정도
+    ctx.font = `500 ${fs}px "Noto Sans KR", "Apple SD Gothic Neo", sans-serif`;
+    const maxW = fs * 13;
+    const lines = [];
+    let cur = '';
+    for (const ch of text) {
+      if (ctx.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch.trim() ? ch : ''; } else cur += ch;
+    }
+    if (cur) lines.push(cur);
+    const w = Math.max(...lines.map((l) => ctx.measureText(l).width)) + fs * 1.2;
+    const h = lines.length * fs * 1.35 + fs * 0.8;
+    const bx = x - w / 2, by = y - h;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(18,20,24,.9)';
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(bx, by, w, h, fs * 0.5); else ctx.rect(bx, by, w, h);
+    ctx.moveTo(x - fs * 0.4, by + h); ctx.lineTo(x, by + h + fs * 0.5); ctx.lineTo(x + fs * 0.4, by + h);
+    ctx.fill();
+    ctx.fillStyle = '#ece8df';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    lines.forEach((l, i) => ctx.fillText(l, x, by + fs * 0.45 + i * fs * 1.35));
+    ctx.globalAlpha = 1;
   }
 
   drawPerson(ctx, e, isPlayer) {
@@ -484,24 +565,75 @@ class Game {
     const s = this.scene, p = this.player;
     const out = [...s.lights];
     for (const e of s.entities) {
-      if (e.light && e.visible !== false) out.push({ ...e.light, x: e.x ?? (e.tx + e.tw / 2) * TILE, y: e.y ?? (e.ty + e.th / 2) * TILE });
+      if (e.light && e.visible !== false) out.push({ ...e.light, dyn: true, x: e.x ?? (e.tx + e.tw / 2) * TILE, y: e.y ?? (e.ty + e.th / 2) * TILE });
     }
-    // 도일의 "야간 알바" 시야: 어둠 속에서도 주변이 조금 보인다
-    out.push({ x: p.x, y: p.y, r: s.def.visionR || 92, i: 0.74 });
+    // 도일의 "야간 알바" 시야: 어둠에 눈이 익을수록 넓어진다
+    const ad = this.adapt;
+    out.push({ x: p.x, y: p.y, r: (s.def.visionR || 92) * (0.62 + 0.38 * ad), i: 0.46 + 0.3 * ad, dyn: true });
     if (this.lightMode === 'flash') {
       const f = Math.min(1, state.flashPower / 25 + 0.35);
-      out.push({ x: p.x, y: p.y, r: 290, i: 0.97 * f, cone: true, angle: p.dir, spread: 0.46, color: '#fff3d6', glow: 0.1 });
-      out.push({ x: p.x + Math.cos(p.dir) * 10, y: p.y + Math.sin(p.dir) * 10, r: 46, i: 0.6 * f });
+      // 부드러운 가장자리: 넓고 옅은 원뿔 위에 좁고 밝은 원뿔
+      out.push({ x: p.x, y: p.y, r: 250, i: 0.34 * f, cone: true, angle: p.dir, spread: 0.7, dyn: true });
+      out.push({ x: p.x, y: p.y, r: 290, i: 0.9 * f, cone: true, angle: p.dir, spread: 0.4, color: '#fff3d6', glow: 0.09, dyn: true });
+      out.push({ x: p.x + Math.cos(p.dir) * 10, y: p.y + Math.sin(p.dir) * 10, r: 50, i: 0.55 * f, dyn: true });
     } else if (this.lightMode === 'phone') {
-      out.push({ x: p.x, y: p.y, r: 150, i: 0.86, color: '#cfe1ff', glow: 0.08 });
+      out.push({ x: p.x, y: p.y, r: 150, i: 0.82, color: '#cfe1ff', glow: 0.08, dyn: true });
     }
     return out;
+  }
+
+  // 빛을 막는 타일 (벽, 건물, 기둥, 철문). 진열대나 차는 낮아서 빛이 넘어간다
+  blocksLight(tx, ty) {
+    const row = this.scene.map.rows[ty];
+    if (!row) return true;
+    const ch = row[tx];
+    return ch === undefined || LIGHT_BLOCK.has(ch);
+  }
+
+  castRay(x, y, dx, dy, r) {
+    const step = 6;
+    for (let d = step; d < r; d += step) {
+      if (this.blocksLight(Math.floor((x + dx * d) / TILE), Math.floor((y + dy * d) / TILE))) return d + 6; // 벽면까지는 비춘다
+    }
+    return r;
+  }
+
+  // 벽에 가려진 부분을 뺀 빛의 모양 (다각형)
+  lightPoly(l) {
+    if (l.noOcc || this.blocksLight(Math.floor(l.x / TILE), Math.floor(l.y / TILE))) return null;
+    if (!l.dyn && l._poly && l._px === l.x && l._py === l.y) return l._poly;
+    const rays = l.cone ? 40 : 90;
+    const a0 = l.cone ? l.angle - l.spread : 0;
+    const a1 = l.cone ? l.angle + l.spread : Math.PI * 2;
+    const pts = l.cone ? [l.x, l.y] : [];
+    for (let i = 0; i <= rays; i++) {
+      const a = a0 + ((a1 - a0) * i) / rays;
+      const dx = Math.cos(a), dy = Math.sin(a);
+      const d = this.castRay(l.x, l.y, dx, dy, l.r);
+      pts.push(l.x + dx * d, l.y + dy * d);
+    }
+    if (!l.dyn) { l._poly = pts; l._px = l.x; l._py = l.y; }
+    return pts;
+  }
+
+  pathLight(C, l, poly) {
+    C.beginPath();
+    if (poly) {
+      C.moveTo(poly[0], poly[1]);
+      for (let i = 2; i < poly.length; i += 2) C.lineTo(poly[i], poly[i + 1]);
+      C.closePath();
+    } else if (l.cone) {
+      C.moveTo(l.x, l.y);
+      C.arc(l.x, l.y, l.r, l.angle - l.spread, l.angle + l.spread);
+      C.closePath();
+    } else C.arc(l.x, l.y, l.r, 0, Math.PI * 2);
   }
 
   renderLighting(cx, cy) {
     const s = this.scene;
     if (s.ambient <= 0.01) return;
-    const L = this.lctx, ws = this.ws;
+    const L = this.lctx;
+    const lws = this.ws * (this.lc.width / this.cv.width);
     L.setTransform(1, 0, 0, 1, 0, 0);
     L.globalCompositeOperation = 'source-over';
     L.clearRect(0, 0, this.lc.width, this.lc.height);
@@ -509,45 +641,44 @@ class Game {
     L.fillStyle = `rgba(${r},${g},${b},${s.ambient})`;
     L.fillRect(0, 0, this.lc.width, this.lc.height);
     L.globalCompositeOperation = 'destination-out';
-    L.setTransform(ws, 0, 0, ws, -cx * ws, -cy * ws);
+    L.setTransform(lws, 0, 0, lws, -cx * lws, -cy * lws);
     const lights = this.collectLights();
-    for (const l of lights) {
+    const polys = lights.map((l) => this.lightPoly(l));
+    lights.forEach((l, k) => {
       let i = l.i;
       if (l.flicker) i *= 1 - Math.random() * l.flicker;
       const grd = L.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r);
       grd.addColorStop(0, `rgba(0,0,0,${i})`);
-      grd.addColorStop(0.45, `rgba(0,0,0,${i * 0.65})`);
+      grd.addColorStop(0.4, `rgba(0,0,0,${i * 0.7})`);
+      grd.addColorStop(0.75, `rgba(0,0,0,${i * 0.25})`);
       grd.addColorStop(1, 'rgba(0,0,0,0)');
       L.fillStyle = grd;
-      L.beginPath();
-      if (l.cone) {
-        L.moveTo(l.x, l.y);
-        L.arc(l.x, l.y, l.r, l.angle - l.spread, l.angle + l.spread);
-        L.closePath();
-      } else L.arc(l.x, l.y, l.r, 0, Math.PI * 2);
+      this.pathLight(L, l, polys[k]);
       L.fill();
-    }
+    });
     const ctx = this.ctx;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.drawImage(this.lc, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(this.lc, 0, 0, this.cv.width, this.cv.height);
     // 색이 있는 빛은 살짝 물들인다
     ctx.globalCompositeOperation = 'lighter';
+    const ws = this.ws;
     ctx.setTransform(ws, 0, 0, ws, -cx * ws, -cy * ws);
-    for (const l of lights) {
-      if (!l.color) continue;
+    lights.forEach((l, k) => {
+      if (!l.color) return;
       const a = l.glow ?? 0.16;
       const grd = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r);
       grd.addColorStop(0, hexA(l.color, a));
       grd.addColorStop(1, hexA(l.color, 0));
       ctx.fillStyle = grd;
-      ctx.beginPath();
-      if (l.cone) { ctx.moveTo(l.x, l.y); ctx.arc(l.x, l.y, l.r, l.angle - l.spread, l.angle + l.spread); ctx.closePath(); }
-      else ctx.arc(l.x, l.y, l.r, 0, Math.PI * 2);
+      this.pathLight(ctx, l, polys[k]);
       ctx.fill();
-    }
+    });
     ctx.globalCompositeOperation = 'source-over';
   }
 }
+
+const LIGHT_BLOCK = new Set(['#', 'B', 'M', 'K', 'P', 'E', 'd']);
 
 function hexA(hex, a) {
   const n = parseInt(hex.slice(1), 16);
@@ -558,7 +689,9 @@ function hexA(hex, a) {
 async function boot() {
   const game = new Game();
   window.__game = game; // 디버그용
+  window.__state = (await import('./state.js')).state;
   try { await Promise.race([document.fonts.ready, wait(2500)]); } catch (e) { /* noop */ }
+  await loadAssets();
   const choice = await game.ui.title(hasSave());
   game.sfx.init();
   game.showTouch(true);

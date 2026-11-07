@@ -21,6 +21,8 @@ function freshState() {
     battery: 64,
     flashPower: 0,
     alerts: [],
+    chat: [],
+    notes: [],
     unsent: [],
     objective: '',
     checkpoint: null,

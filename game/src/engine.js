@@ -287,4 +287,111 @@ export class Sfx {
     this.bus.gain.setValueAtTime(0, t);
     this.bus.gain.setTargetAtTime(1, t + ms / 1000, 0.6);
   }
+  // ── 1차 개편 추가 효과음 ──
+  chime() { this.tone(1318, 0.25, { vol: 0.05 }); this.tone(988, 0.4, { vol: 0.05, delay: 0.18 }); }
+  beep() { this.tone(2093, 0.07, { vol: 0.05, type: 'square' }); }
+  coin() { this.tone(1567, 0.06, { vol: 0.04 }); this.tone(2093, 0.1, { vol: 0.04, delay: 0.06 }); }
+  tick() { this.tone(3000, 0.015, { vol: 0.03, type: 'square' }); }
+  success() { this.tone(784, 0.08, { vol: 0.05 }); this.tone(1175, 0.14, { vol: 0.05, delay: 0.08 }); }
+  glitch() {
+    for (let i = 0; i < 6; i++) this.tone(200 + Math.random() * 1800, 0.04, { type: 'square', vol: 0.03, delay: i * 0.05 });
+    this.noise(0.3, { vol: 0.08, freq: 3000, type: 'highpass' });
+  }
+  flap() { for (let i = 0; i < 14; i++) this.noise(0.05, { vol: 0.04, freq: 900 + Math.random() * 600, type: 'bandpass', q: 2, delay: i * 0.045 + Math.random() * 0.03 }); }
+  glass(delay = 0) {
+    this.noise(0.18, { vol: 0.09, freq: 4200, type: 'highpass', delay });
+    for (let i = 0; i < 4; i++) this.tone(2400 + Math.random() * 2600, 0.12, { vol: 0.02, type: 'triangle', delay: delay + 0.02 + i * 0.03 });
+  }
+  thud() { this.noise(0.6, { vol: 0.7, freq: 90, brown: true }); this.tone(48, 0.5, { vol: 0.3, slide: 30 }); }
+  // 이명: 다른 소리가 모두 끊긴 뒤에도 들리도록 master에 직접 연결
+  tinnitus(sec = 7) {
+    if (!this.ok) return;
+    const t = this.ac.currentTime;
+    const o = this.ac.createOscillator(); o.frequency.value = 6200;
+    const o2 = this.ac.createOscillator(); o2.frequency.value = 6213;
+    const g = this.ac.createGain();
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.05, t + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + sec);
+    o.connect(g); o2.connect(g); g.connect(this.master);
+    o.start(t); o2.start(t); o.stop(t + sec + 0.1); o2.stop(t + sec + 0.1);
+  }
+  heartbeat(on) {
+    if (!on) { clearInterval(this.hbTimer); this.hbTimer = null; return; }
+    if (this.hbTimer) return;
+    const beat = () => { this.noise(0.12, { vol: 0.35, freq: 70, brown: true }); this.noise(0.1, { vol: 0.22, freq: 70, brown: true, delay: 0.22 }); };
+    beat();
+    this.hbTimer = setInterval(beat, 820);
+  }
+  shop(on) { // 편의점의 잔잔한 배경음 (근무 파트)
+    if (!on) return this.stopLoop('shop', 0.6);
+    this.startLoop('shop', (ac, out) => {
+      const g = ac.createGain(); g.gain.value = 0.018;
+      const notes = [523.25, 659.25, 783.99, 659.25];
+      const os = notes.map((n, i) => {
+        const o = ac.createOscillator(); o.type = 'triangle'; o.frequency.value = n / 2;
+        const lfo = ac.createOscillator(); lfo.frequency.value = 0.13 + i * 0.07;
+        const lg = ac.createGain(); lg.gain.value = 0.5;
+        const og = ac.createGain(); og.gain.value = 0.5;
+        lfo.connect(lg).connect(og.gain); o.connect(og).connect(g);
+        o.start(); lfo.start();
+        return [o, lfo];
+      }).flat();
+      g.connect(out);
+      return os;
+    });
+  }
 }
+
+// ───────────────────────── 음성 (임시 더빙: 브라우저 음성) ─────────────────────────
+// 녹음 파일이 생기면 VOICE_FILES 에 경로를 넣으면 그 파일을 재생한다.
+export const VOICE_FILES = {};
+export class Voice {
+  constructor(sfx) { this.sfx = sfx; this.current = null; }
+  pick(role) {
+    const ss = window.speechSynthesis;
+    if (!ss) return null;
+    const ko = ss.getVoices().filter((v) => /ko/i.test(v.lang));
+    if (!ko.length) return null;
+    const fem = ko.find((v) => /yuna|sunhi|heami|female|여/i.test(v.name));
+    const male = ko.find((v) => /injoon|minsu|male|남/i.test(v.name));
+    if (role === 'anchor') return fem || ko[0];
+    if (role === 'dj' || role === 'reporter') return male || ko[0];
+    return ko[0];
+  }
+  // 대사를 읽는다. 다 읽거나 skip()하면 끝난다. 음성이 없으면 글자 수만큼 기다린다.
+  speak(text, role = 'anchor', key = null) {
+    this.stop();
+    const fallbackMs = Math.max(1600, text.length * 95);
+    return new Promise((resolve) => {
+      let done = false;
+      const finish = () => { if (done) return; done = true; clearTimeout(this.t); this.current = null; resolve(); };
+      this.current = finish;
+      const muted = this.sfx.muted;
+      if (key && VOICE_FILES[key] && !muted) {
+        const a = new Audio(VOICE_FILES[key]);
+        this.audio = a;
+        a.onended = finish; a.onerror = () => { this.t = setTimeout(finish, fallbackMs); };
+        a.play().catch(() => { this.t = setTimeout(finish, fallbackMs); });
+        this.t = setTimeout(finish, fallbackMs * 2.5);
+        return;
+      }
+      const ss = window.speechSynthesis;
+      const v = !muted && ss && this.pick(role);
+      if (!v) { this.t = setTimeout(finish, fallbackMs); return; }
+      const u = new SpeechSynthesisUtterance(text);
+      u.voice = v; u.lang = v.lang;
+      u.rate = role === 'dj' ? 0.95 : role === 'reporter' ? 1.12 : 1.05;
+      u.pitch = role === 'dj' ? 0.85 : role === 'reporter' ? 0.95 : 1.05;
+      u.volume = 0.9;
+      u.onend = finish; u.onerror = finish;
+      ss.speak(u);
+      this.t = setTimeout(finish, fallbackMs * 2.5);
+    });
+  }
+  stop() {
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { /* noop */ }
+    if (this.audio) { try { this.audio.pause(); } catch (e) { /* noop */ } this.audio = null; }
+    if (this.current) { const f = this.current; this.current = null; f(); }
+  }
+}
+

@@ -6,6 +6,7 @@ import {
 import { ITEMS } from './items.js';
 import { TILE, wait } from './engine.js';
 import { STAIR_FLOORS, stairLandingY } from './world.js';
+import { clockText } from './state.js';
 
 const C = (n) => n * TILE + TILE / 2;
 const F = () => state.flags;
@@ -14,81 +15,223 @@ function npc(o) { return { kind: 'npc', r: 10, solid: true, visible: true, ...o,
 function thing(o) { return { kind: 'thing', visible: true, tw: 1, th: 1, ...o }; }
 function kindness(text, w = 1) { state.warmth += w; state.kindness.push(text); }
 function talkCount(id) { F()[`tc_${id}`] = (F()[`tc_${id}`] || 0) + 1; return F()[`tc_${id}`] - 1; }
-function note(text) { if (!state.notes.includes(text)) state.notes.push(text); }
+function note(text) { state.notes = state.notes || []; if (!state.notes.includes(text)) state.notes.push(text); }
 
-// ═════════════════════════ 편의점 (프롤로그) ═════════════════════════
+// ═════════════════════════ 편의점 야간 근무 (위장 오프닝) ═════════════════════════
 
-function shelf(id, cid, title, task, preText) {
+const shiftTasks = () => ['task_fridge', 'task_ramen', 'task_waste'].filter((k) => F()[k]).length;
+function shiftObjective(g) {
+  const f = F();
+  if (g.cust && g.cust.waiting) { g.objective('손님이 기다린다 · 계산대로', true); return; }
+  const n = shiftTasks();
+  g.objective(n >= 3 ? '할 일 끝 · 손님 기다리기' : `진열 정리·폐기 체크 ${n}/3`, true);
+}
+
+async function sayV(g, name, text, role) {
+  g.voice.speak(text, role);
+  await g.say(name, text, { mode: role === 'dj' ? 'radio' : '' });
+  g.voice.stop();
+}
+
+const CUSTOMERS = [
+  {
+    time: [1, 20], name: '술 취한 회사원', color: '#3c3f52', goods: ['hetbahn', 'water500'], barks: ['(비틀) 저기요…', '계산이요오'],
+    async after(g) {
+      await g.say('술 취한 회사원', '즉석밥… 이거 전자레인지 돼요? 아, 되지. 되지.');
+      await g.say('술 취한 회사원', '요즘 뉴스 보면 술이 안 깨요. 맨날 미사일 쏜대. 맨날.');
+      await g.say('술 취한 회사원', '근데 맨날 쏘니까… 이제 아무도 안 무서워하잖아. 그게 무서운 거야, 그게.');
+    },
+  },
+  {
+    time: [2, 5], name: '택배기사', color: '#4f6a3a', goods: ['mixCoffee', 'mixCoffee', 'kimbap'], barks: ['형님 고생하십니다'],
+    async after(g) {
+      await g.say('택배기사', '형님 오늘도 야간이세요? 저도요. 우리 같은 사람들이 나라를 돌려요, 밤에.');
+      await g.say('택배기사', '근데 오늘 고속도로에 군 차량이 엄청 많던데요. 줄줄이. 훈련인가 봐요.');
+      await g.say('택배기사', '아 맞다. 303동 1104호, 형님 댁이죠? 택배 하나 있던데. 내일 아침에 문 앞에 둘게요.');
+      note('303동 1104호 택배 — 내일 아침 도착 예정');
+    },
+  },
+  {
+    time: [2, 40], name: '고등학생 둘', color: '#2a3a5a', pair: '#5a3a3a', goods: ['cupRamen', 'cupRamen'], barks: ['야 빨리 골라', '나 불닭'],
+    async after(g) {
+      await g.say('고등학생', '야 학교 단톡에 전쟁 난다는 거 떴는데 ㅋㅋ');
+      await g.say('고등학생 친구', '또 그거? 작년에도 그랬잖아. 수행평가나 걱정해.');
+      await g.say('고등학생', '아저씨, 전쟁 나면 편의점은 문 열어요?');
+      const c = await g.choose('', ['24시간이니까 열겠지.', '그땐 아저씨도 도망가야지.', '빨리 집에 가서 자라.']);
+      if (c === 0) await g.say('고등학생', 'ㅋㅋㅋ 아저씨 레전드.');
+      else if (c === 1) await g.say('고등학생 친구', '아 ㅋㅋ 같이 가요 그럼.');
+      else await g.say('고등학생', '네에… 엄마 같아.');
+    },
+  },
+  {
+    time: [3, 15], name: '307동 할머니', color: '#6b5a72', hair: '#d8d4cc', goods: ['peach'], barks: ['…'],
+    async after(g) {
+      await g.say('307동 할머니', '잠이 안 와서. 늙으면 다 그래.');
+      await g.say('307동 할머니', '이거, 황도. 아플 때 먹는 거야. 우리 엄마가 그랬어. 피난 가는 배에서도 이걸 줬는데.');
+      const c = await g.choose('', ['어디 편찮으세요?', '조심히 들어가세요.']);
+      if (c === 0) await g.say('307동 할머니', '아니. 그냥 오늘은… 옛날 생각이 나네.');
+      await g.say('307동 할머니', '총각 이름이 뭐랬지?');
+      await g.say('강도일', '도일이요. 강도일.');
+      await g.say('307동 할머니', '도일이. 그래, 도일이.');
+      F().metGrandma = true;
+    },
+  },
+  {
+    time: [3, 40], name: '경비원 박 씨', color: '#3f5066', hair: '#9a9a9a', goods: ['mixCoffee'], barks: ['총각, 커피 하나'],
+    async after(g) {
+      await g.say('경비원 박 씨', '총각, 오늘따라 조용하지? 이런 날이 꼭…');
+      await g.say('경비원 박 씨', '아냐. 늙은이 말은 반만 들어.');
+      await g.say('경비원 박 씨', '아까 307동 할머니 왔다 갔지? 그 양반 요즘 잠을 못 주무셔. 혼자 사시니까 내가 가끔 들여다봐.');
+    },
+  },
+];
+
+function spawnCustomer(g) {
+  const f = F();
+  const c = CUSTOMERS[f.custIdx];
+  f.custIdx += 1;
+  setClock(0, c.time[0], c.time[1]);
+  g.sfx.chime();
+  const e = npc({ id: 'cust', name: c.name, tx: 6, ty: 9, color: c.color, hair: c.hair, solid: true, barks: c.barks, def: c });
+  g.scene.entities.push(e);
+  g.cust = e;
+  const followers = [];
+  if (c.pair) {
+    const e2 = npc({ id: 'cust2', name: c.name, tx: 6, ty: 9, color: c.pair, solid: false });
+    g.scene.entities.push(e2);
+    followers.push(e2);
+    setTimeout(() => g.walk(e2, [[8, 9], [8, 8]], 70), 500);
+  }
+  e.followers = followers;
+  g.walk(e, [[9, 9], [9, 8]], 70).then(() => { e.waiting = true; e.face = 0; e.barkReady = 0; shiftObjective(g); });
+}
+
+async function serveCustomer(g) {
+  const e = g.cust;
+  const c = e.def;
+  e.waiting = false;
+  await g.ui.pos(c.name, c.goods);
+  await c.after(g);
+  const out = () => g.walk(e, [[9, 9], [6, 9], [6, 10]], 80);
+  e.followers.forEach((x) => g.walk(x, [[6, 9], [6, 10]], 80).then(() => { x.visible = false; }));
+  out().then(() => {
+    e.visible = false;
+    g.sfx.chime();
+    g.scene.entities = g.scene.entities.filter((x) => x !== e && !e.followers.includes(x));
+    g.cust = null;
+    F().lastCustLeft = F().shiftT;
+    F().nextCustAt = F().shiftT + 14;
+    shiftObjective(g);
+  });
+}
+
+function shelf(id, title, onShift, after) {
   return async (g) => {
     const f = F();
-    if (!f.siren) {
-      if (task && !f[`task_${id}`]) {
-        f[`task_${id}`] = true;
-        f.restock = (f.restock || 0) + 1;
-        await g.narr(preText);
-        if (f.restock >= 3) { f.restockDoneAt = g.now; g.objective('진열 정리 끝. 잠깐 쉬기', true); }
-        else g.objective(`진열 정리 (${f.restock}/3)`, true);
-      } else {
-        await g.narr(task ? '여기는 정리했다.' : preText);
-      }
-      return;
-    }
-    g.ui.openShelf(cid, title, (itemId) => {
-      if (itemId === 'flashlight' && !f.gotFlash) {
-        f.gotFlash = true;
-        state.flashPower = 100;
-        g.ui.toast(document.body.classList.contains('touch') ? '손전등: 「손전등」 버튼으로 켜고 끈다' : '손전등: F 키로 켜고 끈다');
-      }
-    });
+    if (f.siren) { await g.narr('지금은 그럴 때가 아니다.'); return; }
+    await onShift(g, f);
+    if (after) await after(g);
+    shiftObjective(g);
   };
+}
+
+const NEWS_FRAMES = [
+  { img: 'news_01_studio', time: '04:09', tag: '뉴스', lines: [{ text: '한누리뉴스24입니다. 방금 들어온 속보를 전해 드립니다.' }] },
+  { img: 'news_02_breaking', time: '04:09', lines: [{ text: '합동참모본부는 조금 전, 북한이 오전 4시 3분경 탄도미사일 여러 발을 발사했다고 밝혔습니다.' }] },
+  { img: 'news_03_map', time: '04:10', zoom: true, lines: [{ text: '미사일은 수도권을 포함한 남쪽 방향으로 발사된 것으로 보이며, 군은 정확한 궤적을 분석하고 있습니다.' }] },
+  { img: 'news_04_coast', fallback: 'news_03_map', time: '04:10', tag: '현장 연결', red: true, lines: [{ role: 'reporter', text: '네, 서해안입니다. 조금 전부터 바다 쪽에서 섬광이 여러 차례… 지금도 보입니다. 주민들이 밖으로 나와…' }] },
+  { img: 'news_05_jets', fallback: 'news_02_breaking', time: '04:11', lines: [{ text: '정부는 국가안전보장회의를 긴급 소집했고, 전군에 최고 수준의 경계 태세가 발령됐습니다.' }] },
+  { img: 'news_06_subway', fallback: 'news_02_breaking', time: '04:11', zoom: true, lines: [{ text: '수도권 전역에 공습경보가 발령됐습니다. 시민 여러분은 지금 즉시 가까운 지하 대피시설로 이동해 주십시오.' }] },
+  { img: 'news_07_earpiece', fallback: 'news_02_breaking', time: '04:12', zoom: true, flick: true, lines: [{ text: '지금 막… 추가로 들어온 소식이…' }, { text: '…네? 네.', pause: 1500 }, { text: '시청자 여러분, 지금 바로—' }] },
+  { img: null, noise: true, noiseMs: 1500, hold: 1500, time: '' },
+];
+
+const GRAB = [
+  ['flashlight', '계산대 밑. 정전 대비용이라고 사장님이 사 둔 것.'],
+  ['battery', '손전등 옆 칸. 네 개들이.'],
+  ['raincoat', '비 오는 날 제일 잘 팔리는 것.'],
+  ['mask', '계산대 옆 매대 맨 아래 칸.'],
+  ['medkit', '사장님이 직원용으로 두고 간 상비약.'],
+  ['handwarmer', '11월이다. 지하는 춥다.'],
+  ['powerbank', '휴대폰이 꺼지면 끝이다.'],
+];
+
+function chatScript(g, list) {
+  list.forEach(([ms, who, text]) => setTimeout(() => { if (!F().flash) g.ui.chat(who, text); }, ms));
+}
+
+async function newsSequence(g) {
+  const f = F();
+  if (f.newsStarted) return;
+  f.newsStarted = true;
+  setClock(0, 4, 8);
+  g.sfx.shop(false);
+  await sayV(g, '라디오 · DJ', '네, 오늘 사연 보내 주신 분께는 커피 쿠폰 보내 드리고요. 다음 곡은…', 'dj');
+  await sayV(g, '라디오 · DJ', '…아, 잠시만요.', 'dj');
+  await sayV(g, '라디오 · DJ', '청취자 여러분, 잠시 방송을 중단하고… 긴급 뉴스를 전해 드리겠습니다.', 'dj');
+  g.sfx.notify();
+  g.ui.toast('한누리뉴스24 · 속보 생방송', 2400);
+  await wait(900);
+  await g.narr('휴대폰에 속보 알림이 떴다. 손가락이 먼저 눌렀다.');
+  g.sfx.hum(false);
+  await g.ui.news(NEWS_FRAMES, g.voice);
+  setClock(0, 4, 12);
+  await sirenScript(g);
 }
 
 async function sirenScript(g) {
   const f = F();
-  if (f.siren) return;
   f.siren = true;
-  g.ui.closeModal();
-  setClock(0, 4, 12);
-  g.sfx.hum(false);
   g.sfx.alert();
   g.shake(0.5, 2);
   await wait(900);
   const a1 = { title: '긴급재난문자', time: '04:12', body: '[가상] 공습경보 발령. 지금 즉시 가까운 지하 대피시설로 대피하십시오.' };
   state.alerts.push(a1);
   await g.ui.alertPopup(a1);
-  await g.narr('계산대 위의 휴대폰이, 포스기 옆의 단말기가, 진열대 너머 어딘가의 휴대폰이 동시에 울었다.');
-  await g.narr('훈련이겠지. 매년 하는 그거.');
+  // 정체가 드러난다: 생존 게이지가 나타난다
+  document.body.classList.remove('shift');
+  document.body.classList.add('reveal-stats');
+  g.ui.updateHUD();
   g.sfx.alert();
-  await wait(800);
+  await wait(700);
   const a2 = { title: '긴급재난문자', time: '04:12', body: '[가상] 이것은 훈련이 아닙니다. 실제 상황입니다. 엘리베이터를 이용하지 마십시오.' };
   state.alerts.push(a2);
   await g.ui.alertPopup(a2);
   addStat('mental', -8);
   g.sfx.siren(true);
-  await wait(1400);
+  chatScript(g, [
+    [400, '303동 고양이집사', '이거 뭐예요??'],
+    [1500, '301동 1203호', 'ㅋㅋ 훈련임 매년 함'],
+    [2900, '302동 김○○', '훈련 아니래요 뉴스 보세요 뉴스'],
+    [4300, '관리사무소', '[안내] 주민 여러분은 지하주차장 B2로 대피해 주십시오'],
+    [5600, '301동 1203호', '엘베 멈췄어요 계단으로 가세요'],
+  ]);
+  await wait(1600);
   g.sfx.ring(2);
   g.ui.callScreen('문기철 사장님', '휴대전화 수신 중…');
-  await wait(2300);
+  await wait(2200);
   g.ui.callScreen('문기철 사장님', '통화 중');
-  await g.say('문 사장', '도일아! 문자 봤지? 봤지?');
-  await g.say('문 사장', '셔터 내려. 아니… 아니다.');
-  await g.say('문 사장', '너 그냥 가. 가게 신경 쓰지 말고. 필요한 거 챙겨서 가. 계산 같은 거 하지 말고.');
+  await g.say('문 사장', '도일아! 봤지? 뉴스 봤지?');
+  await g.say('문 사장', '셔터 내려. 아니… 아니다. 너 그냥 가. 가게 신경 쓰지 말고.');
   const c = await g.choose('', ['사장님은요?', '…알겠습니다.']);
-  if (c === 0) await g.say('문 사장', '난 정왕동 집이야. 애 엄마 깨워야 돼. 끊는다. 가, 얼른!');
-  else await g.say('문 사장', '그래. 그래야지. …도일아, 조심해라.');
+  if (c === 0) await g.say('문 사장', '난 정왕동 집이야. 애 엄마 깨워야 돼. 필요한 거 챙겨서 가. 계산 같은 거 하지 말고!');
+  else await g.say('문 사장', '필요한 거 챙겨서 가. 계산 같은 거 하지 말고. …도일아, 조심해라.');
   g.ui.hideCall();
-  await g.ui.centerText('골든타임 90초<small>가방은 하나, 칸은 열 개. 무엇을 포기할지가 첫 번째 선택이다.</small>', 2600, true);
-  g.objective('필요한 것을 챙겨 편의점을 나가기');
-  g.ui.toast(document.body.classList.contains('touch') ? '진열대 앞에서 「행동」: 가방에 담기' : '진열대 앞에서 E: 가방에 담기', 3600);
-  g.startTimer(90, leaveStore);
+  await g.narr('손이 먼저 움직였다. 5년 동안 매일 정리한 진열대였다. 어디에 뭐가 있는지 눈을 감고도 안다.');
+  for (const [id, n] of GRAB) {
+    if (!canFit(id)) break;
+    addItem(id);
+    if (id === 'flashlight') { f.gotFlash = true; state.flashPower = 100; }
+    await g.ui.itemGet(id, { kicker: '챙겼다', note: n, ms: 1350 });
+  }
+  await g.ui.centerText(`가방이 꽉 찼다.<small>${state.bagSlots}칸 중 ${Math.min(state.bagSlots, state.inv.reduce((s, e) => s + ITEMS[e.id].size * e.qty, 0))}칸</small>`, 1800);
+  g.ui.toast(document.body.classList.contains('touch') ? '손전등: 「손전등」 버튼' : '손전등: F 키', 3200);
+  await leaveStore(g);
 }
 
-async function leaveStore(g, auto = false) {
+async function leaveStore(g) {
   const f = F();
   if (f.leftStore) return;
-  g.stopTimer();
-  g.ui.closeModal();
-  if (auto) await g.narr('사이렌이 점점 커진다. 더는 지체할 수 없다.');
   f.leftStore = true;
   state.taken = state.inv.map((e) => `${ITEMS[e.id].name} ×${e.qty}`);
   await g.goto('street', { tx: 7, ty: 13, dir: -90 });
@@ -96,82 +239,126 @@ async function leaveStore(g, auto = false) {
 
 const store = {
   map: 'store',
-  timeRate: 0.15,
+  timeRate: 0.12,
   tint: [10, 12, 16],
   visionR: 120,
   setup(s) {
     s.power = true;
     s.ambient = 0.06;
     s.entities.push(
-      thing({ id: 'fridge', tx: 1, ty: 1, tw: 10, label: '음료 냉장고', onUse: shelf('fridge', 'store_drinks', '음료 냉장고', true, '뒤에 있는 걸 앞으로 당겨 채운다. 선입선출. 머리보다 손이 먼저 안다.') }),
-      thing({ id: 'shelfA', tx: 2, ty: 3, tw: 5, label: '삼각김밥·통조림 진열대', onUse: shelf('shelfA', 'store_food', '삼각김밥·통조림 진열대', true, '삼각김밥 폐기 시간은 06:00. 두 개는 아침밥이다. 5년째 같은 아침.') }),
-      thing({ id: 'shelfB', tx: 8, ty: 3, tw: 5, label: '생활용품 진열대', onUse: shelf('shelfB', 'store_goods', '생활용품 진열대', false, '건전지, 우비, 핫팩, 손전등. 평소에는 아무도 사지 않는 것들.') }),
-      thing({ id: 'shelfC', tx: 2, ty: 5, tw: 5, label: '라면 진열대', onUse: shelf('shelfC', 'store_ramen', '라면 진열대', true, '컵라면 줄을 맞춘다. 아무도 보지 않는 줄이다. 그래도 맞춘다.') }),
-      thing({ id: 'shelfD', tx: 8, ty: 5, tw: 5, label: '과자 진열대', onUse: shelf('shelfD', 'store_snack', '과자 진열대', false, '과자 봉지는 가볍다. 배는 안 찬다.') }),
+      thing({
+        id: 'fridge', tx: 1, ty: 1, tw: 10, label: '음료 냉장고 · 진열',
+        onUse: shelf('fridge', '음료 냉장고', async (g, f) => {
+          if (f.task_fridge) { await g.narr('냉장고는 정리했다. 물병들이 가지런하다.'); return; }
+          await g.ui.restock('음료 냉장고 진열', 'water500', ['11.20', '12.02', '11.16', '12.24']);
+          f.task_fridge = true;
+          await g.narr('물 한 병은 내 몫. 사장님이 늘 그러라고 했다.');
+          addItem('water500');
+          await g.ui.itemGet('water500', { kicker: '획득', note: '근무 중에 마시는 물. 사장님이 준 것.' });
+        }),
+      }),
+      thing({
+        id: 'shelfA', tx: 2, ty: 3, tw: 5, label: '삼각김밥 · 폐기 체크',
+        onUse: shelf('waste', '삼각김밥', async (g, f) => {
+          if (f.task_waste) { await g.narr('폐기는 끝났다. 남은 건 06:00까지 팔 수 있다.'); return; }
+          await g.ui.wasteCheck(clockText().replace(/^D\+\d+\s+/, ''));
+          f.task_waste = true;
+          await g.narr('폐기 셋 중 둘은 아침밥이다. 5년째 같은 아침.');
+          addItem('kimbap', 2);
+          await g.ui.itemGet('kimbap', { n: 2, kicker: '획득', note: '폐기 삼각김밥. 참치마요. 사장님은 못 본 척한다.' });
+        }),
+      }),
+      thing({ id: 'shelfB', tx: 8, ty: 3, tw: 5, label: '생활용품 진열대', onUse: shelf('goods', '', async (g) => { await g.narr('건전지, 우비, 핫팩, 손전등. 평소엔 아무도 사지 않는 것들.'); }) }),
+      thing({
+        id: 'shelfC', tx: 2, ty: 5, tw: 5, label: '라면 진열대 · 진열',
+        onUse: shelf('ramen', '라면', async (g, f) => {
+          if (f.task_ramen) { await g.narr('컵라면 줄이 맞다. 아무도 보지 않는 줄이지만.'); return; }
+          await g.ui.restock('라면 진열', 'cupRamen', ['12.30', '11.28', '12.05', '11.21']);
+          f.task_ramen = true;
+          await g.narr('컵라면 줄을 맞췄다. 아무도 보지 않는 줄이다. 그래도 맞춘다.');
+        }),
+      }),
+      thing({ id: 'shelfD', tx: 8, ty: 5, tw: 5, label: '과자 진열대', onUse: shelf('snack', '', async (g) => { await g.narr('과자 봉지는 가볍다. 배는 안 찬다. 고등학생들은 늘 여기서 오래 고민한다.'); }) }),
       thing({
         id: 'counter', tx: 10, ty: 7, tw: 3, th: 2, label: '계산대',
+        verb: '살펴보기',
         onUse: async (g) => {
-          if (!F().siren) {
-            await g.narr('계산대 라디오에서 새벽 사연이 흘러나온다. 군대 간 아들에게 보내는 엄마의 편지.');
-            await g.narr('도일은 볼륨을 조금 줄였다.');
-            return;
+          if (F().siren) return;
+          if (g.cust && g.cust.waiting) { await serveCustomer(g); return; }
+          const f = F();
+          const n = (f.radioN = (f.radioN || 0) + 1);
+          if (n === 1) {
+            await sayV(g, '라디오 · DJ', '다음 사연입니다. 군대 간 아들에게 보내는 엄마의 편지예요. 우리 아들, 밥은 잘 먹고 있니…', 'dj');
+            await g.narr('도일은 볼륨을 조금 줄였다. 휴대폰을 꺼내 볼까 하다가, 그만뒀다.');
+          } else if (n === 2) {
+            await sayV(g, '라디오 · DJ', '새벽 세 시를 넘어가고 있습니다. 지금 깨어 계신 분들, 다들 무슨 이유가 있으시겠죠.', 'dj');
+          } else {
+            await g.narr('라디오에서는 오래된 노래가 흘러나온다.');
           }
-          g.ui.openShelf('store_counter', '계산대 뒤 선반', null);
         },
       }),
-      thing({
-        id: 'door', tx: 6, ty: 10, tw: 2, label: '출입문',
-        onUse: async (g) => {
-          if (!F().siren) { await g.narr('근무 중이다. 교대는 아침 8시.'); return; }
-          const c = await g.choose('가게를 나갈까?', ['나간다', '조금 더 챙긴다']);
-          if (c === 0) await leaveStore(g, false);
-        },
-      }),
+      thing({ id: 'door', tx: 6, ty: 10, tw: 2, label: '출입문', onUse: async (g) => { await g.narr(F().siren ? '…' : '근무 중이다. 교대는 아침 8시.'); } }),
     );
+    // 계산대 라벨은 손님이 기다릴 때 바뀐다
+    const counter = s.entities.find((e) => e.id === 'counter');
+    Object.defineProperty(counter, 'label', { get: () => (window.__game && window.__game.cust && window.__game.cust.waiting ? `계산하기 · ${window.__game.cust.name}` : '계산대 · 라디오') });
   },
   async onEnter(g) {
     const f = F();
     if (f.introDone) return;
+    setClock(0, 1, 0);
     g.ui.showHUD(false);
     await g.ui.card([
-      { text: '11월 13일 금요일', cls: 'kicker' },
-      '새벽 3시 50분.',
-      '경기도 시흥시 배곧동.',
-      '편의점 「오늘25」 배곧해오름점.',
-    ], { gap: 1300 });
+      { text: '오늘25 배곧해오름점', cls: 'kicker' },
+      '야간 근무 1,825일째.',
+      '새벽 1시.',
+      '오늘도 무사히, 아침 8시까지.',
+    ], { gap: 1100 });
     f.introDone = true;
+    f.custIdx = 0;
+    f.shiftT = 0;
+    f.nextCustAt = 12;
     g.ui.showHUD(true);
     g.sfx.hum(true);
-    await g.ui.fade(0, 1200);
-    await g.narr('손님이 없는 시간. 라디오에서 누군가의 사연이 끝나고, 오래된 노래가 나온다.');
-    g.objective('진열 정리 (0/3)');
-    if (document.body.classList.contains('touch')) {
-      g.ui.toast('화면 왼쪽을 끌어 이동 · 「행동」 버튼으로 살펴보기', 5000);
-    } else {
-      g.ui.toast('이동 WASD·방향키 · 살펴보기 E', 5000);
-      setTimeout(() => g.ui.toast('휴대폰 P · 가방 I · 소리 M', 5000), 900);
-    }
+    g.sfx.shop(true);
+    await g.ui.fade(0, 1000);
+    shiftObjective(g);
+    if (document.body.classList.contains('touch')) g.ui.toast('화면 왼쪽을 끌어 이동 · 「행동」 버튼으로 살펴보기', 5000);
+    else { g.ui.toast('이동 WASD·방향키 · 살펴보기 E', 5000); setTimeout(() => g.ui.toast('휴대폰 P · 가방 I · 소리 M', 5000), 900); }
   },
   update(g, dt, free) {
     const f = F();
-    if (f.siren || !f.introDone || !free) return;
-    f.storeT = (f.storeT || 0) + dt;
-    if ((f.restock >= 3 && g.now - f.restockDoneAt > 2.5) || f.storeT > 150) g.run(sirenScript);
+    if (!f.introDone || f.newsStarted) return;
+    f.shiftT += dt;
+    if (!g.cust && f.custIdx < CUSTOMERS.length && f.shiftT > f.nextCustAt) spawnCustomer(g);
+    if (free && !g.cust && f.custIdx >= CUSTOMERS.length && (shiftTasks() >= 3 || f.shiftT - f.lastCustLeft > 35)) g.run(newsSequence);
   },
 };
 
 // ═════════════════════════ 단지 앞 거리 ═════════════════════════
 
+const SHADOW_TILES = new Set(['B', 'c', 'T', 'L', 'K', 'M']);
+
 function streetLights(s) {
   s.lights = [];
   if (s.power) {
-    for (const [x, y] of [[4, 13], [18, 13], [28, 13]]) s.lights.push({ x: C(x), y: C(y) - 8, r: 150, i: 0.9, color: '#f3d79a' });
-    s.lights.push({ x: C(7) - 16, y: C(14), r: 170, i: 0.92, color: '#cfe8ff', glow: 0.12 });
-    s.lights.push({ x: C(12), y: C(6), r: 70, i: 0.7, color: '#f3d79a' });
+    for (const [x, y] of [[4, 13], [18, 13], [28, 13]]) s.lights.push({ x: C(x), y: C(y) - 8, r: 150, i: 0.9, color: '#f3d79a', noOcc: true });
+    s.lights.push({ x: C(7) - 16, y: C(13), r: 170, i: 0.92, color: '#cfe8ff', glow: 0.12 });
+    s.lights.push({ x: C(12), y: C(5) + 12, r: 70, i: 0.7, color: '#f3d79a' });
   } else {
     // 동북쪽 지평선의 불그스름한 빛
-    s.lights.push({ x: 33 * TILE, y: -3 * TILE, r: 560, i: 0.32, color: '#e0742c', glow: 0.14 });
+    s.lights.push({ x: 33 * TILE, y: -3 * TILE, r: 560, i: 0.3, color: '#e0742c', glow: 0.14, noOcc: true });
   }
+}
+
+function perchBirds(s) {
+  const spots = [[4, 1], [6, 2], [8, 1], [16, 1], [19, 3], [21, 2], [26, 2], [28, 4], [10, 13], [22, 13], [13, 8], [30, 8]];
+  spots.forEach(([x, y]) => s.particles.push({ type: 'bird', perched: true, x: x * TILE + Math.random() * 20, y: y * TILE + 10 + Math.random() * 10, vx: 0, vy: 0, life: 9999, fade: 0.6 }));
+}
+
+// 그림자 다각형: 타일 사각형과 남서쪽으로 L만큼 민 사각형의 볼록 껍질
+function shadowHull(x, y, w, h, L) {
+  return [[x, y], [x + w, y], [x + w, y + h], [x + w - L, y + h + L], [x - L, y + h + L], [x - L, y + L]];
 }
 
 async function flashScript(g) {
@@ -179,32 +366,64 @@ async function flashScript(g) {
   if (f.flash) return;
   f.flash = true;
   setClock(0, 4, 17);
-  g.sfx.siren(false);
-  g.sfx.silence(5000);
-  await g.ui.flash(1300, 3800);
   const s = g.scene;
+  // 0. 휴대폰 화면들이 깜빡인다
+  g.sfx.glitch();
+  g.shake(0.3, 2);
+  await wait(450);
+  // 1. 새들이 날아오른다
+  s.particles.forEach((q) => { if (q.type === 'bird') { q.perched = false; q.vx = -40 - Math.random() * 60; q.vy = 30 + Math.random() * 50; q.life = 4; } });
+  g.sfx.flap();
+  // 2. 동북쪽에서 빛이 오며 그림자가 남서쪽으로 늘어난다
+  g.sfx.siren(false);
+  g.sfx.silence(11000);
+  s.fx = { white: 0, shadow: 0, t0: g.now };
+  await wait(1500);
+  // 3. 하얗게 타고, 진짜 제목이 떠오른다
+  document.title = '서울 끝';
+  g.sfx.tinnitus(8);
+  const hold = g.ui.whiteTitle(4600);
   s.power = false;
   s.ambient = 0.9;
+  s.fx = null;
   streetLights(s);
+  s.particles = s.particles.filter((q) => q.type !== 'bird');
   s.entities.forEach((e) => { if (e.runner) e.visible = false; });
   g.refreshMap();
-  await wait(1400);
-  await g.ui.centerText('소리가 나지 않았다.', 2400);
   addStat('mental', -10);
-  f.rumbleAt = g.now + 8;
+  await hold;
+  await g.ui.whiteOut(3600);
+  await wait(1200);
+  await g.ui.centerText('소리가 나지 않았다.', 2200);
+  // 4. 4분을 센다. 플레이어는 움직일 수 있다
+  f.clockT0 = g.now;
+  g.sfx.heartbeat(true);
   g.objective('단지 지하주차장(대피소)으로', true);
 }
 
-async function rumbleScript(g) {
+const WAVE_SEC = 14; // 04:17 → 04:21 을 이만큼으로 압축
+
+async function shockwaveScript(g) {
   const f = F();
   if (f.rumble) return;
   f.rumble = true;
-  g.sfx.rumble();
-  g.shake(4.5, 7);
-  await wait(2400);
-  g.sfx.carAlarm(true);
+  g.ui.bigClock(null);
+  g.sfx.heartbeat(false);
   setClock(0, 4, 21);
-  await g.ui.centerText('소리는 4분 뒤에 왔다.<small>80킬로미터를 건너오느라.</small>', 3000);
+  const s = g.scene;
+  const map = s.map;
+  const W = map.rows[0].length * TILE;
+  const targets = [];
+  map.rows.forEach((row, y) => [...row].forEach((ch, x) => {
+    const below = (map.rows[y + 1] || '')[x];
+    if ((ch === 'B' && below !== 'B') || ch === 'w' || ch === 'K') targets.push({ x: x * TILE + 16, y: y * TILE + 26, kind: 'glass' });
+    if (ch === 'c') targets.push({ x: x * TILE + 16, y: y * TILE + 16, kind: 'car' });
+  }));
+  s.wave = { t0: g.now, dur: 3.4, max: (W + map.rows.length * TILE) / Math.SQRT2, targets, hitPlayer: false };
+  g.sfx.rumble();
+  await wait(3800);
+  s.wave = null;
+  await g.ui.centerText('소리는 4분 뒤에 왔다.<small>80킬로미터를 건너오느라.</small>', 2800);
   await g.narr('동북쪽 하늘 아래가 멍처럼 붉었다. 그 방향에 서울이 있다. 도준이 있다.');
 }
 
@@ -212,14 +431,14 @@ async function parkTalk(g) {
   const f = F();
   if (f.parkTalked) return;
   if (!f.flash) await flashScript(g);
-  if (!f.rumble) await rumbleScript(g);
+  if (!f.rumble) await shockwaveScript(g);
   setClock(0, 4, 25);
   const park = g.ent('park');
   park.face = Math.atan2(g.player.y - park.y, g.player.x - park.x);
   park.light.angle = park.face;
   await g.say('경비원 박 씨', '지하로! 지하 2층으로! 엘리베이터 타지 말고!');
-  await g.say('경비원 박 씨', '…아, 편의점 총각이구먼.');
-  await g.say('경비원 박 씨', '혹시 307동 할머니 못 봤어? 1502호. 혼자 사시는데 아직 안 내려오셨어.');
+  await g.say('경비원 박 씨', '…아, 도일이 총각이구먼.');
+  await g.say('경비원 박 씨', '혹시 307동 할머니 못 봤어? 1502호. 아까 편의점 다녀가셨잖아. 아직 안 내려오셨어.');
   const c = await g.choose('', ['못 봤어요.', '같이 올라가 볼까요?']);
   if (c === 0) {
     await g.say('경비원 박 씨', '그래. 내가 금방 다녀올게. 총각은 얼른 내려가.');
@@ -259,6 +478,7 @@ const street = {
       { text: '오늘25', x: 8, y: 15.3, size: 11, bg: '#2f8f83', color: '#fff' },
     ];
     streetLights(s);
+    if (!f.flash) perchBirds(s);
     s.entities.push(
       npc({
         id: 'park', name: '경비원 박 씨', tx: 24, ty: 5, color: '#3f5066', hair: '#9a9a9a',
@@ -266,23 +486,17 @@ const street = {
         visible: !f.parkTalked,
         onUse: parkTalk,
         enabled: () => !F().parkTalked,
-        mark: () => !F().parkTalked && F().flash,
+        mark: () => !F().parkTalked && F().rumble,
       }),
-      thing({
-        id: 'storeDoor', tx: 6, ty: 14, tw: 2, label: '편의점 출입문',
-        onUse: async (g) => { await g.narr(F().flash ? '셔터 너머는 캄캄하다. 돌아갈 곳이 아니다.' : '다시 들어갈 시간은 없다.'); },
-      }),
+      thing({ id: 'storeDoor', tx: 6, ty: 14, tw: 2, label: '편의점 출입문', onUse: async (g) => { await g.narr(F().flash ? '셔터 너머는 캄캄하다. 돌아갈 곳이 아니다.' : '다시 들어갈 시간은 없다.'); } }),
       thing({
         id: 'booth', tx: 11, ty: 6, tw: 2, th: 2, label: '경비실',
         onUse: async (g) => {
           if (F().parkTalked) await g.narr('경비실 안에서 손전등 불빛이 흔들린다. 박 씨가 무언가를 적고 있다.');
-          else await g.narr('경비실은 비어 있다. 책상 위에 근무일지가 펼쳐져 있다.');
+          else await g.narr('경비실은 비어 있다. 책상 위에 근무일지와 식은 믹스커피가 놓여 있다.');
         },
       }),
-      thing({
-        id: 'ramp', tx: 25, ty: 4, tw: 4, th: 2, label: '지하주차장 경사로',
-        onUse: async (g) => { if (F().parkTalked) await enterB2(g); else await parkTalk(g); },
-      }),
+      thing({ id: 'ramp', tx: 25, ty: 4, tw: 4, th: 2, label: '지하주차장 경사로', onUse: async (g) => { if (F().parkTalked) await enterB2(g); else await parkTalk(g); } }),
     );
     if (!f.flash) {
       const runners = [
@@ -290,11 +504,11 @@ const street = {
         { tx: 30, ty: 8, color: '#6b5b3b', path: [[15, 8], [15, 6], [26, 6]], sp: 150 },
         { tx: 20, ty: 13, color: '#3b5b6b', path: [[15, 12], [15, 7], [23, 6], [28, 6]], sp: 120 },
       ];
-      runners.forEach((r, i) => s.entities.push(npc({ id: `runner${i}`, runner: true, solid: false, tx: r.tx, ty: r.ty, color: r.color, run: r })));
+      runners.forEach((r, i) => s.entities.push(npc({ id: `runner${i}`, runner: true, solid: false, tx: r.tx, ty: r.ty, color: r.color, run: r, light: { r: 40, i: 0.5, color: '#9cc3ff', glow: 0.1 } })));
     }
     s.triggers.push(
       { x: 0, y: 0, w: 32, h: 9, when: () => !F().flash, run: flashScript },
-      { x: 20, y: 3, w: 5, h: 4, when: () => !F().parkTalked, run: parkTalk },
+      { x: 20, y: 3, w: 5, h: 4, when: () => !F().parkTalked && F().rumble, run: parkTalk },
       { x: 23, y: 3, w: 7, h: 4, once: false, when: (g) => F().parkTalked && g.now > F().rampOkAt && !F().inB2Transit, run: async (g) => { F().inB2Transit = true; await enterB2(g); } },
     );
   },
@@ -308,14 +522,78 @@ const street = {
     if (!f.streetIntro) {
       f.streetIntro = true;
       g.objective('단지 지하주차장(대피소)으로');
+      chatScript(g, [[1800, '305동', '지금 내려가는 중이에요 애기 있어서 천천히'], [4200, '303동 고양이집사', '고양이 데리고 가도 되나요?']]);
       await g.narr('밖은 아직 밤이었다. 아파트 창문들이 하나둘 켜지고 있었다.');
     }
   },
   update(g, dt, free) {
     const f = F();
-    if (!free) return;
-    if (!f.flash && g.now - f.streetAt > 16) g.run(flashScript);
-    else if (f.flash && !f.rumble && g.now > f.rumbleAt) g.run(rumbleScript);
+    const s = g.scene;
+    if (!f.flash) { if (free && g.now - f.streetAt > 16) g.run(flashScript); return; }
+    // 섬광 직전: 하얘지는 정도와 그림자 길이
+    if (s.fx) { const t = (g.now - s.fx.t0) / 1.5; s.fx.white = Math.min(1, t) * 0.75; s.fx.shadow = Math.min(1, t) * 150; }
+    // 4분 시계
+    if (f.clockT0 && !f.rumble) {
+      const e = Math.min(1, (g.now - f.clockT0) / WAVE_SEC);
+      const sec = Math.floor(e * 240);
+      const mm = 17 + Math.floor(sec / 60), ss = sec % 60;
+      g.ui.bigClock(`04:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}<small>섬광 후 ${Math.floor(sec / 60)}분 ${ss}초</small>`);
+      if (Math.floor(g.now * 4) !== f.lastTick) { f.lastTick = Math.floor(g.now * 4); g.sfx.tick(); }
+      if (e >= 1 && free) g.run(shockwaveScript);
+    }
+    // 충격파가 지나가며 유리를 깨고 차 경보를 켠다
+    if (s.wave) {
+      const w = s.wave;
+      const front = ((g.now - w.t0) / w.dur) * w.max;
+      const W = s.map.rows[0].length * TILE;
+      const sOf = (x, y) => (W - x + y) / Math.SQRT2;
+      let glassN = 0;
+      for (const t of w.targets) {
+        if (t.done || sOf(t.x, t.y) > front) continue;
+        t.done = true;
+        if (t.kind === 'glass') {
+          for (let i = 0; i < 6; i++) s.particles.push({ type: 'shard', x: t.x + (Math.random() - 0.5) * 20, y: t.y, vx: -60 - Math.random() * 120, vy: 40 + Math.random() * 120, size: 1.5 + Math.random() * 2, life: 1.6 + Math.random(), fade: 1 });
+          if (glassN++ < 2) g.sfx.glass();
+        } else if (!f.alarmOn) { f.alarmOn = true; g.sfx.carAlarm(true); }
+      }
+      if (!w.hitPlayer && sOf(g.player.x, g.player.y) <= front) { w.hitPlayer = true; g.shake(1.6, 14); g.sfx.thud(); for (let i = 0; i < 30; i++) s.particles.push({ type: 'dust', x: g.player.x + (Math.random() - 0.5) * 300, y: g.player.y + (Math.random() - 0.5) * 200, vx: -80 - Math.random() * 80, vy: 60 + Math.random() * 60, size: 2, life: 1.5, fade: 1 }); }
+    }
+  },
+  drawUnder(ctx, g) {
+    const s = g.scene;
+    if (!s.fx || s.fx.shadow <= 0) return;
+    const L = s.fx.shadow;
+    ctx.fillStyle = 'rgba(12,12,22,0.55)';
+    s.map.rows.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (!SHADOW_TILES.has(ch)) return;
+      const pts = shadowHull(x * TILE + 3, y * TILE + 3, TILE - 6, TILE - 6, L);
+      ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach((p) => ctx.lineTo(p[0], p[1])); ctx.closePath(); ctx.fill();
+    }));
+    const people = [g.player, ...s.entities.filter((e) => e.kind === 'npc' && e.visible !== false)];
+    people.forEach((p) => {
+      const pts = shadowHull(p.x - 7, p.y - 7, 14, 14, L * 0.8);
+      ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach((q) => ctx.lineTo(q[0], q[1])); ctx.closePath(); ctx.fill();
+    });
+  },
+  drawTop(ctx, g) {
+    const s = g.scene;
+    const W = s.map.rows[0].length * TILE, H = s.map.rows.length * TILE;
+    if (s.fx && s.fx.white > 0) {
+      ctx.fillStyle = `rgba(255,250,236,${s.fx.white})`;
+      ctx.fillRect(-200, -200, W + 400, H + 400);
+    }
+    if (s.wave) {
+      // 충격파의 앞면: 화면을 북동쪽에서 남서쪽으로 가로지르는 띠
+      const w = s.wave;
+      const front = ((g.now - w.t0) / w.dur) * w.max * Math.SQRT2;
+      const x0 = -200, x1 = W + 200;
+      ctx.strokeStyle = 'rgba(235,225,205,0.28)';
+      ctx.lineWidth = 38;
+      ctx.beginPath(); ctx.moveTo(x0, front - W + x0); ctx.lineTo(x1, front - W + x1); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,245,225,0.5)';
+      ctx.lineWidth = 6;
+      ctx.beginPath(); ctx.moveTo(x0, front - W + x0 - 14); ctx.lineTo(x1, front - W + x1 - 14); ctx.stroke();
+    }
   },
 };
 
@@ -563,6 +841,7 @@ const b2 = {
       s.entities.push(npc({
         id: `x${i}`, name: x.name, tx: x.tx, ty: x.ty, sit: true, color: x.color, hair: x.hair, small: x.small,
         light: i % 2 === 0 ? { r: 46, i: 0.55, color: '#9cc3ff', glow: 0.12 } : null,
+        barks: x.lines,
         onUse: async (g) => { await g.say(x.name, x.lines[talkCount(`x${i}`) % x.lines.length]); },
       }));
     });
@@ -610,7 +889,7 @@ async function oldmanScene(g) {
   await g.say('강도일', '아뇨, 11층 사람이에요. 집에 물건 가지러 가요.');
   await g.say('7층 할아버지', '우리 집사람이 무릎이 안 좋아서 계단을 못 내려가. 나 혼자 내려갈 수도 없고.');
   await g.say('7층 할아버지', '…혹시 밑에 내려가면, 대표한테 704호에 물 좀 남는 거 있나 물어봐 줘요. 부탁해요.');
-  const water = ['water500', 'water2l', 'ionDrink'].find((id) => has(id));
+  const water = ['water500', 'water2l'].find((id) => has(id));
   const opts = ['내려가서 전해 드릴게요.'];
   if (water) opts.push(`${ITEMS[water].name}을(를) 드린다`);
   opts.push('…지금은 어렵습니다.');
@@ -701,7 +980,7 @@ const home = {
       }),
       thing({ id: 'jbed', tx: 1, ty: 1, label: '도준의 침대', onUse: async (g) => { await g.narr('이불이 반듯하게 개어져 있다. 입대하던 날 아침, 도준이 갰다.'); await g.narr('도일은 그 뒤로 이 방 문을 거의 열지 않았다.'); } }),
       thing({ id: 'closet', tx: 7, ty: 1, label: '옷장', onUse: async (g) => g.ui.openShelf('home_closet', '옷장', null) }),
-      thing({ id: 'dbed', tx: 11, ty: 1, label: '도일의 침대', onUse: async (g) => { await g.narr('낮에 자고 밤에 일하는 사람의 이불은 늘 흐트러져 있다.'); } }),
+      thing({ id: 'dbed', tx: 11, ty: 1, label: '도일의 침대 · 서랍', onUse: async (g) => { if (!F().drawerSeen) { F().drawerSeen = true; await g.narr('낮에 자고 밤에 일하는 사람의 이불은 늘 흐트러져 있다. 침대 옆 서랍에 접힌 편지가 있다.'); } g.ui.openShelf('home_drawer', '침대 옆 서랍', null); } }),
       thing({
         id: 'window', tx: 13, ty: 1, tw: 4, label: '베란다 창',
         onUse: async (g) => {
@@ -805,7 +1084,7 @@ async function endSummary(g) {
   const c = g.ui.htmlCard(`<div class="summary">
     <div class="k">1장 「배곧」 · 1차 테스트</div>
     <h2>여기까지입니다</h2>
-    <div class="sec"><h3>골든타임에 챙긴 것</h3>${taken}</div>
+    <div class="sec"><h3>편의점에서 챙긴 것</h3>${taken}</div>
     <div class="sec"><h3>도일이 건넨 것</h3>${kind}</div>
     <div class="sec"><h3>보내지 못한 문자함</h3>${unsent}</div>
     <div class="sec"><h3>플레이 시간</h3><p>약 ${mins}분</p></div>
@@ -817,6 +1096,9 @@ async function endSummary(g) {
 
 export async function startNewGame(g) {
   resetState();
+  document.body.classList.add('shift');
+  document.title = '오늘25 야간 근무';
+  g.cust = null;
   g.lightMode = null;
   g.stopTimer();
   g.sfx.stopAll();
@@ -829,6 +1111,8 @@ export async function startNewGame(g) {
 
 export async function continueGame(g) {
   if (!loadGame()) return startNewGame(g);
+  document.body.classList.remove('shift');
+  document.title = '서울 끝';
   g.lightMode = null;
   g.dying = false;
   g.sfx.stopAll();
@@ -846,6 +1130,19 @@ export async function dieScript(g) {
   g.dying = false;
   if (loadGame()) await continueGame(g);
   else await startNewGame(g);
+}
+
+export async function letterScript(g) {
+  const lines = [
+    '형. 여기 밥은 생각보다 괜찮아. 형이 끓인 라면보다는 별로지만.',
+    '조교가 무섭다. 근데 형네 사장님보다는 덜 무서움.',
+    '나 없다고 라면만 먹지 마. 진짜로.',
+    '그리고 그날 말한 거. 그거 진심 아니었어.',
+    '…반은 진심이었고.',
+    '휴가 나가면 얘기하자. — 도준',
+  ];
+  for (const l of lines) await g.say('도준의 편지', l, { mode: 'narr' });
+  if (!F().letterRead) { F().letterRead = true; await g.narr('도일은 편지를 다시 접었다. 처음 받았을 때는 끝까지 읽지 못했었다.'); }
 }
 
 export const SCENES = { store, street, b2, stair, home, dream };
