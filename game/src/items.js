@@ -15,6 +15,8 @@ export const ITEMS = {
   stew: { name: '도준이 끓인 김치찌개', icon: 'budae', size: 1, kind: '식량', desc: '냉동실에서 녹고 있었다. 오늘 안에 먹어야 한다.', use: { hunger: 30, mental: 12 }, useText: '차가운 찌개를 먹었다. 짜다. 도준이 끓인 건 늘 짰다.' },
   rice: { name: '쌀 1kg', size: 2, kind: '식량', desc: '익힐 방법이 생기면 가장 든든한 식량이다.', special: 'rice' },
   peach: { name: '황도 통조림', size: 1, kind: '식량', desc: '아플 때 먹는 거라고, 누군가 그랬다.', use: { hunger: 10, thirst: 8, mental: 8 }, useText: '황도를 먹었다. 어릴 때 감기에 걸리면 엄마가 따 주던 맛.' },
+  milk: { name: '우유팩', size: 1, kind: '음료', desc: '작은 우유. 이틀이면 상한다.', use: { thirst: 12, hunger: 4 }, useText: '우유를 마셨다.' },
+  cash: { name: '사장님 비상금 봉투', size: 0, kind: '교환', desc: '48만 원. 문 사장이 25년 동안 "혹시 몰라" 모은 돈. 지금은 아직 돈이다.', special: 'passive' },
   mixCoffee: { name: '믹스커피', size: 1, kind: '음료', desc: '뜨거운 물이 있으면 좋겠다.', use: { mental: 3 }, useText: '가루를 그냥 털어 넣었다. 달다.' },
   medkit: { name: '상비약 키트', size: 1, kind: '의약품', desc: '진통제, 소독약, 밴드.', use: { hp: 25 }, useText: '진통제를 삼키고 상처를 소독했다.' },
   flashlight: { name: '손전등', size: 1, kind: '도구', desc: 'F 키(휴대폰은 「손전등」 버튼)로 켜고 끈다. 건전지를 쓴다.', special: 'flashlight' },
@@ -33,7 +35,7 @@ export const ITEMS = {
 
 // 편의점 손님이 사는 물건 (계산대 미니게임용, 가방에는 들어오지 않음)
 export const POS_GOODS = {
-  water500: 1000, hetbahn: 1800, cupRamen: 1500, kimbap: 1400, peach: 2800, mixCoffee: 300, powerbank: 15900, tuna: 3200,
+  water500: 1000, milk: 1500, hetbahn: 1800, cupRamen: 1500, kimbap: 1400, peach: 2800, mixCoffee: 300, powerbank: 15900, tuna: 3200,
 };
 
 // 컨테이너(선반·서랍)의 초기 내용물

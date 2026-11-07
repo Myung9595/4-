@@ -35,32 +35,52 @@ async function sayV(g, name, text, role) {
 
 const CUSTOMERS = [
   {
-    time: [1, 20], name: '술 취한 회사원', color: '#3c3f52', goods: ['hetbahn', 'water500'], barks: ['(비틀) 저기요…', '계산이요오'],
+    time: [1, 20], name: '고집 센 할아버지', color: '#5a5242', hair: '#e0ddd5', goods: ['water500', 'tuna'], barks: ['어흠.', '계산.'],
+    async before(g) {
+      await g.say('강도일', '카드 꽂아 주세요.');
+      await g.say('고집 센 할아버지', '나한테 명령하지 마라!');
+      const c = await g.choose('', ['…꽂아 주시겠어요?', '명령 아니고 부탁입니다, 어르신.']);
+      if (c === 0) await g.say('고집 센 할아버지', '그래. 그렇게 말해야지.');
+      else await g.say('고집 센 할아버지', '부탁은 들어주지.');
+      await g.say('고집 센 할아버지', '…카드는 무슨. 현금이다. 동전까지 맞춰 줄 테니 기다려.');
+    },
     async after(g) {
-      await g.say('술 취한 회사원', '즉석밥… 이거 전자레인지 돼요? 아, 되지. 되지.');
-      await g.say('술 취한 회사원', '요즘 뉴스 보면 술이 안 깨요. 맨날 미사일 쏜대. 맨날.');
-      await g.say('술 취한 회사원', '근데 맨날 쏘니까… 이제 아무도 안 무서워하잖아. 그게 무서운 거야, 그게.');
+      await g.say('고집 센 할아버지', '젊은 사람. 나는 평생 명령만 듣고 살았어. 군대에서 삼십사 개월, 회사에서 삼십 년.');
+      await g.say('고집 센 할아버지', '이제 안 들어. 아무 명령도.');
+      await g.say('고집 센 할아버지', '요즘 뉴스 보면 맨날 미사일 쏜다더만. 맨날 쏘니까 이제 아무도 안 무서워해. …그게 무서운 거야.');
+      F().metGrandpa = true;
     },
   },
   {
-    time: [2, 5], name: '택배기사', color: '#4f6a3a', goods: ['mixCoffee', 'mixCoffee', 'kimbap'], barks: ['형님 고생하십니다'],
+    time: [2, 5], name: '택배기사', color: '#4f6a3a', goods: ['mixCoffee', 'mixCoffee', 'kimbap'], barks: ['형님 고생하십니다!'],
     async after(g) {
-      await g.say('택배기사', '형님 오늘도 야간이세요? 저도요. 우리 같은 사람들이 나라를 돌려요, 밤에.');
+      await g.say('택배기사', '형님 오늘도 야간이세요? 저도요. 우리 같은 사람들이 밤에 나라를 돌려요.');
       await g.say('택배기사', '근데 오늘 고속도로에 군 차량이 엄청 많던데요. 줄줄이. 훈련인가 봐요.');
-      await g.say('택배기사', '아 맞다. 303동 1104호, 형님 댁이죠? 택배 하나 있던데. 내일 아침에 문 앞에 둘게요.');
-      note('303동 1104호 택배 — 내일 아침 도착 예정');
+      await g.say('택배기사', '아 맞다. 303동 1104호 형님 댁이죠? 택배 하나 있던데. 보낸 사람이 강도준. 동생분이세요?');
+      const c = await g.choose('', ['…동생이요.', '잘못 온 거 아니에요?']);
+      if (c === 1) await g.say('택배기사', '에이, 송장에 형님 이름 박혀 있던데요. 강도일.');
+      await g.say('택배기사', '내일 아침에 문 앞에 둘게요. 중요한 건 꺾이지 않는 마음 아니겠습니까, 형님!');
+      await g.narr('도준이 뭘 보냈을까. 넉 달 동안 문자 한 통 없더니.');
+      note('303동 1104호 택배 — 보낸 사람 강도준. 내일 아침 도착 예정');
     },
   },
   {
-    time: [2, 40], name: '고등학생 둘', color: '#2a3a5a', pair: '#5a3a3a', goods: ['cupRamen', 'cupRamen'], barks: ['야 빨리 골라', '나 불닭'],
+    time: [2, 40], name: '초등학생 유튜버', color: '#c45a4a', small: true, goods: ['cupRamen', 'milk'], barks: ['안녕하세요 일롱튜브입니다!', '구독 좋아요 알림 설정!'],
     async after(g) {
-      await g.say('고등학생', '야 학교 단톡에 전쟁 난다는 거 떴는데 ㅋㅋ');
-      await g.say('고등학생 친구', '또 그거? 작년에도 그랬잖아. 수행평가나 걱정해.');
-      await g.say('고등학생', '아저씨, 전쟁 나면 편의점은 문 열어요?');
-      const c = await g.choose('', ['24시간이니까 열겠지.', '그땐 아저씨도 도망가야지.', '빨리 집에 가서 자라.']);
-      if (c === 0) await g.say('고등학생', 'ㅋㅋㅋ 아저씨 레전드.');
-      else if (c === 1) await g.say('고등학생 친구', '아 ㅋㅋ 같이 가요 그럼.');
-      else await g.say('고등학생', '네에… 엄마 같아.');
+      await g.say('초등학생 유튜버', '(휴대폰을 들이밀며) 안녕하세요 구독자 여러분! 일롱튜브입니다! 지금 새벽 편의점에 나와 있는데요!');
+      await g.say('초등학생 유튜버', '구독자 열두 명 다 보고 계시죠? 오늘은 편의점 아저씨를 인터뷰해 보겠습니다!');
+      await g.say('초등학생 유튜버', '아저씨, 일롱 머스크 알아요? 화성에 도시 만든대요. 나 거기 갈 거예요. 화성엔 전쟁도 없대요.');
+      const c = await g.choose('', ['화성에 편의점은 있대?', '아저씨도 데려가 줘.', '새벽 세 시에 왜 안 자?']);
+      if (c === 0) await g.say('초등학생 유튜버', '없으니까 아저씨가 차려요! 화성 1호점!');
+      else if (c === 1) await g.say('초등학생 유튜버', '구독 누르면 생각해 볼게요.');
+      else await g.say('초등학생 유튜버', '아빠가 택시 기사라 차에서 기다리는 중이에요. 아빠도 야간이라서요.');
+      await g.say('초등학생 유튜버', '근데 아저씨, 전쟁 나면 편의점은 문 열어요? 우리 반 애들이 오늘 전쟁 난대요.');
+      const d = await g.choose('', ['24시간이니까 열겠지.', '그땐 아저씨도 도망가야지.']);
+      if (d === 0) await g.say('초등학생 유튜버', '와 레전드. 구독자 여러분, 편의점은 전쟁 나도 엽니다!');
+      else await g.say('초등학생 유튜버', '그럼 저랑 같이 화성 가요!');
+      await g.say('택시기사 아빠', '(문을 반쯤 열고) 민재야, 가자. …총각도 밥은 먹고 다니냐?');
+      await g.narr('밥은 먹냐. 넉 달 전, 도준에게 보낸 마지막 문자였다. 읽음 표시만 남은.');
+      F().metMinjae = true;
     },
   },
   {
@@ -81,7 +101,16 @@ const CUSTOMERS = [
     async after(g) {
       await g.say('경비원 박 씨', '총각, 오늘따라 조용하지? 이런 날이 꼭…');
       await g.say('경비원 박 씨', '아냐. 늙은이 말은 반만 들어.');
+      await g.say('경비원 박 씨', '근데 총각은 꿈이 뭐야? 5년째 여기 서 있는 거 보면 궁금해서.');
+      const c = await g.choose('', ['…요리요. 예전에요.', '꿈은 무슨요.']);
+      if (c === 1) {
+        await g.say('경비원 박 씨', '에이, 있잖아. 얼굴에 써 있어.');
+        await g.say('강도일', '…요리사요. 예전에요. 대학도 그거 하려고 갔었는데.');
+      }
+      await g.say('경비원 박 씨', '요리사! 그럼 언제 한번 끓여 줘. 경비실 라면 말고, 진짜로.');
       await g.say('경비원 박 씨', '아까 307동 할머니 왔다 갔지? 그 양반 요즘 잠을 못 주무셔. 혼자 사시니까 내가 가끔 들여다봐.');
+      F().dreamCook = true;
+      note('경비원 박 씨 — 언젠가 진짜 요리를 해 드리기로 함');
     },
   },
 ];
@@ -92,7 +121,7 @@ function spawnCustomer(g) {
   f.custIdx += 1;
   setClock(0, c.time[0], c.time[1]);
   g.sfx.chime();
-  const e = npc({ id: 'cust', name: c.name, tx: 6, ty: 9, color: c.color, hair: c.hair, solid: true, barks: c.barks, def: c });
+  const e = npc({ id: 'cust', name: c.name, tx: 6, ty: 9, color: c.color, hair: c.hair, small: c.small, solid: true, barks: c.barks, def: c });
   g.scene.entities.push(e);
   g.cust = e;
   const followers = [];
@@ -110,6 +139,7 @@ async function serveCustomer(g) {
   const e = g.cust;
   const c = e.def;
   e.waiting = false;
+  if (c.before) await c.before(g);
   await g.ui.pos(c.name, c.goods);
   await c.after(g);
   const out = () => g.walk(e, [[9, 9], [6, 9], [6, 10]], 80);
@@ -224,6 +254,17 @@ async function sirenScript(g) {
     if (id === 'flashlight') { f.gotFlash = true; state.flashPower = 100; }
     await g.ui.itemGet(id, { kicker: '챙겼다', note: n, ms: 1350 });
   }
+  if (f.sawStash) {
+    const c = await g.choose('계산대 밑, 사장님의 비상금 봉투. 「건드리면 죽는다 — 문」', ['챙긴다', '그대로 둔다']);
+    if (c === 0) {
+      addItem('cash');
+      f.tookStash = true;
+      await g.ui.itemGet('cash', { kicker: '챙겼다', note: '48만 원. 필요한 거 챙기라고 했다. …이것도 필요한 거다.', ms: 1800 });
+    } else {
+      f.leftStash = true;
+      await g.narr('필요한 걸 챙기라고 했지, 사장님 걸 챙기라고 하진 않았다. 도일은 서랍을 닫았다.');
+    }
+  }
   await g.ui.centerText(`가방이 꽉 찼다.<small>${state.bagSlots}칸 중 ${Math.min(state.bagSlots, state.inv.reduce((s, e) => s + ITEMS[e.id].size * e.qty, 0))}칸</small>`, 1800);
   g.ui.toast(document.body.classList.contains('touch') ? '손전등: 「손전등」 버튼' : '손전등: F 키', 3200);
   await leaveStore(g);
@@ -286,6 +327,17 @@ const store = {
           if (F().siren) return;
           if (g.cust && g.cust.waiting) { await serveCustomer(g); return; }
           const f = F();
+          const c = await g.choose('계산대', ['라디오 듣기', '계산대 밑 살펴보기', '그만두기']);
+          if (c === 1) {
+            if (!f.sawStash) {
+              f.sawStash = true;
+              await g.narr('계산대 밑 서랍. 안쪽에 누런 봉투가 테이프로 붙어 있다.');
+              await g.narr('봉투에 매직으로 적혀 있다. 「건드리면 죽는다 — 문」');
+              await g.narr('사장님의 비상금이다. 25년째 "혹시 몰라" 모으는 돈. 도일은 5년째 못 본 척하고 있다.');
+            } else await g.narr('사장님의 비상금 봉투. 「건드리면 죽는다 — 문」');
+            return;
+          }
+          if (c !== 0) return;
           const n = (f.radioN = (f.radioN || 0) + 1);
           if (n === 1) {
             await sayV(g, '라디오 · DJ', '다음 사연입니다. 군대 간 아들에게 보내는 엄마의 편지예요. 우리 아들, 밥은 잘 먹고 있니…', 'dj');
@@ -601,8 +653,9 @@ const street = {
 
 const EXTRAS = [
   { tx: 4, ty: 6, name: '402호 아주머니', color: '#7a5a5a', lines: ['우리 아들은 강남에서 일해요. 전화가 안 돼요.', '…괜찮겠죠? 강남은 멀잖아요. 거기서는.'] },
-  { tx: 8, ty: 7, name: '고등학생', color: '#2a3a5a', lines: ['이거 진짜예요? 와이파이도 안 되고 아무것도 안 돼요.', '친구들 단톡방 마지막 메시지가 “ㅋㅋ 훈련임”이에요.'] },
-  { tx: 21, ty: 3, name: '노인', color: '#5a5a4a', hair: '#cfcfcf', lines: ['…또 시작이구먼.', '내 평생 이걸 두 번 볼 줄은 몰랐어.'] },
+  { tx: 8, ty: 7, name: '민재 (일롱튜브)', color: '#c45a4a', small: true, lines: ['(꺼진 휴대폰에 대고) 구독자 여러분… 지금 여기는 지하 주차장인데요…', '아저씨… 편의점 문 열어요?', '일롱 머스크는 지금 화성에 있겠죠? 거긴 괜찮겠죠?'] },
+  { tx: 7, ty: 8, name: '택시기사 아빠', color: '#4a4e3a', lines: ['총각, 밥은 먹었냐.', '택시에 기름이 반 남았어. 반이면… 어디까지 갈 수 있을까.', '민재가 저 휴대폰을 안 놔. 꺼진 건데도.'] },
+  { tx: 21, ty: 3, name: '고집 센 할아버지', color: '#5a5242', hair: '#e0ddd5', lines: ['명령하지 마라. …앉으라니까 앉긴 한다마는.', '편의점 총각이구먼. 동전 맞춰 준 거 기억하지?', '삼십사 개월 동안 들은 명령보다 오늘 하루가 더 기네.'] },
   { tx: 23, ty: 11, name: '배달 기사', color: '#3a6a4a', lines: ['오토바이 위에서 문자 받았어요. 콜은 다 취소됐고.', '배달 가방에 치킨이 두 마리 있었는데, 다 식어서 여기 사람들이랑 나눠 먹었어요.'] },
   { tx: 28, ty: 8, name: '부부', color: '#6a4a3a', lines: ['(속삭이며 다투고 있다) …그러니까 내가 이사 오지 말자고 했잖아.', '(아내가 남편의 손을 꽉 잡고 있다. 다툼은 끝난 것 같다.)'] },
   { tx: 12, ty: 11, name: '어린아이', color: '#c45a4a', small: true, lines: ['아저씨 편의점 아저씨죠? 초코우유 있어요?', '엄마가 여기서 자면 캠핑이래요.'] },
@@ -768,6 +821,11 @@ async function d1Morning(g) {
   await g.say('라디오', '낙진의 위험이 가장 큰 것은 처음 48시간입니다. 수도권 서부 주민께서는 최소 이틀간 실내에 머물러 주십시오.', { mode: 'radio' });
   await g.narr('지하 2층이 잠깐 조용해졌다. 그리고 어디선가 누군가 울기 시작했다.');
   addStat('mental', -6);
+  g.sfx.notify();
+  g.ui.toast('통신사 알림 · 오늘은 강도일 고객님의 생일입니다', 3600);
+  await wait(1200);
+  await g.narr('11월 14일. 생일이었다. 아무도 몰랐다. 도일도 방금 알았다.');
+  await g.narr('택배는 오늘 아침 문 앞에 온다고 했었다. 도준이 보낸 상자. 문 앞까지 올 수 있었을까.');
   await g.say('동대표 최정민', '들으셨죠. 이틀은 밖에 못 나갑니다. 대신 지하로 연결된 동은 다녀오셔도 돼요.');
   await g.say('동대표 최정민', '집에서 물이랑 이불, 먹을 거 가져오세요. 엘리베이터 없습니다. 계단이에요.');
   g.objective('303동 계단으로 집(1104호)에 다녀오기');
@@ -857,6 +915,11 @@ const b2 = {
       await wait(500);
       await g.say('동대표 최정민', '동별로 모여 앉아 주세요! 301동은 첫 번째 기둥, 303동은 두 번째 기둥 쪽!');
       await g.say('동대표 최정민', '엘리베이터는 멈췄습니다. 계단으로만 다니세요! 다치신 분 계시면 손 들어 주세요!');
+      await g.say('고집 센 할아버지', '나한테 명령하지 마라!');
+      await g.say('동대표 최정민', '……어르신, 부탁드립니다. 앉아 주세요.');
+      await g.say('고집 센 할아버지', '부탁은 들어주지.');
+      await g.narr('지하 2층 어딘가에서 누군가 웃음을 터뜨렸다. 오늘 밤 처음 들은 웃음이었다.');
+      addStat('mental', 4);
       g.objective('동대표 최정민에게 이름 적기');
     } else if (state.day === 1 && !f.d1Morning) {
       await d1Morning(g);
@@ -1088,7 +1151,7 @@ async function endSummary(g) {
     <div class="sec"><h3>도일이 건넨 것</h3>${kind}</div>
     <div class="sec"><h3>보내지 못한 문자함</h3>${unsent}</div>
     <div class="sec"><h3>플레이 시간</h3><p>약 ${mins}분</p></div>
-    <div class="next">D+3. 단지 밖으로 처음 나가는 날.<br>경비실 책상 위에 박 씨의 근무일지가 펼쳐져 있다. 마지막 줄은 04:31.<br>「올라가 봐야 함.」</div>
+    <div class="next">D+3. 단지 밖으로 처음 나가는 날.<br>경비실 책상 위에 박 씨의 근무일지가 펼쳐져 있다. 마지막 줄은 04:31.<br>「올라가 봐야 함.」<br><br>그리고 길가에, 짐칸 문이 열린 채 멈춰 선 택배 트럭 한 대.</div>
     <div class="btns"><button class="btn primary" id="btn-restart">처음부터 다시</button></div>
   </div>`);
   c.querySelector('#btn-restart').onclick = () => { g.ui.hideCard(); startNewGame(g); };
