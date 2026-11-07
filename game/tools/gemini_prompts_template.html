@@ -1,0 +1,106 @@
+<title>서울 끝 제미나이 프롬프트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* 레이아웃: 한 줄로 쌓인 작업 카드. 위에서부터 순서대로 복사해 가는 작업 목록 */
+:root {
+  --bg: #f1efea; --surface: #fbfaf7; --fg: #1d1e21; --muted: #6c6a64; --line: #dcd8cf;
+  --accent: #b4501c; --yellow: #c6921c; --code-bg: #efece5; --magenta: #c0189a;
+  --display: "Nanum Myeongjo", "AppleMyungjo", serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111214; --surface: #1a1b1e; --fg: #e8e5dd; --muted: #9a978f; --line: #2c2e33;
+  --accent: #e0742c; --yellow: #e3b341; --code-bg: #141518; --magenta: #ff4fd8; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #111214; --surface: #1a1b1e; --fg: #e8e5dd; --muted: #9a978f; --line: #2c2e33;
+  --accent: #e0742c; --yellow: #e3b341; --code-bg: #141518; --magenta: #ff4fd8; color-scheme: dark; }
+
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
+.kicker { font-size: 12px; letter-spacing: .18em; color: var(--muted); margin: 0; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 6vw, 44px); line-height: 1.15; margin: 6px 0 0; text-wrap: balance; }
+.lede { color: var(--muted); margin: 10px 0 0; max-width: 60ch; }
+.steps { display: grid; gap: 8px; margin: 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); list-style: none; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 22px 1fr; gap: 8px; }
+.steps li::before { content: counter(s); font-family: var(--mono); color: var(--accent); font-weight: 500; }
+.steps code { font-family: var(--mono); font-size: 13px; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.swatch { display: inline-block; width: 11px; height: 11px; border-radius: 2px; background: #ff00ff; vertical-align: -1px; margin-right: 4px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px; }
+nav a { font-family: var(--mono); font-size: 12.5px; color: var(--fg); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; background: var(--surface); }
+nav a.star { border-color: var(--yellow); }
+nav a:hover, nav a:focus-visible { border-color: var(--accent); outline: none; }
+section { display: grid; gap: 14px; }
+section > h3 { font-size: 13px; letter-spacing: .12em; color: var(--muted); margin: 8px 0 0; font-weight: 500; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0; scroll-margin-top: 16px; }
+.card.star { border-left: 3px solid var(--yellow); }
+.card header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.card header > div { min-width: 0; }
+.card h2 { font-size: 17px; margin: 0; font-weight: 700; text-wrap: balance; }
+.file { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin: 2px 0 0; }
+.copy { flex: none; font-family: var(--body); font-weight: 700; font-size: 14px; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+.copy:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.copy.done { background: transparent; color: var(--accent); }
+.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.chips li { font-size: 13px; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; display: flex; gap: 6px; align-items: baseline; min-width: 0; }
+.chips b { font-family: var(--mono); font-weight: 500; color: var(--muted); font-size: 11.5px; }
+pre { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--code-bg); border-radius: 8px; padding: 12px; white-space: pre-wrap; word-break: break-word; max-height: 220px; overflow: auto; }
+pre:focus-visible { outline: 2px solid var(--accent); }
+footer { color: var(--muted); font-size: 13px; }
+@media (max-width: 460px) { .chips { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <div>
+    <p class="kicker">서울 끝 · 아트 작업</p>
+    <h1>제미나이 프롬프트</h1>
+    <p class="lede">아이템 시트 12장과 뉴스 컷신 8장. 카드마다 「복사」를 누르고 제미나이에 그대로 붙여 넣으면 됩니다.</p>
+  </div>
+
+  <ol class="steps">
+    <li><span>노란 줄이 있는 <b>시트 01~07</b>부터 만드세요. 1장에 꼭 필요한 아이템들입니다.</span></li>
+    <li><span>결과가 9칸이 아니거나 스타일이 어긋나면, 같은 프롬프트로 <b>다시 생성</b>하세요.</span></li>
+    <li><span>배경이 <span class="swatch"></span>마젠타면 정상입니다. 배경은 제가 지웁니다.</span></li>
+    <li><span>카드에 적힌 파일명으로 저장해서 <code>game/assets/raw/</code>에 올려 주세요.</span></li>
+  </ol>
+
+  <nav aria-label="바로 가기">
+    {{NAV}}
+  </nav>
+
+  <section aria-labelledby="h-sheets">
+    <h3 id="h-sheets">아이템 시트 · 3×3, 정사각형</h3>
+    {{SHEETS}}
+  </section>
+
+  <section aria-labelledby="h-news">
+    <h3 id="h-news">뉴스 컷신 · 16:9, 아래 20%는 자막 자리로 비움</h3>
+    {{NEWS}}
+  </section>
+
+  <footer>방송사 「한누리뉴스24」는 가상입니다. 이미지에 글자를 넣지 않는 이유는 한글이 깨지는 것과 실제 뉴스 화면으로 오인되는 것을 막기 위해서입니다. 자막은 게임에서 얹습니다.</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var pre = document.getElementById(btn.dataset.target);
+    var text = pre.textContent;
+    var done = function () { btn.textContent = '복사됨'; btn.classList.add('done'); setTimeout(function () { btn.textContent = '복사'; btn.classList.remove('done'); }, 1800); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(pre);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = '선택됨 · 길게 눌러 복사';
+    };
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch (e) { fallback(); }
+  });
+});
+</script>

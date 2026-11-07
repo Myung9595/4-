@@ -1,0 +1,500 @@
+<title>서울 끝 제미나이 프롬프트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* 레이아웃: 한 줄로 쌓인 작업 카드. 위에서부터 순서대로 복사해 가는 작업 목록 */
+:root {
+  --bg: #f1efea; --surface: #fbfaf7; --fg: #1d1e21; --muted: #6c6a64; --line: #dcd8cf;
+  --accent: #b4501c; --yellow: #c6921c; --code-bg: #efece5; --magenta: #c0189a;
+  --display: "Nanum Myeongjo", "AppleMyungjo", serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111214; --surface: #1a1b1e; --fg: #e8e5dd; --muted: #9a978f; --line: #2c2e33;
+  --accent: #e0742c; --yellow: #e3b341; --code-bg: #141518; --magenta: #ff4fd8; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #111214; --surface: #1a1b1e; --fg: #e8e5dd; --muted: #9a978f; --line: #2c2e33;
+  --accent: #e0742c; --yellow: #e3b341; --code-bg: #141518; --magenta: #ff4fd8; color-scheme: dark; }
+
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
+.kicker { font-size: 12px; letter-spacing: .18em; color: var(--muted); margin: 0; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 6vw, 44px); line-height: 1.15; margin: 6px 0 0; text-wrap: balance; }
+.lede { color: var(--muted); margin: 10px 0 0; max-width: 60ch; }
+.steps { display: grid; gap: 8px; margin: 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); list-style: none; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 22px 1fr; gap: 8px; }
+.steps li::before { content: counter(s); font-family: var(--mono); color: var(--accent); font-weight: 500; }
+.steps code { font-family: var(--mono); font-size: 13px; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.swatch { display: inline-block; width: 11px; height: 11px; border-radius: 2px; background: #ff00ff; vertical-align: -1px; margin-right: 4px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px; }
+nav a { font-family: var(--mono); font-size: 12.5px; color: var(--fg); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; background: var(--surface); }
+nav a.star { border-color: var(--yellow); }
+nav a:hover, nav a:focus-visible { border-color: var(--accent); outline: none; }
+section { display: grid; gap: 14px; }
+section > h3 { font-size: 13px; letter-spacing: .12em; color: var(--muted); margin: 8px 0 0; font-weight: 500; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0; scroll-margin-top: 16px; }
+.card.star { border-left: 3px solid var(--yellow); }
+.card header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.card header > div { min-width: 0; }
+.card h2 { font-size: 17px; margin: 0; font-weight: 700; text-wrap: balance; }
+.file { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin: 2px 0 0; }
+.copy { flex: none; font-family: var(--body); font-weight: 700; font-size: 14px; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+.copy:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.copy.done { background: transparent; color: var(--accent); }
+.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.chips li { font-size: 13px; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; display: flex; gap: 6px; align-items: baseline; min-width: 0; }
+.chips b { font-family: var(--mono); font-weight: 500; color: var(--muted); font-size: 11.5px; }
+pre { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--code-bg); border-radius: 8px; padding: 12px; white-space: pre-wrap; word-break: break-word; max-height: 220px; overflow: auto; }
+pre:focus-visible { outline: 2px solid var(--accent); }
+footer { color: var(--muted); font-size: 13px; }
+@media (max-width: 460px) { .chips { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <div>
+    <p class="kicker">서울 끝 · 아트 작업</p>
+    <h1>제미나이 프롬프트</h1>
+    <p class="lede">아이템 시트 12장과 뉴스 컷신 8장. 카드마다 「복사」를 누르고 제미나이에 그대로 붙여 넣으면 됩니다.</p>
+  </div>
+
+  <ol class="steps">
+    <li><span>노란 줄이 있는 <b>시트 01~07</b>부터 만드세요. 1장에 꼭 필요한 아이템들입니다.</span></li>
+    <li><span>결과가 9칸이 아니거나 스타일이 어긋나면, 같은 프롬프트로 <b>다시 생성</b>하세요.</span></li>
+    <li><span>배경이 <span class="swatch"></span>마젠타면 정상입니다. 배경은 제가 지웁니다.</span></li>
+    <li><span>카드에 적힌 파일명으로 저장해서 <code>game/assets/raw/</code>에 올려 주세요.</span></li>
+  </ol>
+
+  <nav aria-label="바로 가기">
+    <a href="#sheet_01" class="star">시트 01</a><a href="#sheet_02" class="star">시트 02</a><a href="#sheet_03" class="star">시트 03</a><a href="#sheet_04" class="star">시트 04</a><a href="#sheet_05" class="star">시트 05</a><a href="#sheet_06" class="star">시트 06</a><a href="#sheet_07" class="star">시트 07</a><a href="#sheet_08" class="">시트 08</a><a href="#sheet_09" class="">시트 09</a><a href="#sheet_10" class="">시트 10</a><a href="#sheet_11" class="">시트 11</a><a href="#sheet_12" class="">시트 12</a><a href="#news_01_studio">뉴스 01</a><a href="#news_02_breaking">뉴스 02</a><a href="#news_03_map">뉴스 03</a><a href="#news_04_coast">뉴스 04</a><a href="#news_05_jets">뉴스 05</a><a href="#news_06_subway">뉴스 06</a><a href="#news_07_earpiece">뉴스 07</a><a href="#news_08_nosignal">뉴스 08</a>
+  </nav>
+
+  <section aria-labelledby="h-sheets">
+    <h3 id="h-sheets">아이템 시트 · 3×3, 정사각형</h3>
+    <article class="card star" id="sheet_01">
+  <header><div><h2>시트 01 · 편의점 식량</h2><p class="file">sheet_01.png</p></div>
+  <button class="copy" data-target="p-sheet_01" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>삼각김밥</li><li><b>2</b>컵라면</li><li><b>3</b>봉지라면</li><li><b>4</b>참치캔</li><li><b>5</b>햄 통조림</li><li><b>6</b>즉석밥</li><li><b>7</b>초코파이 두 개</li><li><b>8</b>건빵</li><li><b>9</b>생수 500ml</li></ol>
+  <pre id="p-sheet_01" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. triangle rice ball wrapped in dark seaweed inside a clear plastic wrapper with a red tear strip
+2. paper cup instant noodles with a red and white lid
+3. instant noodle packet, crinkled red and orange plastic bag
+4. short round can with a pull-tab lid and a blue label
+5. rectangular canned ham tin, navy and yellow, with a key opener
+6. white plastic instant rice tray with a peeled-back film lid
+7. two round chocolate-coated snack cakes in red wrappers
+8. brown paper bag of square hardtack biscuits with a few tiny star-shaped candies spilling out
+9. small clear plastic water bottle with a blue cap</pre>
+</article>
+<article class="card star" id="sheet_02">
+  <header><div><h2>시트 02 · 물과 요리</h2><p class="file">sheet_02.png</p></div>
+  <button class="copy" data-target="p-sheet_02" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>생수 2L</li><li><b>2</b>받아 둔 수돗물</li><li><b>3</b>깨끗한 물</li><li><b>4</b>김치 (반찬통)</li><li><b>5</b>쌀 1kg</li><li><b>6</b>휴대용 버너</li><li><b>7</b>부탄가스</li><li><b>8</b>냄비</li><li><b>9</b>끓인 라면</li></ol>
+  <pre id="p-sheet_02" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. large 2-liter clear water bottle with a blue cap and a carry handle
+2. plastic bucket half full of water, faint ripple
+3. clear plastic bottle of water with a small cloth tied around the neck
+4. clear plastic food container full of red napa cabbage kimchi
+5. small white rice sack tied at the top
+6. portable single-burner gas stove in a gray metal case, lid open
+7. slim butane gas canister, orange and white
+8. dented yellow aluminum pot with two handles
+9. steaming instant noodles in a dented yellow aluminum pot</pre>
+</article>
+<article class="card star" id="sheet_03">
+  <header><div><h2>시트 03 · 방호</h2><p class="file">sheet_03.png</p></div>
+  <button class="copy" data-target="p-sheet_03" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>일회용 우비</li><li><b>2</b>KF94 마스크</li><li><b>3</b>고무장갑</li><li><b>4</b>장화</li><li><b>5</b>방사선 측정기</li><li><b>6</b>종량제 봉투</li><li><b>7</b>청테이프</li><li><b>8</b>요오드화칼륨 정</li><li><b>9</b>간이 방호복</li></ol>
+  <pre id="p-sheet_03" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. folded clear disposable plastic raincoat with a hood
+2. white folded 3D face mask with ear loops
+3. pair of bright pink kitchen rubber gloves
+4. pair of tall black rubber rain boots
+5. handheld yellow radiation dosimeter with a small dark screen and a probe
+6. folded light-yellow plastic waste bag bundle
+7. roll of blue cloth duct tape
+8. small brown pharmacy bottle with white round tablets
+9. improvised protective suit made of a clear raincoat, pink rubber gloves and black boots taped together with blue tape, folded</pre>
+</article>
+<article class="card star" id="sheet_04">
+  <header><div><h2>시트 04 · 빛과 도구</h2><p class="file">sheet_04.png</p></div>
+  <button class="copy" data-target="p-sheet_04" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>손전등</li><li><b>2</b>건전지 AA</li><li><b>3</b>보조배터리</li><li><b>4</b>라이터</li><li><b>5</b>양초</li><li><b>6</b>커터칼</li><li><b>7</b>빠루 (쇠지렛대)</li><li><b>8</b>노끈</li><li><b>9</b>휴대용 라디오</li></ol>
+  <pre id="p-sheet_04" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. compact black LED flashlight
+2. four AA batteries in a blister pack, orange and black
+3. slim white power bank with a short cable
+4. translucent disposable lighter, yellow
+5. two white candles, one slightly melted
+6. yellow box cutter with the blade slightly extended
+7. red-painted steel crowbar, slightly bent at one end
+8. coil of yellow plastic twine
+9. small portable radio with an extendable antenna, beige</pre>
+</article>
+<article class="card star" id="sheet_05">
+  <header><div><h2>시트 05 · 재료</h2><p class="file">sheet_05.png</p></div>
+  <button class="copy" data-target="p-sheet_05" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>천 조각</li><li><b>2</b>숯</li><li><b>3</b>모래</li><li><b>4</b>빈 페트병</li><li><b>5</b>빈 캔</li><li><b>6</b>택배 상자</li><li><b>7</b>뽁뽁이 (에어캡)</li><li><b>8</b>은박 돗자리</li><li><b>9</b>배달 전단지</li></ol>
+  <pre id="p-sheet_05" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. folded scrap of checkered cotton cloth
+2. small bag of black barbecue charcoal chunks
+3. small plastic bag of pale sand
+4. empty crumpled clear plastic bottle without a cap
+5. empty dented aluminum can, top removed
+6. flattened brown cardboard delivery box with tape scraps
+7. roll of clear bubble wrap
+8. folded silver foil picnic mat
+9. stack of glossy folded food delivery flyers, bright colors, no text</pre>
+</article>
+<article class="card star" id="sheet_06">
+  <header><div><h2>시트 06 · 체온과 기억</h2><p class="file">sheet_06.png</p></div>
+  <button class="copy" data-target="p-sheet_06" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>롱패딩</li><li><b>2</b>담요</li><li><b>3</b>핫팩</li><li><b>4</b>목장갑</li><li><b>5</b>형제 사진</li><li><b>6</b>도준의 이어폰</li><li><b>7</b>훈련소 편지</li><li><b>8</b>가게 열쇠</li><li><b>9</b>일곱 살 동생 사진</li></ol>
+  <pre id="p-sheet_06" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. long black puffer coat, hood up
+2. folded fleece blanket, mustard and gray
+3. rectangular disposable heat pack, white and orange
+4. pair of white cotton work gloves with red rubber dots on the palms
+5. small printed photo of two brothers standing stiffly, in a thin frame, faces simple
+6. tangled white wired earphones
+7. folded letter on thin lined paper with a small military-green envelope
+8. single brass key on a teal plastic keyring tag
+9. old cracked black-and-white photo of a small boy, sepia edges</pre>
+</article>
+<article class="card star" id="sheet_07">
+  <header><div><h2>시트 07 · 이야기 소품</h2><p class="file">sheet_07.png</p></div>
+  <button class="copy" data-target="p-sheet_07" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>휴대폰</li><li><b>2</b>경비 근무일지</li><li><b>3</b>하윤의 그림</li><li><b>4</b>도준의 쪽지</li><li><b>5</b>할머니의 약봉지</li><li><b>6</b>경비원의 삼단봉</li><li><b>7</b>소화기</li><li><b>8</b>테이프 감은 쇠파이프</li><li><b>9</b>상비약 키트</li></ol>
+  <pre id="p-sheet_07" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. black smartphone with a cracked corner, screen glowing faint blue
+2. open hardcover logbook with handwritten lines (unreadable scribbles) and a pen
+3. child&#x27;s crayon drawing of tall buildings across the sea and a small stick figure
+4. yellow sticky note with a few handwritten scribbles
+5. paper pharmacy medicine envelope, folded, with pill packets inside
+6. collapsed black telescopic baton with a wrist strap
+7. red fire extinguisher with a black hose
+8. steel pipe with blue duct tape wrapped around the handle
+9. small white plastic first-aid box with a red cross</pre>
+</article>
+<article class="card" id="sheet_08">
+  <header><div><h2>시트 08 · 요리 결과물</h2><p class="file">sheet_08.png</p></div>
+  <button class="copy" data-target="p-sheet_08" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>부대찌개</li><li><b>2</b>김치볶음밥</li><li><b>3</b>참치마요 주먹밥</li><li><b>4</b>따뜻한 믹스커피</li><li><b>5</b>냄비밥</li><li><b>6</b>조미김</li><li><b>7</b>달걀</li><li><b>8</b>황도 통조림</li><li><b>9</b>믹스커피</li></ol>
+  <pre id="p-sheet_08" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. bubbling red stew in a wide shallow pot with ham slices, kimchi, noodles and sausages
+2. red kimchi fried rice in a small black frying pan
+3. two rice balls wrapped in seaweed on a piece of foil
+4. paper cup of light brown instant coffee with steam
+5. small pot of fluffy white rice, slightly burnt at the edge
+6. small rectangular pack of seasoned seaweed sheets, green and gold
+7. three brown eggs in a small paper egg carton
+8. round can with a peach-colored label, syrup drop on the lid
+9. three yellow instant coffee stick sachets fanned out</pre>
+</article>
+<article class="card" id="sheet_09">
+  <header><div><h2>시트 09 · 의약품</h2><p class="file">sheet_09.png</p></div>
+  <button class="copy" data-target="p-sheet_09" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>진통제</li><li><b>2</b>붕대</li><li><b>3</b>일회용 밴드</li><li><b>4</b>상처 연고</li><li><b>5</b>감기약</li><li><b>6</b>생리대</li><li><b>7</b>소독용 에탄올</li><li><b>8</b>파스</li><li><b>9</b>체온계</li></ol>
+  <pre id="p-sheet_09" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. blister pack of white pills
+2. rolled white gauze bandage
+3. small box of adhesive bandages, a few strips scattered
+4. small squeezed tube of ointment, green and white
+5. box of cold medicine sachets, orange stripes
+6. individually wrapped soft pad in a pastel pink wrapper
+7. white plastic spray bottle of disinfectant alcohol
+8. stack of square medicated patches in a white sleeve
+9. digital ear thermometer, white</pre>
+</article>
+<article class="card" id="sheet_10">
+  <header><div><h2>시트 10 · 도구 2</h2><p class="file">sheet_10.png</p></div>
+  <button class="copy" data-target="p-sheet_10" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>헤드랜턴</li><li><b>2</b>성냥</li><li><b>3</b>멀티툴</li><li><b>4</b>망치</li><li><b>5</b>드라이버</li><li><b>6</b>펜치</li><li><b>7</b>철사 옷걸이</li><li><b>8</b>무전기</li><li><b>9</b>탁상 알람시계</li></ol>
+  <pre id="p-sheet_10" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. elastic head strap with a small lamp
+2. small box of matches, one match out
+3. folding stainless steel multitool, half open
+4. claw hammer with a wooden handle
+5. screwdriver with a yellow and black handle
+6. pair of pliers with red rubber grips
+7. bent wire clothes hanger
+8. black walkie-talkie with a stubby antenna
+9. round twin-bell alarm clock, metal</pre>
+</article>
+<article class="card" id="sheet_11">
+  <header><div><h2>시트 11 · 재료 2 · 무기</h2><p class="file">sheet_11.png</p></div>
+  <button class="copy" data-target="p-sheet_11" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>쿠킹호일</li><li><b>2</b>쇠파이프</li><li><b>3</b>각목</li><li><b>4</b>못</li><li><b>5</b>전선</li><li><b>6</b>고무줄</li><li><b>7</b>알루미늄 야구방망이</li><li><b>8</b>골프채</li><li><b>9</b>캠핑 손도끼</li></ol>
+  <pre id="p-sheet_11" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. roll of aluminum cooking foil, partly unrolled
+2. short rusty steel pipe
+3. two square lengths of rough lumber
+4. small handful of steel nails
+5. coil of thin red and black electrical wire
+6. tangle of beige rubber bands
+7. silver aluminum baseball bat, scuffed
+8. single golf iron club with a worn grip
+9. small camping hatchet with a wooden handle</pre>
+</article>
+<article class="card" id="sheet_12">
+  <header><div><h2>시트 12 · 가방 · 교환</h2><p class="file">sheet_12.png</p></div>
+  <button class="copy" data-target="p-sheet_12" type="button">복사</button></header>
+  <ol class="chips"><li><b>1</b>등산 배낭</li><li><b>2</b>바퀴 캐리어</li><li><b>3</b>쇼핑카트</li><li><b>4</b>담배 한 보루</li><li><b>5</b>현금</li><li><b>6</b>돌반지</li><li><b>7</b>경유 20L 말통</li><li><b>8</b>윈치 핸들</li><li><b>9</b>검문소 통행증</li></ol>
+  <pre id="p-sheet_12" tabindex="0">Pixel art item icon sheet for a Korean post-apocalyptic survival game. Square image.
+A 3x3 grid of 9 separate item icons, evenly spaced, each icon centered in its own square cell.
+Style: 32x32 pixel art upscaled with hard nearest-neighbor edges, no anti-aliasing, no blur.
+Limited muted palette: concrete grays, desaturated olive green, dusty navy, warm beige,
+with rust orange (#D9772B) and civil-defense yellow (#E3B341) as the only bright accents.
+View: slight 3/4 top-down angle, same angle and same scale for every icon.
+Lighting: soft light from the top-left, one darker shade on the bottom-right of each object.
+Every object has a 1-pixel dark outline (#1A1A1E).
+Background: solid flat pure magenta (#FF00FF) everywhere, no gradient, no floor, no shadow on the background, no grid lines.
+No text, no letters, no numbers, no logos, no brand names anywhere.
+Items, left to right, top to bottom:
+1. large olive hiking backpack with straps and a sleeping pad loop
+2. gray hard-shell rolling suitcase, handle extended
+3. metal supermarket shopping cart, slightly rusted
+4. carton of cigarettes, plain white and gray
+5. small stack of folded banknotes with a rubber band, no readable numbers
+6. tiny gold ring in a small red velvet box
+7. blue plastic 20-liter jerry can with a spout
+8. heavy crank handle for a winch, greasy steel
+9. laminated card on a lanyard, military green border, no readable text</pre>
+</article>
+  </section>
+
+  <section aria-labelledby="h-news">
+    <h3 id="h-news">뉴스 컷신 · 16:9, 아래 20%는 자막 자리로 비움</h3>
+    <article class="card" id="news_01_studio">
+  <header><div><h2>뉴스 01 · 평온한 심야 뉴스 스튜디오</h2><p class="file">news_01_studio.png</p></div>
+  <button class="copy" data-target="p-news_01_studio" type="button">복사</button></header>
+  
+  <pre id="p-news_01_studio" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: a calm late-night news studio, a female anchor in a navy suit at a desk facing the camera, blue screens behind her</pre>
+</article>
+<article class="card" id="news_02_breaking">
+  <header><div><h2>뉴스 02 · 속보 종이를 받아 든 앵커</h2><p class="file">news_02_breaking.png</p></div>
+  <button class="copy" data-target="p-news_02_breaking" type="button">복사</button></header>
+  
+  <pre id="p-news_02_breaking" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: the same news anchor in a navy suit holding a sheet of paper handed from off-screen, her expression tense, a red alert glow on the screens behind her</pre>
+</article>
+<article class="card" id="news_03_map">
+  <header><div><h2>뉴스 03 · 한반도 지도와 붉은 궤적</h2><p class="file">news_03_map.png</p></div>
+  <button class="copy" data-target="p-news_03_map" type="button">복사</button></header>
+  
+  <pre id="p-news_03_map" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: a stylized dark map graphic of the Korean peninsula seen from above, several glowing red arcs launching from the north toward the south, faint grid lines</pre>
+</article>
+<article class="card" id="news_04_coast">
+  <header><div><h2>뉴스 04 · 서해 바다의 함정과 섬광</h2><p class="file">news_04_coast.png</p></div>
+  <button class="copy" data-target="p-news_04_coast" type="button">복사</button></header>
+  
+  <pre id="p-news_04_coast" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: night sea off the west coast of Korea, silhouettes of navy ships, distant orange flashes on the horizon, dark clouds</pre>
+</article>
+<article class="card" id="news_05_jets">
+  <header><div><h2>뉴스 05 · 야간 이륙하는 전투기</h2><p class="file">news_05_jets.png</p></div>
+  <button class="copy" data-target="p-news_05_jets" type="button">복사</button></header>
+  
+  <pre id="p-news_05_jets" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: fighter jets taking off from a runway at night, afterburner glow, airbase lights in rows</pre>
+</article>
+<article class="card" id="news_06_subway">
+  <header><div><h2>뉴스 06 · 지하철역으로 몰리는 시민들</h2><p class="file">news_06_subway.png</p></div>
+  <button class="copy" data-target="p-news_06_subway" type="button">복사</button></header>
+  
+  <pre id="p-news_06_subway" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: crowds of civilians in pajamas and winter coats hurrying down subway station stairs at night, green emergency exit signs glowing</pre>
+</article>
+<article class="card" id="news_07_earpiece">
+  <header><div><h2>뉴스 07 · 이어폰을 누르며 멈춘 앵커</h2><p class="file">news_07_earpiece.png</p></div>
+  <button class="copy" data-target="p-news_07_earpiece" type="button">복사</button></header>
+  
+  <pre id="p-news_07_earpiece" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: the same news anchor in a navy suit pressing a finger to her earpiece, mouth half open, frozen mid-sentence, studio lights flickering</pre>
+</article>
+<article class="card" id="news_08_nosignal">
+  <header><div><h2>뉴스 08 · 신호 끊김 (선택)</h2><p class="file">news_08_nosignal.png</p></div>
+  <button class="copy" data-target="p-news_08_nosignal" type="button">복사</button></header>
+  
+  <pre id="p-news_08_nosignal" tabindex="0">Pixel art cutscene frame for a Korean survival game. Wide 16:9 image.
+320x180 pixel resolution upscaled with hard nearest-neighbor edges, no anti-aliasing.
+Muted palette with deep navy, concrete gray, and warning red-orange accents. Slight CRT scanline feel.
+Fictional TV news broadcast. No real broadcaster, no logos.
+Leave the bottom 20 percent of the frame as an empty dark band for subtitles.
+No text, no letters, no numbers anywhere in the image.
+Scene: a broken TV signal screen, distorted color bars and static noise, dark edges, glitch lines</pre>
+</article>
+  </section>
+
+  <footer>방송사 「한누리뉴스24」는 가상입니다. 이미지에 글자를 넣지 않는 이유는 한글이 깨지는 것과 실제 뉴스 화면으로 오인되는 것을 막기 위해서입니다. 자막은 게임에서 얹습니다.</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var pre = document.getElementById(btn.dataset.target);
+    var text = pre.textContent;
+    var done = function () { btn.textContent = '복사됨'; btn.classList.add('done'); setTimeout(function () { btn.textContent = '복사'; btn.classList.remove('done'); }, 1800); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(pre);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = '선택됨 · 길게 눌러 복사';
+    };
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch (e) { fallback(); }
+  });
+});
+</script>
