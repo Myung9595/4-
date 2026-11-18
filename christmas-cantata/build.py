@@ -11,6 +11,7 @@ from fractions import Fraction as F
 
 import engine as E
 from score_data import SECTIONS
+from lyrics_ko import KO
 
 # ---------------------------------------------------------------------------
 ARRANGER = "[편곡자 이름]"   # <- 편곡자 이름을 여기에 넣고 다시 빌드하세요
@@ -24,7 +25,7 @@ SF2 = "/usr/share/sounds/sf2/FluidR3_GM.sf2"
 VOICES = ["S", "A", "T", "B"]
 
 
-def compile_all():
+def compile_all(lang="ko"):
     music = {v: [] for v in VOICES}
     lyrics = {v: [] for v in VOICES}
     glob_parts = []
@@ -41,6 +42,8 @@ def compile_all():
         vbars = {}
         for v in VOICES:
             bars = E.split_bars(sec[v])
+            if lang == "ko":
+                bars = E.apply_lyrics(name, v, bars, KO[name][v])
             vbars[v] = bars
             ly, syl, tl = E.compile_vocal(name, v, bars, glens)
             music[v].append(ly)
@@ -246,17 +249,17 @@ FRONT = r'''
   \override #'(line-width . 120) \override #'(font-name . "Nanum Myeongjo") \override #'(baseline-skip . 3.0) \fontsize #-0.8 \column {
     \wordwrap-string "1. 시작음 E는 지휘자가 조용히 허밍으로 제시합니다. I은 처음부터 끝까지 무반주이며, 남성 제창(T·B unis.)은 모음 [o]를 통일하고 숨표 뒤에도 같은 음색을 유지합니다. 마지막 화음은 E장조(피카르디 3도) — 테너의 G#을 밝게."
     \vspace #0.4
-    \wordwrap-string "2. II의 'Oo'는 입술을 둥글게 하고, 소프라노 선율보다 한 단계 여리게 깔아 줍니다. 'everlasting light'에서만 mf로 열었다가 바로 닫습니다."
+    \wordwrap-string "2. II의 'Oo'는 입술을 둥글게 하고, 소프라노 선율보다 한 단계 여리게 깔아 줍니다. '늘 빛나는 빛'(everlasting light)에서만 mf로 열었다가 바로 닫습니다."
     \vspace #0.4
-    \wordwrap-string "3. III은 목자의 들판입니다. 피아노는 D–A 지속음을 두 마디씩 페달로 이어 백파이프 같은 울림을 만듭니다. 1절 전반은 남성, 후반은 여성이 부르고, 후렴 'Noel'에서 처음으로 4성부가 모두 모입니다. 'Born is the King'은 marcato로 또렷하게."
+    \wordwrap-string "3. III은 목자의 들판입니다. 피아노는 D–A 지속음을 두 마디씩 페달로 이어 백파이프 같은 울림을 만듭니다. 1절 전반은 남성, 후반은 여성이 부르고, 후렴 '노엘'(Noel)에서 처음으로 4성부가 모두 모입니다. '나셨네'(Born is the King)는 marcato로 또렷하게."
     \vspace #0.4
-    \wordwrap-string "4. IV의 Gloria 멜리스마는 'Glo-' 모음 [ɔ]를 유지한 채 8분음표마다 강박에만 가볍게 무게를 둡니다. 두 번째 후렴에서는 테너가 주선율을, 소프라노가 높은 데스캔트를 맡습니다(데스캔트는 소수 정예도 충분합니다)."
+    \wordwrap-string "4. IV의 '영광을'(Gloria) 멜리스마는 '영-' 모음 [ʌ]를 유지한 채 8분음표마다 강박에만 가볍게 무게를 둡니다. 두 번째 후렴에서는 테너가 주선율을, 소프라노가 높은 데스캔트를 맡습니다(데스캔트는 소수 정예도 충분합니다)."
     \vspace #0.4
-    \wordwrap-string "5. V의 1절은 소프라노 독창(또는 소수)이 자유롭게 노래하고, 3절은 무반주 4성부입니다. 반주가 빠지는 순간이 메들리 전체의 고요한 정점입니다. 마지막 'birth'는 morendo로 사라지게 하고, 2–3초 정적 뒤에 VI로 넘어갑니다."
+    \wordwrap-string "5. V의 1절은 소프라노 독창(또는 소수)이 자유롭게 노래하고, 3절은 무반주 4성부입니다. 반주가 빠지는 순간이 메들리 전체의 고요한 정점입니다. 마지막 '날'(birth)은 morendo로 사라지게 하고, 2–3초 정적 뒤에 VI로 넘어갑니다."
     \vspace #0.4
-    \wordwrap-string "6. VI 후렴은 순차적으로 쌓입니다. 'O come, let us adore Him'을 남성(mf) → 알토와 남성(f) → 전체(ff) 순서로 부르고, 'Christ the Lord'는 fff, allargando로 넓게 마무리합니다."
+    \wordwrap-string "6. VI 후렴은 순차적으로 쌓입니다. '오 와서 경배하세'(O come, let us adore Him)를 남성(mf) → 알토와 남성(f) → 전체(ff) 순서로 부르고, '주 예수'(Christ the Lord)는 fff, allargando로 넓게 마무리합니다."
     \vspace #0.4
-    \wordwrap-string "7. VII 1절에서 테너·베이스는 'And heav'n and nature sing'을 한 마디 늦게 메아리처럼 따라갑니다. 반음 상승(D→E♭) 두 마디 동안 회중을 일으켜 세워 함께 부르도록 안내합니다. 이때 알토와 테너는 주선율, 베이스는 화성, 소프라노는 데스캔트를 부릅니다. 알토 주선율의 최고음 E♭5가 버거우면 일부 알토는 테너와 같은 옥타브로 부르고, 베이스 divisi의 낮은 E♭은 가능한 인원만 부릅니다. 마지막 'A-men'은 fff로 길게."
+    \wordwrap-string "7. VII 1절에서 테너·베이스는 '하늘 땅 노래해'(And heav'n and nature sing)를 한 마디 늦게 메아리처럼 따라갑니다. 반음 상승(D→E♭) 두 마디 동안 회중을 일으켜 세워 함께 부르도록 안내합니다. 이때 알토와 테너는 주선율, 베이스는 화성, 소프라노는 데스캔트를 부릅니다. 알토 주선율의 최고음 E♭5가 버거우면 일부 알토는 테너와 같은 옥타브로 부르고, 베이스 divisi의 낮은 E♭은 가능한 인원만 부릅니다. 마지막 '아멘'은 fff로 길게."
   }
   \vspace #1
   \fill-line { \fontsize #2 \bold "용어 해설 (Glossary)" }
@@ -315,7 +318,7 @@ FRONT = r'''
   \fill-line { \fontsize #2 \bold "가사와 저작권 (Texts & Copyright)" }
   \vspace #0.4
   \override #'(line-width . 120) \override #'(font-name . "Nanum Myeongjo") \fontsize #-1 \column {
-    \wordwrap-string "선율과 영어 가사는 모두 퍼블릭 도메인입니다 (VENI EMMANUEL · ST. LOUIS · THE FIRST NOWELL · GLORIA · STILLE NACHT · ADESTE FIDELES · ANTIOCH). 새찬송가 한국어 가사는 별도의 저작권이 있을 수 있어 이 악보에는 넣지 않았습니다. 한국어로 부르려면 사용 허락을 확인한 뒤 음절에 맞춰 붙이십시오. 이 편곡(화성, 성부 진행, 구성, 연결부, 데스캔트)의 저작권은 편곡자에게 있습니다."
+    @LYRICNOTE@
     \vspace #0.3
     \bold "© @YEAR@ @ARR@. All Rights Reserved."
   }
@@ -340,7 +343,7 @@ def staff_block(v, music, lyr, midi=False, practice=None):
     with_ = '\\with { instrumentName = "%s" shortInstrumentName = "%s" midiInstrument = "%s" midiPanPosition = #%s %s }' % (full, short, instr, pan, vol)
     s = '\\new Staff = "%s" %s << \\clef "%s" \\global \\new Voice = "%s" { \\dynamicUp %s } >>\n' % (v, with_, clef, vid, music)
     if not midi:
-        s += '\\new Lyrics \\lyricsto "%s" { %s }\n' % (vid, lyr)
+        s += '\\new Lyrics \\with { \\override LyricText.font-name = "Nanum Myeongjo" } \\lyricsto "%s" { %s }\n' % (vid, lyr)
     return s
 
 
@@ -373,7 +376,7 @@ LAYOUT = r'''
     \override SectionLabel.font-size = #1
     \override MetronomeMark.font-size = #0.5
   }
-  \context { \Lyrics \override LyricText.font-size = #-0.6 }
+  \context { \Lyrics \override LyricText.font-size = #0.4 \override LyricSpace.minimum-distance = #0.9 }
   \context { \Dynamics \override VerticalAxisGroup.remove-empty = ##t \override VerticalAxisGroup.remove-first = ##t }
 }
 '''
@@ -386,7 +389,10 @@ MIDI = r'''
 '''
 
 
-def make_ly(music, lyrics, globs, prh, plh, pdyn, kind="score", practice=None):
+LYRICNOTE = {"ko": '\\wordwrap-string "한국어 가사는 퍼블릭 도메인인 영어 원가사(VENI EMMANUEL · ST. LOUIS · THE FIRST NOWELL · GLORIA · STILLE NACHT · ADESTE FIDELES · ANTIOCH)를 바탕으로 편곡자가 새로 번역해 한 음에 한 글자씩 맞춘 것입니다. 새찬송가 가사는 별도의 저작권이 있을 수 있어 사용하지 않았습니다. 영어 원가사판 악보는 별도 파일(_English.pdf)로 제공합니다. 이 편곡(화성, 성부 진행, 구성, 연결부, 데스캔트)과 한국어 번역 가사의 저작권은 편곡자에게 있습니다."', "en": '\\wordwrap-string "선율과 영어 가사는 모두 퍼블릭 도메인입니다 (VENI EMMANUEL · ST. LOUIS · THE FIRST NOWELL · GLORIA · STILLE NACHT · ADESTE FIDELES · ANTIOCH). 이 악보는 영어 원가사판이며, 편곡자가 새로 번역한 한국어 가사판이 기본 악보입니다. 이 편곡(화성, 성부 진행, 구성, 연결부, 데스캔트)의 저작권은 편곡자에게 있습니다."'}
+
+
+def make_ly(music, lyrics, globs, prh, plh, pdyn, kind="score", practice=None, lang="ko"):
     glob = "global = { %s }\n" % " | ".join(globs)
     mus = {v: " | ".join(music[v]) for v in VOICES}
     lyr = {v: E.lyric_string(lyrics[v]) for v in VOICES}
@@ -396,7 +402,7 @@ def make_ly(music, lyrics, globs, prh, plh, pdyn, kind="score", practice=None):
     if kind == "score":
         out.append('\\header { title = ##f tagline = ##f }\n')
         out.append(FRONT.replace("@YEAR@", YEAR).replace("@ARR@", ARRANGER)
-                   .replace("@TKO@", TITLE_KO).replace("@TEN@", TITLE_EN))
+                   .replace("@TKO@", TITLE_KO).replace("@TEN@", TITLE_EN).replace("@LYRICNOTE@", LYRICNOTE[lang]))
         out.append('\\score {\n \\header { piece = \\markup \\column { \\fill-line { \\fontsize #4 \\bold "%s" } '
                    '\\fill-line { \\italic "%s — A Christmas Cantata Medley" } '
                    '\\fill-line { "" \\right-column { "Arr. %s" "© %s" } } \\vspace #1 } }\n' % (TITLE_KO, TITLE_EN, ARRANGER, YEAR))
@@ -436,6 +442,8 @@ def main():
     }
     for v, nm in zip(VOICES, ["Soprano", "Alto", "Tenor", "Bass"]):
         files["%s_practice_%s.ly" % (base, nm)] = make_ly(music, lyrics, globs, prh, plh, pdyn, "midi", practice=v)
+    m_en, l_en, *_ = compile_all("en")
+    files[base + "_English.ly"] = make_ly(m_en, l_en, globs, prh, plh, pdyn, "score", lang="en")
     for fn, txt in files.items():
         with open(os.path.join(OUT, fn), "w") as f:
             f.write(txt)

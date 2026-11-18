@@ -6,7 +6,8 @@
 
 | 파일 | 내용 |
 |---|---|
-| `Christmas_Cantata_Medley.pdf` | 지휘자용 총보 15쪽 (표지·구성표, 지휘자 노트, 용어 해설, 낭독 본문 포함) |
+| `Christmas_Cantata_Medley.pdf` | **한국어 가사판** 총보 14쪽 (표지·구성표, 지휘자 노트, 용어 해설, 낭독 본문 포함) |
+| `Christmas_Cantata_Medley_English.pdf` | 영어 원가사판 총보 |
 | `Christmas_Cantata_Medley_midi.midi` | 전체 MIDI. S·A·T·B·피아노 트랙이 분리되어 있어 큐베이스나 로직에서 바로 열 수 있음 |
 | `Christmas_Cantata_Medley_midi.mp3` | MIDI로 렌더링한 전체 미리듣기 음원 |
 | `Christmas_Cantata_Medley_practice_*.midi / .mp3` | 파트 연습용 음원. 해당 파트는 피아노 음색으로 크게, 나머지는 작게 재생 |
@@ -36,4 +37,4 @@ python3 build.py --check    # 검사만 실행
 
 필요한 것: LilyPond 2.24, 나눔 폰트(fonts-nanum). 음원을 만들려면 FluidSynth와 FluidR3_GM 사운드폰트도 필요합니다.
 
-선율과 영어 가사는 퍼블릭 도메인입니다. 편곡(화성, 성부 진행, 구성, 연결부, 데스캔트)의 저작권은 편곡자에게 있습니다.
+한국어 가사는 퍼블릭 도메인 영어 원가사를 편곡자가 새로 번역한 것입니다(`lyrics_ko.py`). 새찬송가 가사는 쓰지 않았습니다. 선율과 영어 가사는 퍼블릭 도메인입니다. 편곡(화성, 성부 진행, 구성, 연결부, 데스캔트)의 저작권은 편곡자에게 있습니다.

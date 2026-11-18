@@ -133,6 +133,87 @@ def frac_to_dur(f):
     raise DSLError("no duration for %s" % f)
 
 
+def _is_hangul(ch):
+    return "가" <= ch <= "힣"
+
+
+def split_slot(slot):
+    """'한밤,' -> ['한', '밤,'];  'Oo' -> ['Oo']."""
+    if not any(_is_hangul(c) for c in slot):
+        return [slot]
+    parts = []
+    for c in slot:
+        if _is_hangul(c) or not parts:
+            parts.append(c)
+        else:
+            parts[-1] += c
+    return parts
+
+
+def apply_lyrics(sec_name, vname, bars_src, slots):
+    """Replace the syllables of a voice with a new list of slots.
+
+    Each slot replaces one original syllable.  A slot holding several Hangul
+    syllables spreads them over the following melisma notes of that syllable
+    (breaking a tie where needed)."""
+    out_bars = []
+    flat = []  # (bar index, token string or Note)
+    prevdur = None
+    for bi, bar in enumerate(bars_src):
+        for tok in tokens(bar):
+            m = NOTE_RE.match(tok)
+            if m and not tok.startswith("\\"):
+                n = Note(m, prevdur)
+                prevdur = n.dur
+                flat.append([bi, n])
+            else:
+                flat.append([bi, tok])
+    si = 0
+    pending = []
+    last_note = None
+    for item in flat:
+        n = item[1]
+        if not isinstance(n, Note):
+            continue
+        if n.is_rest:
+            if pending:
+                raise DSLError("%s %s: syllables %s left over before a rest" % (sec_name, vname, pending))
+            last_note = None
+            continue
+        if n.syl is not None:
+            if pending:
+                raise DSLError("%s %s: syllables %s left over" % (sec_name, vname, pending))
+            if si >= len(slots):
+                raise DSLError("%s %s: not enough lyric slots (%d)" % (sec_name, vname, len(slots)))
+            parts = split_slot(slots[si])
+            si += 1
+            n.syl = parts[0]
+            pending = parts[1:]
+        elif pending:
+            n.syl = pending.pop(0)
+            if last_note is not None and "~" in last_note.post:
+                last_note.post = last_note.post.replace("~", "", 1)
+        last_note = n
+    if pending:
+        raise DSLError("%s %s: syllables %s left over at end" % (sec_name, vname, pending))
+    if si != len(slots):
+        raise DSLError("%s %s: %d lyric slots given, %d used" % (sec_name, vname, len(slots), si))
+    for bi in range(len(bars_src)):
+        toks = []
+        for b, it in flat:
+            if b != bi:
+                continue
+            if isinstance(it, Note):
+                s = it.pitch + it.dur + it.mult + it.post
+                if it.syl is not None:
+                    s += "=" + it.syl
+                toks.append(s)
+            else:
+                toks.append(it)
+        out_bars.append(" ".join(toks))
+    return out_bars
+
+
 class Voice:
     """A vocal line for one section."""
 
